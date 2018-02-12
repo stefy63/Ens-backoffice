@@ -5,5 +5,9 @@
 
 export const environment = {
     production: false,
-    hmr       : false
+    hmr       : false,
+
+    // Socket.io configuration url
+    ws_url: 'http://localhost',
+    ws_port: 9000
 };
