@@ -71,9 +71,6 @@ export class FuseLogin2Component implements OnInit
 
     public bgSeason() {
         const mounth = moment().format('MMMM').toString().toLowerCase();
-        return `url('/assets/images/backgrounds/${mounth}.jpg') no-repeat; 
-        'width': 100%;
-        'overflow': hidden;
-        'background-size': cover`;
+        return `url('/assets/images/backgrounds/${mounth}.jpg') no-repeat`;
     }
 }

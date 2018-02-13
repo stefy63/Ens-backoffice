@@ -10,6 +10,7 @@ import { locale as turkish } from './i18n/tr';
     templateUrl: './sample.component.html',
     styleUrls  : ['./sample.component.scss']
 })
+
 export class FuseSampleComponent
 {
     constructor(

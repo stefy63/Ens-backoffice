@@ -49,6 +49,7 @@ const config: SocketIoConfig = { url: environment.ws_url + ':' + environment.ws_
         FuseConfigService,
         FuseNavigationService,
         SocketService
+
     ],
     bootstrap: [
         AppComponent
