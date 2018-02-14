@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { IDataLogin } from '../interfaces/i-data-login';
+import { Observer } from 'rxjs/Observer';
 
 @Injectable()
 export class ApiService {
@@ -20,17 +21,13 @@ export class ApiService {
     const params = new HttpParams()
       .set('username', dataLogin.username)
       .set('password', dataLogin.password);
+
     const options = {
       headers,
       params
     };
 
-    return this.http.post(this.baseUrl + '/login/' + isOperator, null, options)
-      .subscribe(
-        (data) => {
-          localStorage.setItem('user', JSON.stringify(data));
-      }
-      );
+    return this.http.post(this.baseUrl + '/login/' + isOperator, null, options);
   }
 
 }

@@ -7,24 +7,26 @@ export class NavigationModel
         this.model = [
             {
                 'id'      : 'pages',
-                'title'   : 'Pages',
+                'title'   : 'Funzioni',
                 'type'    : 'group',
                 'icon'    : 'pages',
                 'children': [
                     {
-                        'id'      : 'authentication',
-                        'title'   : 'Authentication',
-                        'type'    : 'collapse',
-                        'icon'    : 'lock',
-                        'children': [
-                            {
-                                'id'   : 'login-v2',
-                                'title': 'Login v2',
-                                'type' : 'item',
-                                'icon'    : 'lock',
-                                'url'  : '/pages/authentication/login-2'
-                            },
-                        ]
+                        'id'      : 'dashboard',
+                        'title'   : 'DashBoard',
+                        'type'    : 'item',
+                        'icon'    : 'pages',
+                        'url'  : '/pages/dashboard'
+                        // 'icon'    : 'lock',
+                        // 'children': [
+                        //     {
+                        //         'id'   : 'login-v2',
+                        //         'title': 'Login v2',
+                        //         'type' : 'item',
+                        //         'icon'    : 'lock',
+                        //         'url'  : '/pages/authentication/login-2'
+                        //     },
+                        // ]
                     }
                 ]
             },

@@ -122,14 +122,16 @@ fuse-navbar-vertical {
             align-items: center;
 
             .logo-icon {
-                width: 38px;
+                width: 80px;
             }
 
             .logo-text {
-                margin-left: 8px;
-                font-size: 20px;
-                font-weight: 300;
+                margin-left: 5px;
+                margin-top: 8px;
+                font-size: 25px;
+                font-weight: bolder;
                 letter-spacing: 0.4px;
+                color:cornflowerblue;
             }
         }
     }

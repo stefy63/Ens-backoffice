@@ -6,7 +6,7 @@
 
         <div fxFlex="1 0 auto" fxLayout="row" fxLayoutAlign="start center">
 
-            <button mat-button class="toggle-button-navbar mat-icon-button"
+            <!-- <button mat-button class="toggle-button-navbar mat-icon-button"
                     fuseNavbarVertical="toggleBar" fxHide.gt-md>
                 <mat-icon>menu</mat-icon>
             </button>
@@ -21,7 +21,7 @@
 
             <div class="px-8 px-mat-16">
                 <fuse-shortcuts></fuse-shortcuts>
-            </div>
+            </div> -->
 
         </div>
 
@@ -31,14 +31,14 @@
                     class="user-button">
                 <div fxLayout="row" fxLayoutAlign="center center">
                     <img class="avatar" src="assets/images/avatars/profile.jpg">
-                    <span class="username mr-12" fxHide fxShow.gt-sm>John Doe</span>
+                    <span class="username mr-12" fxHide fxShow.gt-sm>{{prifile}}</span>
                     <mat-icon class="s-16" fxHide.xs>keyboard_arrow_down</mat-icon>
                 </div>
             </button>
 
             <mat-menu #userMenu="matMenu">
 
-                <button mat-menu-item>
+                <!-- <button mat-menu-item>
                     <mat-icon>account_circle</mat-icon>
                     <span>My Profile</span>
                 </button>
@@ -46,7 +46,7 @@
                 <button mat-menu-item class="">
                     <mat-icon>mail</mat-icon>
                     <span>Inbox</span>
-                </button>
+                </button> -->
 
                 <button mat-menu-item class="">
                     <mat-icon>exit_to_app</mat-icon>
@@ -55,22 +55,22 @@
 
             </mat-menu>
 
-            <div class="toolbar-separator"></div>
+            <!-- <div class="toolbar-separator"></div>
 
             <fuse-search-bar (onInput)="search($event)"></fuse-search-bar>
 
-            <div class="toolbar-separator"></div>
+            <div class="toolbar-separator"></div> -->
 
-            <button mat-button fxHide fxShow.gt-xs
+            <!-- <button mat-button fxHide fxShow.gt-xs
                     class="language-button"
                     [matMenuTriggerFor]="languageMenu">
                 <div fxLayout="row" fxLayoutAlign="center center">
                     <img class="flag mr-8" [src]="'assets/images/flags/'+selectedLanguage.flag+'.png'">
                     <span class="iso text-uppercase">{{selectedLanguage.id}}</span>
                 </div>
-            </button>
+            </button> -->
 
-            <mat-menu #languageMenu="matMenu">
+            <!-- <mat-menu #languageMenu="matMenu">
 
                 <button mat-menu-item *ngFor="let lang of languages" (click)="setLanguage(lang)">
                     <div fxLayout="row" fxLayoutAlign="start center">
@@ -79,16 +79,16 @@
                     </div>
                 </button>
 
-            </mat-menu>
+            </mat-menu> -->
 
             <div class="toolbar-separator" fxHide fxShow.gt-xs></div>
 
-            <button mat-icon-button
+            <!-- <button mat-icon-button
                     class="mat-icon-button quick-panel-toggle-button"
                     fuseMatSidenavToggler="quick-panel"
                     aria-label="Toggle quick panel">
                 <mat-icon class="icon">format_list_bulleted</mat-icon>
-            </button>
+            </button> -->
 
         </div>
     </div>
