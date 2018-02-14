@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import { IDataLogin } from '../../../../../interfaces/i-data-login';
 import { AuthService } from '../../../../../services/auth.service';
 import { Router } from '@angular/router';
+import { LocalStorageService } from '../../../../../services/local-storage.service';
 
 @Component({
     selector   : 'fuse-login-2',
@@ -25,7 +26,8 @@ export class FuseLogin2Component implements OnInit
         private formBuilder: FormBuilder,
         private apiService: ApiService,
         private authService: AuthService,
-        private router: Router
+        private router: Router,
+        private storage: LocalStorageService
     )
     {
         this.fuseConfig.setSettings({
@@ -46,10 +48,11 @@ export class FuseLogin2Component implements OnInit
       this.apiService.apiLogin(this.loginForm.value as IDataLogin, true)
         .subscribe(
             (data) => {
+                this.storage.setItem('user', JSON.stringify(data));
                 this.router.navigate(['pages/dashboard']);
             },
             (err) => {
-                console.log('---------------------');
+                console.log(err);
             }
         );
     }

@@ -20,6 +20,7 @@ import { SocketService } from './services/socket.service';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { ApiService } from './services/api.service';
 import { AuthService } from './services/auth.service';
+import { LocalStorageService } from './services/local-storage.service';
 import { AuthGuard } from './guard/auth.guard';
 
 const appRoutes: Routes = [
@@ -60,7 +61,8 @@ const config: SocketIoConfig = { url: environment.ws_url + ':' + environment.ws_
         },
         ApiService,
         AuthService,
-        AuthGuard
+        AuthGuard,
+        LocalStorageService
     ],
     bootstrap: [
         AppComponent

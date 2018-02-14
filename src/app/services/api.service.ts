@@ -4,21 +4,24 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { IDataLogin } from '../interfaces/i-data-login';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
+import { LocalStorageService } from './local-storage.service';
 
 @Injectable()
 export class ApiService {
 
   private baseUrl: string = environment.api_url + ':' + environment.api_port + environment.api_suffix;
 
-
-
-  constructor(private http: HttpClient) { }
-
-  public apiLogin(dataLogin: IDataLogin, isOperator: boolean): Observable<any> {
-
-    const headers = new HttpHeaders()
+    private headers = new HttpHeaders()
       .set('Content-Type', 'application/x-www-form-urlencoded');
 
+  constructor(
+    private http: HttpClient,
+    private storage: LocalStorageService
+  ) { }
+  
+  public apiLogin(dataLogin: IDataLogin, isOperator: boolean): Observable<any> {
+
+    const headers = this.headers;
     const params = new HttpParams()
       .set('username', dataLogin.username)
       .set('password', dataLogin.password);
@@ -28,8 +31,8 @@ export class ApiService {
       params
     };
 
-    return this.http.post(this.baseUrl + '/login/' + isOperator, null, options)
-      .do((data) => localStorage.setItem('user', JSON.stringify(data)));
+    return this.http.post(this.baseUrl + '/login/' + isOperator, null, options);
+      // .do((data) =>  this.storage.setItem('user', data));
   }
 
 }
