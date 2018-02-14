@@ -12,7 +12,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  public apiLogin(dataLogin: IDataLogin, isOperator: boolean) {
+  public apiLogin(dataLogin: IDataLogin, isOperator: boolean): any {
 
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/x-www-form-urlencoded');
@@ -25,10 +25,11 @@ export class ApiService {
       params
     };
 
-    this.http.post(this.baseUrl + '/login/' + isOperator, null, options)
+    return this.http.post(this.baseUrl + '/login/' + isOperator, null, options)
       .subscribe(
-        data => console.log(data),
-        err => console.log(err)
+        (data) => {
+          localStorage.setItem('user', JSON.stringify(data));
+      }
       );
   }
 

@@ -1,12 +1,14 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../../../../core/modules/shared.module';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
 import { DashboardComponent } from './dashboard.component';
+import { AuthGuard } from '../../../../guard/auth.guard';
 
-const routes = [
+const routes: Routes = [
     {
-        path     : 'pages/authentication/login-2',
+        path     : 'pages/dashboard',
+        canActivate: [AuthGuard],
         component: DashboardComponent
     }
 ];
@@ -18,6 +20,9 @@ const routes = [
     imports     : [
         SharedModule,
         RouterModule.forChild(routes)
+    ],
+    exports     : [
+        DashboardComponent
     ]
 })
 

@@ -19,11 +19,13 @@ import { environment } from '../environments/environment';
 import { SocketService } from './services/socket.service';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { ApiService } from './services/api.service';
+import { AuthService } from './services/auth.service';
+import { AuthGuard } from './guard/auth.guard';
 
 const appRoutes: Routes = [
     {
         path: '**',
-        redirectTo: 'pages/authentication/login-2'
+        redirectTo: 'pages/dashboard'
     }
 ];
 
@@ -56,7 +58,9 @@ const config: SocketIoConfig = { url: environment.ws_url + ':' + environment.ws_
             useClass: TokenInterceptor,
             multi: true
         },
-        ApiService
+        ApiService,
+        AuthService,
+        AuthGuard
     ],
     bootstrap: [
         AppComponent
