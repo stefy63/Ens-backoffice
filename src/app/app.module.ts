@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 import 'hammerjs';
@@ -17,6 +17,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 import { environment } from '../environments/environment';
 import { SocketService } from './services/socket.service';
+import { TokenInterceptor } from './interceptors/token.interceptor';
+import { ApiService } from './services/api.service';
 
 const appRoutes: Routes = [
     {
@@ -29,7 +31,7 @@ const config: SocketIoConfig = { url: environment.ws_url + ':' + environment.ws_
 
 @NgModule({
     declarations: [
-        AppComponent,
+        AppComponent
     ],
     imports: [
         BrowserModule,
@@ -48,8 +50,13 @@ const config: SocketIoConfig = { url: environment.ws_url + ':' + environment.ws_
         FuseSplashScreenService,
         FuseConfigService,
         FuseNavigationService,
-        SocketService
-
+        SocketService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: TokenInterceptor,
+            multi: true
+        },
+        ApiService
     ],
     bootstrap: [
         AppComponent

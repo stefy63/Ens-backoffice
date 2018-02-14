@@ -9,5 +9,10 @@ export const environment = {
 
     // Socket.io configuration url
     ws_url: 'http://localhost',
-    ws_port: 9000
+    ws_port: 9000,
+
+    // API configuration url
+    api_url: 'http://localhost',
+    api_port: 3000,
+    api_suffix: '/api'
 };

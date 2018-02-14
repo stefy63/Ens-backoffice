@@ -3,7 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FuseConfigService } from '../../../../../core/services/config.service';
 import { fuseAnimations } from '../../../../../core/animations';
+import { ApiService } from '../../../../../services/api.service';
 import * as moment from 'moment';
+import { IDataLogin } from '../../../../../interfaces/i-data-login';
 
 @Component({
     selector   : 'fuse-login-2',
@@ -18,7 +20,8 @@ export class FuseLogin2Component implements OnInit
 
     constructor(
         private fuseConfig: FuseConfigService,
-        private formBuilder: FormBuilder
+        private formBuilder: FormBuilder,
+        private apiService: ApiService
     )
     {
         this.fuseConfig.setSettings({
@@ -35,11 +38,17 @@ export class FuseLogin2Component implements OnInit
         };
     }
 
+    private async onSubmit() {
+        console.log(this.loginForm.value);
+        const rest: any = await this.apiService.apiLogin(this.loginForm.value as IDataLogin, true);
+        console.log(rest);
+    }
+
     ngOnInit()
     {
         this.loginForm = this.formBuilder.group({
-            username   : ['', [Validators.required]],
-            password: ['', Validators.required]
+            username   : ['', [Validators.required, Validators.minLength(3)]],
+            password: ['', [Validators.required, Validators.minLength(3)]]
         });
 
         this.loginForm.valueChanges.subscribe(() => {
