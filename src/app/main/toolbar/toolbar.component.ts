@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { FuseConfigService } from '../../core/services/config.service';
 import { TranslateService } from '@ngx-translate/core';
@@ -9,13 +9,14 @@ import { TranslateService } from '@ngx-translate/core';
     styleUrls  : ['./toolbar.component.scss']
 })
 
-export class FuseToolbarComponent
+export class FuseToolbarComponent implements OnInit
 {
     userStatusOptions: any[];
     languages: any;
     selectedLanguage: any;
     showLoadingBar: boolean;
     horizontalNav: boolean;
+    profile: string;
 
     constructor(
         private router: Router,
@@ -82,6 +83,11 @@ export class FuseToolbarComponent
             this.horizontalNav = settings.layout.navigation === 'top';
         });
 
+    }
+
+    ngOnInit(){
+        const user = JSON.parse(localStorage.getItem('user'));
+        this.profile = user.firstname + ' ' + user.lastname;
     }
 
     search(value)
