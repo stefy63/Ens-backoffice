@@ -86,8 +86,8 @@ export class FuseToolbarComponent implements OnInit
     }
 
     ngOnInit(){
-        const user = JSON.parse(localStorage.getItem('user'));
-        this.profile = user.firstname + ' ' + user.lastname;
+        // const user = JSON.parse(localStorage.getItem('user'));
+        // this.profile = user.firstname + ' ' + user.lastname;
     }
 
     search(value)

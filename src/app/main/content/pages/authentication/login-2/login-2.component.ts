@@ -42,17 +42,16 @@ export class FuseLogin2Component implements OnInit
         };
     }
 
-    private async onSubmit() {
-        await this.apiService.apiLogin(this.loginForm.value as IDataLogin, true)
+    private onSubmit() {
+      this.apiService.apiLogin(this.loginForm.value as IDataLogin, true)
         .subscribe(
             (data) => {
-                localStorage.setItem('user', JSON.stringify(data));
                 this.router.navigate(['pages/dashboard']);
             },
             (err) => {
                 console.log('---------------------');
             }
-        );            
+        );
     }
 
     ngOnInit()

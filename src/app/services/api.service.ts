@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { IDataLogin } from '../interfaces/i-data-login';
-import { Observer } from 'rxjs/Observer';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/operator/do';
 
 @Injectable()
 export class ApiService {
@@ -13,7 +14,7 @@ export class ApiService {
 
   constructor(private http: HttpClient) { }
 
-  public apiLogin(dataLogin: IDataLogin, isOperator: boolean): any {
+  public apiLogin(dataLogin: IDataLogin, isOperator: boolean): Observable<any> {
 
     const headers = new HttpHeaders()
       .set('Content-Type', 'application/x-www-form-urlencoded');
@@ -27,7 +28,8 @@ export class ApiService {
       params
     };
 
-    return this.http.post(this.baseUrl + '/login/' + isOperator, null, options);
+    return this.http.post(this.baseUrl + '/login/' + isOperator, null, options)
+      .do((data) => localStorage.setItem('user', JSON.stringify(data)));
   }
 
 }
