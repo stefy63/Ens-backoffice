@@ -22,7 +22,6 @@ import { ApiLoginService } from './services/api-login.service';
 import { AuthService } from './services/auth.service';
 import { LocalStorageService } from './services/local-storage.service';
 import { AuthGuard } from './guard/auth.guard';
-import { ApiTicketService } from './services/api-ticket.service';
 
 const appRoutes: Routes = [
     {
@@ -63,8 +62,7 @@ const config: SocketIoConfig = { url: environment.ws_url + ':' + environment.ws_
         ApiLoginService,
         AuthService,
         AuthGuard,
-        LocalStorageService,
-        ApiTicketService
+        LocalStorageService
     ],
     bootstrap: [
         AppComponent

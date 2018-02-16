@@ -8,7 +8,7 @@
     <mat-table #table [dataSource]="dataSource" matSort>
 
       <!-- service Column -->
-      <ng-container matColumnDef="service.service">
+      <ng-container matColumnDef="service.service" >
         <mat-header-cell *matHeaderCellDef> Servizio</mat-header-cell>
         <mat-cell *matCellDef="let element"> {{element.service.service}} </mat-cell>
       </ng-container>
@@ -19,14 +19,77 @@
         <mat-cell *matCellDef="let element"> {{element.status.status}} </mat-cell>
       </ng-container>
 
+      <!-- operator Column -->
+      <ng-container matColumnDef="operator.firstname">
+        <mat-header-cell *matHeaderCellDef> Operatore</mat-header-cell>
+        <mat-cell *matCellDef="let element">{{element.operator?.firstname}}</mat-cell>
+      </ng-container>
 
+      <!-- user Column -->
+      <ng-container matColumnDef="user.name">
+        <mat-header-cell *matHeaderCellDef> Utente</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.user.name}} {{element.user.surname}} </mat-cell>
+      </ng-container>
 
+      <!-- category Column -->
+      <ng-container matColumnDef="category.category">
+        <mat-header-cell *matHeaderCellDef> Categoria</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.category?.category}} </mat-cell>
+      </ng-container>
+      
+      <!-- phone Column -->
+      <ng-container matColumnDef="phone">
+        <mat-header-cell *matHeaderCellDef> Telefono</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.phone}} </mat-cell>
+      </ng-container>
 
+      <!-- date_time Column -->
+      <ng-container matColumnDef="date_time">
+        <mat-header-cell *matHeaderCellDef> Data</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.date_time | date:'dd/MM/yyyy HH:mm'}} </mat-cell>
+      </ng-container>
+<!-- 
+      <!-- closed Column -->
+      <ng-container matColumnDef="closed">
+        <mat-header-cell *matHeaderCellDef> Chiso</mat-header-cell>
+        <mat-cell *matCellDef="let element"> {{element.closed}} </mat-cell>
+      </ng-container> -->
 
+      <!-- id Column -->
+      <ng-container matColumnDef="id">
+        <mat-header-cell *matHeaderCellDef> Azioni</mat-header-cell>
+        <mat-cell *matCellDef="let element">
+          <div style="display: inline-block;">
+
+            <button (click)="showAndPrint(row)">
+              <mat-icon class="md-18">visibility</mat-icon>
+            </button>
+<!-- 
+            <button (click)="editItem(row)"  style="display: inline-block;">
+              <mat-icon class="md-18">mode_edit</mat-icon>
+            </button>
+
+            <button (click)="deleteItem(row)"  style="display: inline-block;">
+              <mat-icon class="md-18">delete</mat-icon>
+            </button>
+                  -->
+          </div>
+
+        </mat-cell>
+      </ng-container>
 
       <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
       <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
 
-    <mat-paginator  [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    <mat-paginator  [pageSize]="10" [pageSizeOptions]="[2, 5, 10, 25, 100]"></mat-paginator>
 </div>
+
+
+<!-- <cdk-table #table [dataSource]="dataSource">
+  <ng-container *ngFor="let colId of ['col1', 'col2', 'col3', 'col4']; let cIndex = index;"
+                cdkColumnDef="{{colId}}">
+    <cdk-header-cell *cdkHeaderCellDef>{{colId}}</cdk-header-cell>
+    <cdk-cell *cdkCellDef="let row; let rIndex = index;"> {{cIndex}},{{rIndex}} </cdk-cell>
+  </ng-container>
+</cdk-table> -->

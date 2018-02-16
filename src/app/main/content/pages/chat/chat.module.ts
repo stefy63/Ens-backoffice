@@ -1,32 +1,29 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../../../../core/modules/shared.module';
 import { RouterModule, Routes } from '@angular/router';
-
-import { DashboardComponent } from './dashboard.component';
 import { AuthGuard } from '../../../../guard/auth.guard';
-import { TicketItemComponent } from './ticket-item/ticket-item.component';
 // import { Subscription } from 'rxjs/Subscription';
 import { ApiTicketService } from '../../../../services/api-ticket.service';
+import { ChatComponent } from './chat.component';
 
 const routes: Routes = [
     {
-        path     : 'pages/dashboard',
+        path     : 'pages/chat',
         canActivate: [AuthGuard],
-        component: DashboardComponent
+        component: ChatComponent
     }
 ];
 
 @NgModule({
     declarations: [
-        DashboardComponent,
-        TicketItemComponent
+        ChatComponent
     ],
     imports     : [
         SharedModule,
         RouterModule.forChild(routes)
     ],
     exports     : [
-        DashboardComponent
+        ChatComponent
     ],
     providers: [
         // Subscription,
@@ -34,7 +31,7 @@ const routes: Routes = [
     ]
 })
 
-export class Dashboard
+export class Chat
 {
 
 }
