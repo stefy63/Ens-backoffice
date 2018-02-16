@@ -7,7 +7,7 @@ import 'rxjs/add/operator/do';
 import { LocalStorageService } from './local-storage.service';
 
 @Injectable()
-export class ApiService {
+export class ApiLoginService {
 
   private baseUrl: string = environment.api_url + ':' + environment.api_port + environment.api_suffix;
 

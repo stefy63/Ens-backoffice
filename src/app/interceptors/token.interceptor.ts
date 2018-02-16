@@ -14,12 +14,14 @@ export class TokenInterceptor implements HttpInterceptor {
   constructor(private auth: AuthService ) { }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    request = request.clone({
-      setHeaders: {
-        Authorization: `Bearer ${this.auth.getToken()}`
-      }
-    });
-
+    if (this.auth.getToken() !== undefined) {
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${this.auth.getToken().token_session}`
+        }
+      });
+      return next.handle(request);
+    }
     return next.handle(request);
   }
 }

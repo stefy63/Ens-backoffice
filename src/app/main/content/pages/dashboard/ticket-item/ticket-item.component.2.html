@@ -1,0 +1,58 @@
+<div class="filter-header">
+    <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+    </mat-form-field>
+</div>
+
+<div class="ticket-container mat-elevation-z8">
+
+    <mat-table #table [dataSource]="dataSource" matSort>
+
+        <ng-container>
+            <!-- <mat-header-cell> Azioni</mat-header-cell>
+            <mat-cell> </mat-cell> -->
+        </ng-container>
+
+        <ng-container matColumnDef="id_service">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Servizio</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.id_service}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="id_status">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Stato</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.id_status}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="id_category">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Categoria</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.id_category}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="id_operator">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Operatore</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.id_operator}}</mat-cell>
+        </ng-container>
+        
+        <ng-container matColumnDef="id_user">
+            <mat-header-cell *matHeaderCellDef> Utente</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.id_user}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="phone">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Telefono</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.phone}}</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="date_time">
+            <mat-header-cell *matHeaderCellDef mat-sort-header> Data</mat-header-cell>
+            <mat-cell *matCellDef="let row"> {{row.date_time}}</mat-cell>
+        </ng-container>
+
+
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;">
+        </mat-row>
+    </mat-table>
+
+    <mat-paginator #paginator  [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>

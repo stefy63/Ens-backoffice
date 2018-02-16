@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+///<reference path="../../../../services/api-ticket.service.ts"/>
+import {Component, OnInit} from '@angular/core';
+import { ApiTicketService } from '../../../../services/api-ticket.service';
+import { ITicket } from '../../../../interfaces/i-ticket';
+import { LocalStorageService } from '../../../../services/local-storage.service';
 
 @Component({
   selector: 'fuse-dashboard',
@@ -7,9 +11,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DashboardComponent implements OnInit {
 
-  constructor() { }
+  private ticket: ITicket[] = [];
+
+  constructor(
+    private apiTicket: ApiTicketService,
+    private storage: LocalStorageService
+  ) {
+    // this.apiTicket.get()
+    //   .subscribe(
+    //     data => this.ticket = data
+    //   );
+  }
 
   ngOnInit() {
   }
-
 }

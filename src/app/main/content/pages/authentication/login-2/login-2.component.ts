@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FuseConfigService } from '../../../../../core/services/config.service';
 import { fuseAnimations } from '../../../../../core/animations';
-import { ApiService } from '../../../../../services/api.service';
+import { ApiLoginService } from '../../../../../services/api-login.service';
 import * as moment from 'moment';
 import { IDataLogin } from '../../../../../interfaces/i-data-login';
 import { AuthService } from '../../../../../services/auth.service';
@@ -24,7 +24,7 @@ export class FuseLogin2Component implements OnInit
     constructor(
         private fuseConfig: FuseConfigService,
         private formBuilder: FormBuilder,
-        private apiService: ApiService,
+        private apiLoginService: ApiLoginService,
         private authService: AuthService,
         private router: Router,
         private storage: LocalStorageService
@@ -45,11 +45,13 @@ export class FuseLogin2Component implements OnInit
     }
 
     private onSubmit() {
-      this.apiService.apiLogin(this.loginForm.value as IDataLogin, true)
+      this.apiLoginService.apiLogin(this.loginForm.value as IDataLogin, true)
         .subscribe(
-            (data) => {
-                this.storage.setItem('user', JSON.stringify(data));
-                this.router.navigate(['pages/dashboard']);
+           (data) => {
+                this.storage.setItem('data', data);
+                if (this.authService.isAuthenticated()) {
+                    this.router.navigate(['pages/dashboard']);
+                }
             },
             (err) => {
                 console.log(err);

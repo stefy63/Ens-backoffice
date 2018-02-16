@@ -4,6 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { DashboardComponent } from './dashboard.component';
 import { AuthGuard } from '../../../../guard/auth.guard';
+import { TicketItemComponent } from './ticket-item/ticket-item.component';
 
 const routes: Routes = [
     {
@@ -15,7 +16,8 @@ const routes: Routes = [
 
 @NgModule({
     declarations: [
-        DashboardComponent
+        DashboardComponent,
+        TicketItemComponent
     ],
     imports     : [
         SharedModule,
