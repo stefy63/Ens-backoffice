@@ -22,6 +22,7 @@ import { ApiLoginService } from './services/api-login.service';
 import { AuthService } from './services/auth.service';
 import { LocalStorageService } from './services/local-storage.service';
 import { AuthGuard } from './guard/auth.guard';
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 const appRoutes: Routes = [
     {
@@ -47,7 +48,8 @@ const config: SocketIoConfig = { url: environment.ws_url + ':' + environment.ws_
         FuseMainModule,
         FuseSampleModule,
         SocketIoModule.forRoot(config),
-        PagesModule
+        PagesModule, 
+        SimpleNotificationsModule.forRoot()
     ],
     providers: [
         FuseSplashScreenService,

@@ -9,6 +9,9 @@ import { IDataLogin } from '../../../../../interfaces/i-data-login';
 import { AuthService } from '../../../../../services/auth.service';
 import { Router } from '@angular/router';
 import { LocalStorageService } from '../../../../../services/local-storage.service';
+import { SocketService } from '../../../../../services/socket.service';
+import { NotificationsService } from 'angular2-notifications';
+import { ToastOptions } from '../../../../../../environments/toast-options';
 
 @Component({
     selector   : 'fuse-login-2',
@@ -20,6 +23,7 @@ export class FuseLogin2Component implements OnInit
 {
     loginForm: FormGroup;
     loginFormErrors: any;
+    public options = ToastOptions;
 
     constructor(
         private fuseConfig: FuseConfigService,
@@ -27,9 +31,12 @@ export class FuseLogin2Component implements OnInit
         private apiLoginService: ApiLoginService,
         private authService: AuthService,
         private router: Router,
-        private storage: LocalStorageService
+        private storage: LocalStorageService,
+        private socketService: SocketService,
+        private toast: NotificationsService
     )
     {
+
         this.fuseConfig.setSettings({
             layout: {
                 navigation: 'none',
@@ -50,10 +57,23 @@ export class FuseLogin2Component implements OnInit
            (data) => {
                 this.storage.setItem('data', data);
                 if (this.authService.isAuthenticated()) {
+                    console.log(this.authService.getToken().token_session);
+                    this.socketService.sendMessage(
+                        'welcome-message',
+                        {
+                            userToken: this.authService.getToken().token_session,
+                            idUser: data.user.id,
+                            status: 'READY',
+                            userType: 'OPERATOR'
+                        }
+                    );
                     this.router.navigate(['pages/dashboard']);
+                } else {
+                    this.toast.error('Attenzione', 'Login Errato!');
                 }
             },
             (err) => {
+                this.toast.error('Attenzione', 'Login Errato!');
                 console.log(err);
             }
         );

@@ -11,4 +11,10 @@ export interface ITicket {
     date_time: Date;
     closed: number;
     deleted: number;
+
+    service: any;
+    status: any;
+    operator: any;
+    user: any;
+    historys: any[];
 }

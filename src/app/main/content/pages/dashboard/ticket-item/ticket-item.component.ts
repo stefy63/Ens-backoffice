@@ -12,6 +12,8 @@ import {Observable} from 'rxjs/Observable';
 export class TicketItemComponent implements OnInit, AfterViewInit {
 
   @Input() allTicket: Observable<ITicket[]>;
+  public dataSource: MatTableDataSource<ITicket>;
+
   public displayedColumns = ['service.service', 
                               'status.status', 
                               'operator.firstname',
@@ -22,7 +24,7 @@ export class TicketItemComponent implements OnInit, AfterViewInit {
                               // 'closed',
                               'id'
                             ];
-  public dataSource: MatTableDataSource<ITicket>;
+                            
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -36,21 +38,20 @@ export class TicketItemComponent implements OnInit, AfterViewInit {
       ticket => {
         this.dataSource =  new MatTableDataSource(ticket);
         this.cd.markForCheck();
+        this.dataSource.paginator = this.paginator;
+        this.dataSource.sort = this.sort;
       }
     );
   }
 
   ngAfterViewInit()
   {
-    this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
-    // this.cd.reattach();
   }
 
   applyFilter(filterValue: string)
   {
-    filterValue = filterValue.trim(); // Remove whitespace
-    filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
+    filterValue = filterValue.trim().toLowerCase(); // Remove whitespace
+    // filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
     this.dataSource.filter = filterValue;
   }
 }

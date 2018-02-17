@@ -3,6 +3,7 @@ import { SharedModule } from '../../../../../core/modules/shared.module';
 import { RouterModule } from '@angular/router';
 
 import { FuseLogin2Component } from './login-2.component';
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 const routes = [
     {
@@ -17,7 +18,8 @@ const routes = [
     ],
     imports     : [
         SharedModule,
-        RouterModule.forChild(routes)
+        RouterModule.forChild(routes),
+        SimpleNotificationsModule
     ]
 })
 
