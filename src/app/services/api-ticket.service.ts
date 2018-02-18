@@ -13,16 +13,22 @@ export class ApiTicketService {
 
   constructor(
     private http: HttpClient,
-  ) { 
+  ) {
     // this.behaviorSubject = new BehaviorSubject(0);
   }
-  
+
   public get() {
+  // this.behaviorSubject.next(this.http.get<ITicket[]>(this.baseUrl + '/ticket'));
+  // return this.behaviorSubject;
+
+    return this.http.get<ITicket[]>(this.baseUrl + '/ticket').map(data => data as ITicket[]);
+  }
+
+  public getFromId(id: number) {
     // this.behaviorSubject.next(this.http.get<ITicket[]>(this.baseUrl + '/ticket'));
     // return this.behaviorSubject;
 
-    return this.http.get<ITicket[]>(this.baseUrl + '/ticket');
+    return this.http.get<ITicket>(this.baseUrl + '/ticket/' + id).map(data => data as ITicket);
   }
-
 
 }

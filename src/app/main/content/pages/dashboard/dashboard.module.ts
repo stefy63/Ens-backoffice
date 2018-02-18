@@ -36,7 +36,7 @@ const routes: Routes = [
     ]
 })
 
-export class Dashboard
+export class DashboardModule
 {
 
 }

@@ -1,0 +1,31 @@
+
+<div class="left-col">
+  <table>
+    <thead>
+      <tr>
+        <th>Nome</th>
+        <th>Cognome</th>
+        <th>Canale</th>
+        <th>Data e Ora</th>
+        <th>Numero di Telefono</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>{{ticket.user.name}}</td>
+          <td>{{ticket.user.surname}}</td>
+          <td>{{ticket.service.service}}</td>
+          <td>{{ticket.date_time | date:'dd/MM/yyyy HH:mm'}}</td>
+          <td>{{ticket.phone}}</td>
+        </tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="right-col">
+  {{ticket.historys[0].action}}
+</div>
+
+<div class="col-md-6 col-md-offset-6" *ngIf="open">
+  <fuse-chat [historys]="ticket.historys"></fuse-chat>
+</div>

@@ -1,0 +1,27 @@
+.left-col {
+    float: left;
+    width: 48%;
+    margin: 10px;
+}
+.right-col {
+    border: black solid 1px;
+    background-color: lightgray;
+    height: 50px;
+    margin: 10px;
+    float: right;
+    width: 48%;
+}
+
+table {
+    width: 100%;
+    border: black solid 1px;
+    thead {
+        background-color: burlywood;
+    }
+    tbody {
+
+    }
+    td {
+        border: black solid 1px;
+    }
+}

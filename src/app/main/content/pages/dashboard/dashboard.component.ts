@@ -5,12 +5,12 @@ import { ITicket } from '../../../../interfaces/i-ticket';
 import { LocalStorageService } from '../../../../services/local-storage.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 // import { Subscription } from 'rxjs/Subscription';
-import { Observable } from 'rxjs/Observable';
+// import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
 import { SocketService } from '../../../../services/socket.service';
-import { WsEvents } from '../../../../../environments/ws-events';
+import { WsEvents } from '../../../../type/ws-events';
 import { NotificationsService, SimpleNotificationsComponent } from 'angular2-notifications';
-import { ToastOptions } from '../../../../../environments/toast-options';
+import { ToastOptions } from '../../../../type/toast-options';
 
 @Component({
   selector: 'fuse-dashboard',
@@ -39,7 +39,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private toast: NotificationsService
     // private onChangeTickets: Subscription
   ) {
-    // this.onChangeTickets = 
     this.apiTicket.get()
       .subscribe(
         data => {

@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import { LocalStorageService } from '../../../../../services/local-storage.service';
 import { SocketService } from '../../../../../services/socket.service';
 import { NotificationsService } from 'angular2-notifications';
-import { ToastOptions } from '../../../../../../environments/toast-options';
+import { ToastOptions } from '../../../../../type/toast-options';
 
 @Component({
     selector   : 'fuse-login-2',

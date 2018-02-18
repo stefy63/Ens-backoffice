@@ -1,0 +1,19 @@
+<div [ngSwitch]="newTicket.service.service">
+    <div *ngSwitchCase="'CHAT'">
+        <fuse-chat-detail [openTicket]="ticket"></fuse-chat-detail>
+    </div>
+    <div *ngSwitchCase="'SMS'">
+
+    </div>
+    <div *ngSwitchCase="'MAIL'">
+
+    </div>
+    <div *ngSwitchCase="'SOCIAL'">
+
+    </div>
+    <div *ngSwitchDefault>
+
+    </div>
+</div>
+
+
