@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ViewChild, AfterViewInit, ChangeDetectionStra
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import {Observable} from 'rxjs/Observable';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'fuse-ticket-item',
@@ -30,7 +31,8 @@ export class TicketItemComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
 
   constructor(
-    private cd: ChangeDetectorRef
+    private cd: ChangeDetectorRef,
+    private router: Router
   ) {  }
 
   ngOnInit() {
@@ -53,5 +55,10 @@ export class TicketItemComponent implements OnInit, AfterViewInit {
     filterValue = filterValue.trim().toLowerCase(); // Remove whitespace
     // filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
     this.dataSource.filter = filterValue;
+  }
+
+  showTicketDetail(item: ITicket) {
+    console.log(item.id);
+    this.router.navigate(['pages/ticket-detail', item.id ]);
   }
 }

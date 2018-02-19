@@ -1,31 +1,45 @@
 
 <div class="left-col">
-  <table>
-    <thead>
-      <tr>
-        <th>Nome</th>
-        <th>Cognome</th>
-        <th>Canale</th>
-        <th>Data e Ora</th>
-        <th>Numero di Telefono</th>
-      </tr>
-    </thead>
-    <tbody>
+  <fieldset class=" mat-elevation-z24">
+  <legend>Dettaglio Ticket:</legend>
+    <table>
+      <thead>
         <tr>
-          <td>{{ticket.user.name}}</td>
-          <td>{{ticket.user.surname}}</td>
-          <td>{{ticket.service.service}}</td>
-          <td>{{ticket.date_time | date:'dd/MM/yyyy HH:mm'}}</td>
-          <td>{{ticket.phone}}</td>
+          <th>Nome</th>
+          <th>Cognome</th>
+          <th>Canale</th>
+          <th>Data e Ora</th>
+          <th>Numero di Telefono</th>
         </tr>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+          <tr>
+            <td>{{ticket.user.name}}</td>
+            <td>{{ticket.user.surname}}</td>
+            <td>{{ticket.service.service}}</td>
+            <td>{{ticket.date_time | date:'dd/MM/yyyy HH:mm'}}</td>
+            <td>{{ticket.phone}}</td>
+          </tr>
+      </tbody>
+    </table>
+  </fieldset>
 </div>
 
-<div class="right-col">
-  {{ticket.historys[0].action}}
-</div>
+  <fieldset class="right-col mat-elevation-z24">
+  <legend>Descrizione:</legend>
+    <div >
+        {{ticket.historys[0]?.action}}
+    </div>
+  </fieldset>
 
-<div class="col-md-6 col-md-offset-6" *ngIf="open">
+  <div class="row button-bar">
+      <button class="mat-button done-button mat-accent" (click)="activateChat()"><mat-icon>done</mat-icon> Accetta</button>
+      <button class="mat-button delete-button mat-warn" (click)="deleteChat()"><mat-icon>delete</mat-icon> Rfiuta</button>
+    </div>
+
+
+
+
+<div class="" *ngIf="open">
   <fuse-chat [historys]="ticket.historys"></fuse-chat>
 </div>

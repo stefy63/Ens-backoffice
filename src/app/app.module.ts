@@ -31,7 +31,7 @@ const appRoutes: Routes = [
     }
 ];
 
-const config: SocketIoConfig = { url: environment.ws_url + ':' + environment.ws_port, options: {} };
+const config: SocketIoConfig = { url: environment.ws_url + ':' + environment.ws_port + environment.ws_suffix, options: {} };
 
 @NgModule({
     declarations: [

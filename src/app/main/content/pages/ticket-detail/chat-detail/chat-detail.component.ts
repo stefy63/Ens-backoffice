@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import {Observable} from 'rxjs/Observable';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'fuse-chat-detail',
@@ -15,6 +16,7 @@ export class ChatDetailComponent implements OnInit {
   private open: any = false;
 
   constructor(
+    private router: Router,
     private cd: ChangeDetectorRef
   ) { }
 
@@ -27,4 +29,7 @@ export class ChatDetailComponent implements OnInit {
     
   }
 
+  deleteChat() {
+    this.router.navigate(['pages/dashboard']);
+  }
 }

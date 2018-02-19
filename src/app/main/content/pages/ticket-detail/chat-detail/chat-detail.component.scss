@@ -4,24 +4,50 @@
     margin: 10px;
 }
 .right-col {
-    border: black solid 1px;
-    background-color: lightgray;
-    height: 50px;
-    margin: 10px;
-    float: right;
-    width: 48%;
+        margin: 10px;
+        float: right;
+        width: 48%;
+    div {
+        padding: 3px;
+        border: black solid 1px;
+        background-color: lightgray;
+        height: 54px;
+    }
 }
 
 table {
     width: 100%;
     border: black solid 1px;
     thead {
-        background-color: burlywood;
+        font-weight: bolder;
+        background-color: cornflowerblue;
+        color: white;
     }
     tbody {
 
     }
     td {
         border: black solid 1px;
+        padding: 2px;
+    }
+}
+
+div.button-bar {
+    float: left;
+    // border: 1px solid black;
+    width: 48%;
+    text-align: center;
+    height: 70px;
+    vertical-align: bottom;
+    button {
+        margin: 20px 20px;
+        .mat-accent {
+            font-weight: bolder;
+            color: green;
+        }
+        .mat-warn {
+            font-weight: bolder;
+            color: red;
+        }
     }
 }

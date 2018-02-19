@@ -14,18 +14,20 @@ export class TicketDetailComponent implements OnInit {
   
   private idTicket: number;
   private newTicket: ITicket;
+  private service: string;
   private ticket: BehaviorSubject<ITicket> = new BehaviorSubject<ITicket>(this.newTicket);
 
   constructor(
     private route: ActivatedRoute,
     private apiTicket: ApiTicketService
   ) {
-    this.idTicket = parseInt(this.route.snapshot.paramMap.get('id'), 10);
+    this.idTicket = parseInt(this.route.snapshot.paramMap.get('id'));
     this.apiTicket.getFromId(this.idTicket)
       .subscribe(
         data => {
           this.newTicket = data;
-          this.ticket.next(data);
+          this.ticket.next(this.newTicket);
+          this.service = this.newTicket.service.service;
         }
       );
   }

@@ -34,12 +34,15 @@ mat-row:nth-child(odd){
 
 
 .mat-header-row, .mat-row {
-
+  
 }
 
 mat-header-row {
     background-color:cornflowerblue;
     font-weight: bolder;
+    mat-header-cell {
+        color: white;
+    }
 }
 
 .mat-cell {
@@ -85,4 +88,8 @@ flex: 0 0 10%;
 .mat-header-cell:nth-child(8),
 {
 flex: 0 0 10%;
+}
+
+.btn:hover {
+    cursor: pointer;
 }
