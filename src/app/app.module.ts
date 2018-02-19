@@ -1,4 +1,5 @@
-import { NgModule } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
+import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpModule } from '@angular/http';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -49,7 +50,8 @@ const config: SocketIoConfig = { url: environment.ws_url + ':' + environment.ws_
         FuseSampleModule,
         SocketIoModule.forRoot(config),
         PagesModule, 
-        SimpleNotificationsModule.forRoot()
+        SimpleNotificationsModule.forRoot(),
+        MDBBootstrapModule.forRoot()
     ],
     providers: [
         FuseSplashScreenService,
@@ -68,7 +70,8 @@ const config: SocketIoConfig = { url: environment.ws_url + ':' + environment.ws_
     ],
     bootstrap: [
         AppComponent
-    ]
+    ],
+    schemas: [ NO_ERRORS_SCHEMA ]
 })
 export class AppModule {
 }

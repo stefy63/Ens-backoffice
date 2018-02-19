@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 export class ChatDetailComponent implements OnInit {
 
   @Input('openTicket') ticket:  ITicket;
-  private open = true;
+  public open = true;
 
   constructor(
     private router: Router,
