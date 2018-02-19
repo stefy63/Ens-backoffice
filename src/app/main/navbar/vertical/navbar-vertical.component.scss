@@ -139,6 +139,10 @@ fuse-navbar-vertical {
     .navbar-content {
         flex: 1;
     }
+
+    .nav-group {
+        width: 100%;
+    }
 }
 
 fuse-navbar-horizontal + #wrapper > fuse-navbar-vertical {

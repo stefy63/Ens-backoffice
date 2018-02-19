@@ -1,42 +1,61 @@
 
-<div class="left-col">
-  <fieldset class=" mat-elevation-z24">
-  <legend>Dettaglio Ticket:</legend>
-    <table>
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>Cognome</th>
-          <th>Canale</th>
-          <th>Data e Ora</th>
-          <th>Numero di Telefono</th>
-        </tr>
-      </thead>
-      <tbody>
-          <tr>
-            <td>{{ticket.user.name}}</td>
-            <td>{{ticket.user.surname}}</td>
-            <td>{{ticket.service.service}}</td>
-            <td>{{ticket.date_time | date:'dd/MM/yyyy HH:mm'}}</td>
-            <td>{{ticket.phone}}</td>
-          </tr>
-      </tbody>
-    </table>
-  </fieldset>
-</div>
-
-  <fieldset class="right-col mat-elevation-z24">
-  <legend>Descrizione:</legend>
-    <div >
-        {{ticket.historys[0]?.action}}
+<div class="container col-12">
+  <div class="row left-col col-12 mat-elevation-z4">
+    <div class="col-6">
+      <fieldset class="col-12 border">
+      <legend>Dettaglio Ticket:</legend>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Nome</th>
+              <th>Cognome</th>
+              <th>Canale</th>
+              <th>Data e Ora</th>
+              <th>Numero di Telefono</th>
+            </tr>
+          </thead>
+          <tbody>
+              <tr>
+                <td>{{ticket.user.name}}</td>
+                <td>{{ticket.user.surname}}</td>
+                <td>{{ticket.service.service}}</td>
+                <td>{{ticket.date_time | date:'dd/MM/yyyy HH:mm'}}</td>
+                <td>{{ticket.phone}}</td>
+              </tr>
+          </tbody>
+        </table>
+      </fieldset>
     </div>
-  </fieldset>
 
-  <div class="row button-bar">
-    <button class="mat-button done-button mat-accent" (click)="activateChat()"><mat-icon>done</mat-icon> Accetta</button>
-    <button class="mat-button delete-button mat-warn" (click)="deleteChat()"><mat-icon>delete</mat-icon> Rfiuta</button>
+    <div class="col-6 right-col">
+      <fieldset class="border">
+      <legend>Descrizione:</legend>
+        <div >
+            {{ticket.historys[0]?.action}}
+        </div>
+      </fieldset>
+    </div>
+    <div class="row col-12">
+      <div class="col-6 text-center">
+        <br>
+        <button class="mat-button done-button mat-accent col-3" (click)="activateChat()"><mat-icon>done</mat-icon> Accetta</button>
+        <button class="mat-button delete-button mat-warn col-3" (click)="deleteChat()"><mat-icon>delete</mat-icon> Rfiuta</button>
+      </div>
+    </div>
+
   </div>
 
-<div class="" *ngIf="open">
-  <fuse-chat [historys]="ticket.historys"></fuse-chat>
+  <div class="row col-12 mt-12 mat-elevation-z4" >
+
+    <div class="col-6 border" *ngIf="open">
+      <fuse-chat [historys]="ticket.historys"></fuse-chat>
+    </div>
+
+    <div class="col-6 border" >
+        <fuse-chat [historys]="ticket.historys"></fuse-chat>
+    </div>
+  </div>
+
+
+
 </div>

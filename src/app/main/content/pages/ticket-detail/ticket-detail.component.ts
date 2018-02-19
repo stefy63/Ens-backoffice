@@ -11,10 +11,10 @@ import { ITicketService } from '../../../../interfaces/i-ticket-service';
 })
 export class TicketDetailComponent implements OnInit {
   
-  private idTicket: number;
+  public idTicket: number;
   // private newTicket: ITicket;
-  private service: string;
-  private ticket: ITicket;
+  public service: string;
+  public ticket: ITicket;
 
   constructor(
     private route: ActivatedRoute,

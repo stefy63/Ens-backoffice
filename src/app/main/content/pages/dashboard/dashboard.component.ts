@@ -17,10 +17,10 @@ import { ToastOptions } from '../../../../type/toast-options';
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 
-  private ticket: ITicket[];
-  private newTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
-  private openTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
-  private closedTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
+  public ticket: ITicket[];
+  public newTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
+  public openTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
+  public closedTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
 
   public options = ToastOptions;
 
