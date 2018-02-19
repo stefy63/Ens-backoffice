@@ -33,12 +33,9 @@
   </fieldset>
 
   <div class="row button-bar">
-      <button class="mat-button done-button mat-accent" (click)="activateChat()"><mat-icon>done</mat-icon> Accetta</button>
-      <button class="mat-button delete-button mat-warn" (click)="deleteChat()"><mat-icon>delete</mat-icon> Rfiuta</button>
-    </div>
-
-
-
+    <button class="mat-button done-button mat-accent" (click)="activateChat()"><mat-icon>done</mat-icon> Accetta</button>
+    <button class="mat-button delete-button mat-warn" (click)="deleteChat()"><mat-icon>delete</mat-icon> Rfiuta</button>
+  </div>
 
 <div class="" *ngIf="open">
   <fuse-chat [historys]="ticket.historys"></fuse-chat>

@@ -4,8 +4,6 @@ import { ApiTicketService } from '../../../../services/api-ticket.service';
 import { ITicket } from '../../../../interfaces/i-ticket';
 import { LocalStorageService } from '../../../../services/local-storage.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-// import { Subscription } from 'rxjs/Subscription';
-// import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
 import { SocketService } from '../../../../services/socket.service';
 import { WsEvents } from '../../../../type/ws-events';
@@ -28,28 +26,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy(): void {
-    // this.onChangeTickets.unsubscribe();
+
   }
 
 
-  constructor(
+   constructor(
     private apiTicket: ApiTicketService,
     private storage: LocalStorageService,
     private socketService: SocketService,
     private toast: NotificationsService
-    // private onChangeTickets: Subscription
-  ) {
-    this.apiTicket.get()
-      .subscribe(
-        data => {
-          this.ticket = data;
-          this._setDataOutput();
-        }
-      );
+  ) { }
 
-  }
-
-  ngOnInit() {
+  async ngOnInit() {
+    this.ticket = await this.apiTicket.get();
+    this._setDataOutput();
     this.socketService.getMessage(WsEvents.ticket.create)
       .subscribe((data) => {
         this.ticket.push(data as ITicket);

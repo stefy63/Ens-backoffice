@@ -6,14 +6,12 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'fuse-chat-detail',
   templateUrl: './chat-detail.component.html',
-  styleUrls: ['./chat-detail.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./chat-detail.component.scss']
 })
 export class ChatDetailComponent implements OnInit {
 
-  private ticket: ITicket;
-  @Input() openTicket:  Observable<ITicket>;
-  private open: any = false;
+  @Input('openTicket') ticket:  ITicket;
+  private open = true;
 
   constructor(
     private router: Router,
@@ -21,12 +19,11 @@ export class ChatDetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.openTicket.subscribe(
-      ticket => {
-        this.ticket = ticket;
-        this.cd.markForCheck();
-      });
-    
+
+  }
+
+  activateChat() {
+
   }
 
   deleteChat() {

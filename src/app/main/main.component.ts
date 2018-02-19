@@ -3,6 +3,9 @@ import { Subscription } from 'rxjs/Subscription';
 import { FuseConfigService } from '../core/services/config.service';
 import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
+import { AuthService } from '../services/auth.service';
+import { SocketService } from '../services/socket.service';
+import { LocalStorageService } from '../services/local-storage.service';
 
 @Component({
     selector     : 'fuse-main',
@@ -21,7 +24,10 @@ export class FuseMainComponent implements OnInit, OnDestroy
         private _elementRef: ElementRef,
         private fuseConfig: FuseConfigService,
         private platform: Platform,
-        @Inject(DOCUMENT) private document: any
+        private authService: AuthService,
+        private socketService: SocketService,
+        private storage: LocalStorageService,
+        @Inject(DOCUMENT) private document: any,
     )
     {
         this.onSettingsChanged =
@@ -36,6 +42,19 @@ export class FuseMainComponent implements OnInit, OnDestroy
         if ( this.platform.ANDROID || this.platform.IOS )
         {
             this.document.body.className += ' is-mobile';
+        }
+
+        if (this.authService.isAuthenticated()) {
+            const user = this.storage.getItem('user');
+            this.socketService.sendMessage(
+                'welcome-message',
+                {
+                    userToken: this.authService.getToken().token_session,
+                    idUser: user.id,
+                    status: 'READY',
+                    userType: 'OPERATOR'
+                }
+            );
         }
     }
 

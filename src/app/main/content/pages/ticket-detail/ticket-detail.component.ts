@@ -3,7 +3,6 @@ import {ActivatedRoute} from '@angular/router';
 import {ApiTicketService} from '../../../../services/api-ticket.service';
 import {ITicket} from '../../../../interfaces/i-ticket';
 import { ITicketService } from '../../../../interfaces/i-ticket-service';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
   selector: 'fuse-ticket-detail',
@@ -13,26 +12,21 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 export class TicketDetailComponent implements OnInit {
   
   private idTicket: number;
-  private newTicket: ITicket;
+  // private newTicket: ITicket;
   private service: string;
-  private ticket: BehaviorSubject<ITicket> = new BehaviorSubject<ITicket>(this.newTicket);
+  private ticket: ITicket;
 
   constructor(
     private route: ActivatedRoute,
     private apiTicket: ApiTicketService
   ) {
+    // tslint:disable-next-line:radix
     this.idTicket = parseInt(this.route.snapshot.paramMap.get('id'));
-    this.apiTicket.getFromId(this.idTicket)
-      .subscribe(
-        data => {
-          this.newTicket = data;
-          this.ticket.next(this.newTicket);
-          this.service = this.newTicket.service.service;
-        }
-      );
   }
 
-  ngOnInit() {
+  async ngOnInit() { 
+    this.ticket = await this.apiTicket.getFromId(this.idTicket);
+    this.service = this.ticket.service.service;
   }
 
 }
