@@ -12,6 +12,7 @@ export class ChatDetailComponent implements OnInit {
 
   @Input('openTicket') ticket:  ITicket;
   public open = true;
+  public ticketReason: string;
 
   constructor(
     private router: Router,
@@ -19,7 +20,7 @@ export class ChatDetailComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-
+    this.ticketReason = this.ticket.historys[0].action;
   }
 
   activateChat() {

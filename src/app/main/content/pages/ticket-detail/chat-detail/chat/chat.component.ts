@@ -10,9 +10,11 @@ export class ChatComponent implements OnInit {
 
   @Input() historys: ITicketHistory[];
 
-  constructor() { }
+  constructor() { 
+  }
 
   ngOnInit() {
+    this.historys.splice(0,1);
   }
 
 }

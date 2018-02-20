@@ -17,10 +17,12 @@ import { ToastOptions } from '../../../../type/toast-options';
 })
 export class DashboardComponent implements OnInit, OnDestroy {
 
-  public ticket: ITicket[];
+  private ticket: ITicket[];
+  private idOperator: number;
   public newTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
   public openTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
   public closedTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
+  public myOpenTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
 
   public options = ToastOptions;
 
@@ -35,7 +37,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private storage: LocalStorageService,
     private socketService: SocketService,
     private toast: NotificationsService
-  ) { }
+  ) { 
+    this.idOperator = this.storage.getItem('user').id;
+  }
 
   async ngOnInit() {
     this.ticket = await this.apiTicket.get();
@@ -61,5 +65,6 @@ export class DashboardComponent implements OnInit, OnDestroy {
     this.newTicket.next(_.filter(this.ticket, item => item.id_status === 1));
     this.openTicket.next(_.filter(this.ticket, item => item.id_status === 2));
     this.closedTicket.next(_.filter(this.ticket, item => item.id_status === 3));
+    this.myOpenTicket.next(_.filter(this.ticket, item => item.id_status === 2 && item.id_operator === this.idOperator));
   }
 }

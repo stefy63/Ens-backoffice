@@ -58,7 +58,6 @@ export class TicketItemComponent implements OnInit, AfterViewInit {
   }
 
   showTicketDetail(item: ITicket) {
-    console.log(item.id);
     this.router.navigate(['pages/ticket-detail', item.id ]);
   }
 }
