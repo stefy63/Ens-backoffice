@@ -47,11 +47,11 @@
 
   <div class="row col-12 mt-12 mat-elevation-z4" style="height: 67vh">
 
-    <div class="col-7 border fullwidth" *ngIf="open" style="height: 65vh">
+    <div id="chat" class="col-7 border fullwidth" *ngIf="open">
       <fuse-ticket-messages [historys]="ticket.historys"></fuse-ticket-messages>
     </div>
 
-    <div class="col-5 border fullwidth page-layout" >
+    <div id="note" class="col-5 border fullwidth page-layout" >
         <!--<fuse-ticket-messages [historys]="ticket.historys"></fuse-ticket-messages>-->
     </div>
   </div>

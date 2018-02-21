@@ -37,6 +37,14 @@
         }
     }
 
+    #chat {
+      height: 68vh;
+      background:  url('/assets/images/patterns/rain-grey.png') repeat;
+      overflow: auto;
+      height: max-content;
+      // opacity: 0.5;
+    }
+
     // div.button-bar {
     //     float: inherit;
     //     border: 1px solid black;

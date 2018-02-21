@@ -1,67 +1,58 @@
 
+<div class="chat mt-2" fxFlex fxLayout="column">
+
+    <div id="chat-content" fxFlex fusePerfectScrollbar>
+
+        <!-- CHAT MESSAGES -->
+        <div class="chat-messages">
+
+            <!-- MESSAGE -->
+            <div fxLayout="row" *ngFor="let message of historys" class="message-row"
+                [ngClass]="{'user': (message.id_type === 1)}">
+
+                <img class="avatar" *ngIf="message.id_type === 2" src="../../../../../../assets/images/avatars/alice.jpg"/>
+
+                <img class="avatar"  *ngIf="message.id_type === 1"  src="../../../../../../assets/images/avatars/danielle.jpg">
+
+                <div class="bubble">
+                    <div class="message">{{message.action}}</div>
+                    <div class="time secondary-text">{{message.date_time | date:'medium'}}</div>
+                </div>
+
+            </div>
+            <!-- / MESSAGE -->
+
+        </div>
+        <!-- CHAT MESSAGES -->
+
+    </div>
+    <!-- / CHAT CONTENT -->
+
+    <!-- CHAT FOOTER -->
+    <div class="chat-footer" fxLayout="row" fxLayoutAlign="center center">
+
+        <!-- REPLY FORM -->
+        <form #replyForm="ngForm"
+            (ngSubmit)="reply($event)"
+            (keyup.enter)="reply($event)"
+            fxFlex class="reply-form"
+            fxLayout="row"
+            fxLayoutAlign="start center">
+
+            <mat-form-field class="" fxFlex floatPlaceholder="never">
+                <textarea matInput #replyInput placeholder="Scrivi il messaggio e premi Enter"
+                        ngModel name="message"></textarea>
+            </mat-form-field>
+
+            <button mat-fab class="" type="submit" aria-label="Send message">
+                <mat-icon>send</mat-icon>
+            </button>
+
+        </form>
+        <!-- / REPLY FORM -->
+    </div>
+    <!-- / CHAT FOOTER-->
 
 
-
-
-
-                    <div class="chat" fxFlex fxLayout="column">
-
-                       CHAT CONTENT
-                      <div id="chat-content" fxFlex fusePerfectScrollbar>
-
-                          <!-- CHAT MESSAGES -->
-                          <div class="chat-messages">
-
-                              <!-- MESSAGE -->
-                              <div fxLayout="row"  class="message-row"
-                                   [ngClass]="">
-
-                                  <img
-                                       src="contact.avatar"
-                                       class="avatar"
-                                       alt="contact.name"/>
-
-                                  <img class="avatar" src="user.avatar">
-
-                                  <div class="bubble">
-                                      <div class="message">message.message</div>
-                                      <div class="time secondary-text">message.time | date:'medium'</div>
-                                  </div>
-
-                              </div>
-                              <!-- / MESSAGE -->
-
-                          </div>
-                          <!-- CHAT MESSAGES -->
-
-                      </div>
-                      <!-- / CHAT CONTENT -->
-
-                        <!-- CHAT FOOTER -->
-                      <div class="chat-footer" fxLayout="row" fxLayoutAlign="center center">
-
-                          <!-- REPLY FORM -->
-                          <form #replyForm="ngForm"
-                                (ngSubmit)="reply($event)"
-                                (keyup.enter)="reply($event)"
-                                fxFlex class="reply-form"
-                                fxLayout="row"
-                                fxLayoutAlign="start center">
-
-                              <mat-form-field class="" fxFlex floatPlaceholder="never">
-                                  <textarea matInput #replyInput placeholder="Type and hit enter to send message"
-                                            ngModel name="message"></textarea>
-                              </mat-form-field>
-
-                              <button mat-fab class="" type="submit" aria-label="Send message">
-                                  <mat-icon>send</mat-icon>
-                              </button>
-
-                          </form>
-                          <!-- / REPLY FORM -->
-                        </div>
-                        <!-- / CHAT FOOTER-->
-
-
-                      </div>
+</div>
 

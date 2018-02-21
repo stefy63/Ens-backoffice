@@ -28,23 +28,8 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.historys.splice(0, 1);
+    // this.historys.splice(0, 1);
   }
-
-  // ngOnInit()
-  // {
-  //   this.user = this.chatService.user;
-  //   this.chatService.onChatSelected
-  //     .subscribe(chatData => {
-  //       if ( chatData )
-  //       {
-  //         this.selectedChat = chatData;
-  //         this.contact = chatData.contact;
-  //         this.dialog = chatData.dialog;
-  //         this.readyToReply();
-  //       }
-  //     });
-  // }
 
   ngAfterViewInit()
   {
