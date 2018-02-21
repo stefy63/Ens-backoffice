@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {ApiTicketService} from '../../../../services/api-ticket.service';
+import {ApiTicketService} from '../../../../services/api/api-ticket.service';
 import {ITicket} from '../../../../interfaces/i-ticket';
 import { ITicketService } from '../../../../interfaces/i-ticket-service';
 
@@ -10,7 +10,7 @@ import { ITicketService } from '../../../../interfaces/i-ticket-service';
   styleUrls: ['./ticket-detail.component.scss']
 })
 export class TicketDetailComponent implements OnInit {
-  
+
   public idTicket: number;
   // private newTicket: ITicket;
   public service: string;
@@ -24,7 +24,7 @@ export class TicketDetailComponent implements OnInit {
     this.idTicket = parseInt(this.route.snapshot.paramMap.get('id'));
   }
 
-  async ngOnInit() { 
+  async ngOnInit() {
     this.ticket = await this.apiTicket.getFromId(this.idTicket);
     this.service = this.ticket.service.service;
   }

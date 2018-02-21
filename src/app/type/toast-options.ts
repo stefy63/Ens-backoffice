@@ -1,5 +1,5 @@
 export const ToastOptions = {
-    position: ['middle', 'right'],
+    position: ['bottom', 'right'],
     timeOut: 3000,
     showProgressBar: true,
     pauseOnHover: true,

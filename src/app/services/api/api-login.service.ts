@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
+import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { IDataLogin } from '../interfaces/i-data-login';
+import { IDataLogin } from '../../interfaces/i-data-login';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
-import { LocalStorageService } from './local-storage.service';
+import { LocalStorageService } from '../local-storage/local-storage.service';
 
 @Injectable()
 export class ApiLoginService {
@@ -18,7 +18,7 @@ export class ApiLoginService {
     private http: HttpClient,
     private storage: LocalStorageService
   ) { }
-  
+
   public apiLogin(dataLogin: IDataLogin, isOperator: boolean): Observable<any> {
 
     const headers = this.headers;

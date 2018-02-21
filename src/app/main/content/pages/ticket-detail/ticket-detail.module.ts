@@ -3,8 +3,9 @@ import { SharedModule } from '../../../../core/modules/shared.module';
 import { RouterModule, Routes } from '@angular/router';
 import {TicketDetailComponent} from './ticket-detail.component';
 import {AuthGuard} from '../../../../guard/auth.guard';
-import { ChatDetailComponent } from './chat-detail/chat-detail.component';
-import { ChatComponent } from './chat-detail/chat/chat.component';
+import {TicketHeadComponent} from './ticket-head/ticket-head.component';
+import {TicketMessagesComponent} from './ticket-head/ticket-messages/ticket-messages.component';
+import {ChatService} from '../../../../services/ticket-messages/ticket-messages.service';
 
 
 const routes: Routes = [
@@ -19,8 +20,8 @@ const routes: Routes = [
 @NgModule({
   declarations: [
       TicketDetailComponent,
-      ChatDetailComponent,
-      ChatComponent
+      TicketHeadComponent,
+      TicketMessagesComponent
     ],
   imports: [
     SharedModule,
@@ -28,6 +29,9 @@ const routes: Routes = [
   ],
   exports     : [
       TicketDetailComponent
+  ],
+  providers: [
+    ChatService
   ]
 })
 
