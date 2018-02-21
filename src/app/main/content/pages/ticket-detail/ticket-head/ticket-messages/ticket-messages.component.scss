@@ -1,27 +1,29 @@
 
-:host {
-  display: flex;
-  flex: 1 0 auto;
-  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.6) 20%, rgba(255, 255, 255, 0.8));
-  overflow: hidden;
-  max-width: 100%;
+// :host {
+  // display: flex;
+  // flex: 1 0 auto;
+  // background: linear-gradient(to bottom, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.6) 20%, rgba(255, 255, 255, 0.8));
+  // overflow: hidden;
+  // max-width: 100%;
 
   .chat {
+    height: 66vh;
 
 
     #chat-content {
-      background:  url('/src/assets/images/patterns/rain-grey.png') repeat;
+      background: transparent;
       overflow: auto;
-      height: max-content;
+      opacity: 1;
 
       .message-row {
         padding: 16px;
+        opacity: 1;
 
         .bubble {
           position: relative;
           padding: 6px 7px 8px 9px;
-          background-color: #FFF;
-          box-shadow: 0 1px .5px rgba(0, 0, 0, .13);
+          background-color: lightgoldenrodyellow;
+          box-shadow: 10 1px .5px rgba(0, 0, 0, .13);
           border-radius: 6px;
 
           &:before {
@@ -112,4 +114,4 @@
       }
     }
   }
-}
+// }
