@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as moment from 'moment';
-import { ITokenSession } from '../interfaces/i-token-session';
-import { LocalStorageService } from './local-storage.service';
+import { ITokenSession } from '../../interfaces/i-token-session';
+import { LocalStorageService } from '../local-storage/local-storage.service';
 
 @Injectable()
 export class AuthService {

@@ -17,11 +17,11 @@ import { FuseSampleModule } from './main/content/sample/sample.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 import { environment } from '../environments/environment';
-import { SocketService } from './services/socket.service';
+import { SocketService } from './services/socket/socket.service';
 import { TokenInterceptor } from './interceptors/token.interceptor';
-import { ApiLoginService } from './services/api-login.service';
-import { AuthService } from './services/auth.service';
-import { LocalStorageService } from './services/local-storage.service';
+import { ApiLoginService } from './services/api/api-login.service';
+import { AuthService } from './services/auth/auth.service';
+import { LocalStorageService } from './services/local-storage/local-storage.service';
 import { AuthGuard } from './guard/auth.guard';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 
@@ -49,7 +49,7 @@ const config: SocketIoConfig = { url: environment.ws_url + ':' + environment.ws_
         FuseMainModule,
         FuseSampleModule,
         SocketIoModule.forRoot(config),
-        PagesModule, 
+        PagesModule,
         SimpleNotificationsModule.forRoot(),
         MDBBootstrapModule.forRoot()
     ],

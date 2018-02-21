@@ -64,7 +64,6 @@ export class FuseContentComponent implements OnInit, OnDestroy
 
     ngOnInit()
     {
-
     }
 
     ngOnDestroy()

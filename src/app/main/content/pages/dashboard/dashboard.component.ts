@@ -1,11 +1,11 @@
-///<reference path="../../../../services/api-ticket.service.ts"/>
+///<reference path="../../../../services/api/api-ticket.service.ts"/>
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ApiTicketService } from '../../../../services/api-ticket.service';
+import { ApiTicketService } from '../../../../services/api/api-ticket.service';
 import { ITicket } from '../../../../interfaces/i-ticket';
-import { LocalStorageService } from '../../../../services/local-storage.service';
+import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import * as _ from 'lodash';
-import { SocketService } from '../../../../services/socket.service';
+import { SocketService } from '../../../../services/socket/socket.service';
 import { WsEvents } from '../../../../type/ws-events';
 import { NotificationsService, SimpleNotificationsComponent } from 'angular2-notifications';
 import { ToastOptions } from '../../../../type/toast-options';
@@ -37,7 +37,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private storage: LocalStorageService,
     private socketService: SocketService,
     private toast: NotificationsService
-  ) { 
+  ) {
     this.idOperator = this.storage.getItem('user').id;
   }
 

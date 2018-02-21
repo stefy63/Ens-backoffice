@@ -3,9 +3,9 @@ import { Subscription } from 'rxjs/Subscription';
 import { FuseConfigService } from '../core/services/config.service';
 import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
-import { AuthService } from '../services/auth.service';
-import { SocketService } from '../services/socket.service';
-import { LocalStorageService } from '../services/local-storage.service';
+import { AuthService } from '../services/auth/auth.service';
+import { SocketService } from '../services/socket/socket.service';
+import { LocalStorageService } from '../services/local-storage/local-storage.service';
 
 @Component({
     selector     : 'fuse-main',
@@ -30,6 +30,7 @@ export class FuseMainComponent implements OnInit, OnDestroy
         @Inject(DOCUMENT) private document: any,
     )
     {
+
         this.onSettingsChanged =
             this.fuseConfig.onSettingsChanged
                 .subscribe(
