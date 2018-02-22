@@ -1,6 +1,13 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import {Location} from '@angular/common';
+import { find } from 'lodash';
+import { LocalStorageService } from '../../../../../services/local-storage/local-storage.service';
+import { IUser } from '../../../../../interfaces/i-user';
+import { ITicketService } from '../../../../../interfaces/i-ticket-service';
+import { ApiTicketService } from '../../../../../services/api/api-ticket.service';
+import { ITicketStatus } from '../../../../../interfaces/i-ticket-status';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'fuse-ticket-head',
@@ -10,15 +17,26 @@ import {Location} from '@angular/common';
 export class TicketHeadComponent implements OnInit {
 
   @Input('openTicket') ticket:  ITicket;
-  public open = true;
+  public open = false;
   public ticketReason: string;
+  public user: IUser;
+  private ticketStatus: ITicketStatus;
 
   constructor(
-    private location: Location
-  ) { }
+    private location: Location,
+    private store: LocalStorageService,
+    private apiTicketService: ApiTicketService
+  ) {
+    this.user = this.store.getItem('user');
+    this.ticketStatus = this.store.getItem('ticket_status');
+    }
 
   ngOnInit() {
-    this.ticketReason = (this.ticket.historys[0]) ? this.ticket.historys[0].action : '';
+    this.ticketReason = find(this.ticket.historys, item => item.type.type === 'INITIAL').action || '';
+    if (this.ticket.status.status === 'ONLINE' && this.ticket.id_operator === this.user.id) {
+      this.open = true;
+    } 
+ 
   }
 
   activateChat() {
@@ -26,6 +44,16 @@ export class TicketHeadComponent implements OnInit {
   }
 
   deleteChat() {
+    this.location.back();
+  }
+
+  closeChat() {
+    const updateTicket = { 
+      id: this.ticket.id,
+      id_status: _.find(this.ticketStatus, { status : 'CLOSED'}).id
+    };
+    // this.ticket.id_status = _.find(this.ticketStatus, { status : 'CLOSED'}).id;
+    this.apiTicketService.update(updateTicket as ITicket);
     this.location.back();
   }
 }

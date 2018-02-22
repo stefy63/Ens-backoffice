@@ -4,15 +4,16 @@
     <div id="chat-content" fxFlex fusePerfectScrollbar>
 
         <!-- CHAT MESSAGES -->
-        <div class="chat-messages">
+        <div class="chat-messages" *ngFor="let message of ticketHistorys" >
 
             <!-- MESSAGE -->
-            <div fxLayout="row" *ngFor="let message of historys" class="message-row"
-                [ngClass]="{'user': (message.id_type === 1)}">
+            <div fxLayout="row" class="message-row"
+                [ngClass]="{'user': (message.type.type === 'OPERATOR')}"
+                *ngIf="message.type.type == 'USER' || message.type.type == 'OPERATOR'">
 
-                <img class="avatar" *ngIf="message.id_type === 2" src="../../../../../../assets/images/avatars/alice.jpg"/>
+                <img class="avatar" *ngIf="message.type.type == 'USER'" src="../../../../../../assets/images/avatars/alice.jpg"/>
 
-                <img class="avatar"  *ngIf="message.id_type === 1"  src="../../../../../../assets/images/avatars/danielle.jpg">
+                <img class="avatar"  *ngIf="message.type.type == 'OPERATOR'"  src="../../../../../../assets/images/avatars/profile.jpg">
 
                 <div class="bubble">
                     <div class="message">{{message.action}}</div>

@@ -12,7 +12,7 @@ export class ApiLoginService {
   private baseUrl: string = environment.api_url + ':' + environment.api_port + environment.api_suffix;
 
     private headers = new HttpHeaders()
-      .set('Content-Type', 'application/x-www-form-urlencoded');
+      .set('Content-Type', 'application/json');
 
   constructor(
     private http: HttpClient,

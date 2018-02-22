@@ -24,6 +24,8 @@ import { AuthService } from './services/auth/auth.service';
 import { LocalStorageService } from './services/local-storage/local-storage.service';
 import { AuthGuard } from './guard/auth.guard';
 import { SimpleNotificationsModule } from 'angular2-notifications';
+import { ApiTicketService } from './services/api/api-ticket.service';
+import { ApiTicketHistoryService } from './services/api/api-ticket-history.service';
 
 const appRoutes: Routes = [
     {
@@ -66,7 +68,8 @@ const config: SocketIoConfig = { url: environment.ws_url + ':' + environment.ws_
         ApiLoginService,
         AuthService,
         AuthGuard,
-        LocalStorageService
+        LocalStorageService,
+        ApiTicketHistoryService
     ],
     bootstrap: [
         AppComponent
