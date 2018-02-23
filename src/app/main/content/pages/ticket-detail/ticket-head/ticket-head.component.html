@@ -1,12 +1,13 @@
 
 <div class="container col-12">
   <div class="row left-col col-12 mat-elevation-z4">
-    <div class="col-6">
+    <div class="col-7">
       <fieldset class="col-12 border">
       <legend>Dettaglio Ticket:</legend>
         <table class="table table-bordered">
           <thead>
             <tr>
+              <th>Stato</th>
               <th>Nome</th>
               <th>Cognome</th>
               <th>Canale</th>
@@ -16,6 +17,7 @@
           </thead>
           <tbody>
               <tr>
+                <td [ngClass]="{'blink': (ticket.status.status === 'ONLINE') }"  >{{ticket.status.status}}</td>
                 <td>{{ticket.user.name}}</td>
                 <td>{{ticket.user.surname}}</td>
                 <td>{{ticket.service.service}}</td>
@@ -27,7 +29,7 @@
       </fieldset>
     </div>
 
-    <div class="col-6 right-col">
+    <div class="col-5 right-col">
       <fieldset class="border">
       <legend>Descrizione:</legend>
         <div >
@@ -36,27 +38,28 @@
       </fieldset>
     </div>
     <div class="row col-12">
-      <div class="col-6 text-center">
+      <div class="col-7 text-center">
         <br>
         <button *ngIf="!open" class="mat-button done-button mat-accent col-3" (click)="activateChat()"><mat-icon>done</mat-icon> Accetta</button>
-        <button *ngIf="!open" class="mat-button delete-button mat-warn col-3" (click)="deleteChat()"><mat-icon>delete</mat-icon> Rfiuta</button>
         <button *ngIf="open" class="mat-button delete-button mat-warn col-3" (click)="closeChat()"><mat-icon>close</mat-icon> close</button>
+        <button class="mat-button delete-button mat-warn col-3" (click)="abortChat()"><mat-icon>reply</mat-icon> Indietro</button>
       </div>
-      <div class="col-6 text-center">
-        <span *ngIf="user.id != ticket.id_operator" class="alert">Ticket già aperto da [ {{ticket.operator.firstname + ' ' + ticket.operator.lastname}} ]</span>
+      <div class="col-5 text-center">
+        <br>
+        <span *ngIf="ticket.id_operator &&  user.id != ticket.id_operator && ticket.status.status === 'ONLINE'" class="alert text-center col-12">Ticket già aperto da [ {{ticket.operator.firstname + ' ' + ticket.operator.lastname}} ]</span>
       </div>
     </div>
 
   </div>
 
-  <div class="row col-12 mt-12 mat-elevation-z4" style="height: 67vh">
+  <div id="content-bottom" class="row col-12 mt-12 mat-elevation-z4" *ngIf="open">
 
-    <div id="chat" class="col-7 border fullwidth" *ngIf="open">
+    <div id="chat" class="col-7 border" >
       <fuse-ticket-messages [ticket]="ticket"></fuse-ticket-messages>
     </div>
 
-    <div id="note" class="col-5 border fullwidth page-layout" >
-        <!--<fuse-ticket-messages [historys]="ticket.historys"></fuse-ticket-messages>-->
+    <div id="note" class="col-5 border">
+      <fuse-ticket-note [ticket]="ticket"></fuse-ticket-note>
     </div>
   </div>
 

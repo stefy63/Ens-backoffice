@@ -8,12 +8,12 @@
 
             <!-- MESSAGE -->
             <div fxLayout="row" class="message-row"
-                [ngClass]="{'user': (message.type.type === 'OPERATOR')}"
-                *ngIf="message.type.type == 'USER' || message.type.type == 'OPERATOR'">
+                [ngClass]="{'user': (message.type.type === 'OPERATOR'),'system': (message.type.type === 'SYSTEM')}"
+                *ngIf="message.type.type === 'USER' || message.type.type === 'OPERATOR'  || message.type.type === 'SYSTEM'">
 
-                <img class="avatar" *ngIf="message.type.type == 'USER'" src="../../../../../../assets/images/avatars/alice.jpg"/>
+                <img class="avatar" *ngIf="message.type.type === 'USER'" src="../../../../../../assets/images/avatars/alice.jpg"/>
 
-                <img class="avatar"  *ngIf="message.type.type == 'OPERATOR'"  src="../../../../../../assets/images/avatars/profile.jpg">
+                <img class="avatar"  *ngIf="message.type.type === 'OPERATOR'"  src="../../../../../../assets/images/avatars/profile.jpg">
 
                 <div class="bubble">
                     <div class="message">{{message.action}}</div>
@@ -45,7 +45,7 @@
                         ngModel name="message"></textarea>
             </mat-form-field>
 
-            <button mat-fab class="" type="submit" aria-label="Send message">
+            <button mat-fab class="mat-button" type="submit" aria-label="Send message">
                 <mat-icon>send</mat-icon>
             </button>
 
@@ -57,3 +57,4 @@
 
 </div>
 
+<simple-notifications [options]="options"></simple-notifications>

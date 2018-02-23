@@ -4,8 +4,10 @@ import { RouterModule, Routes } from '@angular/router';
 import {TicketDetailComponent} from './ticket-detail.component';
 import {AuthGuard} from '../../../../guard/auth.guard';
 import {TicketHeadComponent} from './ticket-head/ticket-head.component';
-import {TicketMessagesComponent} from './ticket-head/ticket-messages/ticket-messages.component';
+import {TicketMessagesComponent} from './ticket-messages/ticket-messages.component';
 import {ChatService} from '../../../../services/ticket-messages/ticket-messages.service';
+import { TicketNoteComponent } from './ticket-note/ticket-note.component';
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 
 const routes: Routes = [
@@ -21,11 +23,13 @@ const routes: Routes = [
   declarations: [
       TicketDetailComponent,
       TicketHeadComponent,
-      TicketMessagesComponent
+      TicketMessagesComponent,
+      TicketNoteComponent
     ],
   imports: [
     SharedModule,
     RouterModule.forChild(routes),
+    SimpleNotificationsModule
   ],
   exports     : [
       TicketDetailComponent

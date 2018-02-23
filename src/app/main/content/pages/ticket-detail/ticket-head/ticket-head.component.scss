@@ -1,4 +1,7 @@
 .container {
+    legend {
+        color: blue;
+    }
 
     .left-col {
         // height: 54px;
@@ -38,11 +41,14 @@
     }
 
     #chat {
-      height: 68vh;
       background:  url('/assets/images/patterns/rain-grey.png') repeat;
       overflow: auto;
       height: max-content;
       // opacity: 0.5;
+    }
+
+    #content-bottom {
+      height: 68vh;
     }
 
     span.alert {
@@ -50,11 +56,14 @@
         font-weight: bold;
         animation: blink 2s linear infinite;
     }
+    .blink {
+        animation: blink 2s ease infinite;
+    }
 
     @keyframes blink {
         0%{opacity: 0;}
-        50%{opacity: .5;}
-        100%{opacity: 1;}
+        50%{opacity: 1;}
+        100%{opacity: 0;}   
     }
 
     // div.button-bar {

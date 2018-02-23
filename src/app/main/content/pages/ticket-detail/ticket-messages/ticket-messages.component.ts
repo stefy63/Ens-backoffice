@@ -1,14 +1,16 @@
 import { Component, OnInit, Input, AfterViewInit, ViewChild, ViewChildren } from '@angular/core';
-import { ITicketHistory } from '../../../../../../interfaces/i-ticket-history';
+import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
 import { NgForm } from '@angular/forms';
-import { FusePerfectScrollbarDirective } from '../../../../../../core/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
-import { ChatService } from '../../../../../../services/ticket-messages/ticket-messages.service';
-import { ITicket } from '../../../../../../interfaces/i-ticket';
+import { FusePerfectScrollbarDirective } from '../../../../../core/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
+import { ChatService } from '../../../../../services/ticket-messages/ticket-messages.service';
+import { ITicket } from '../../../../../interfaces/i-ticket';
 import * as _ from 'lodash';
-import { ITicketHistoryType } from '../../../../../../interfaces/i-ticket-history-type';
-import { LocalStorageService } from '../../../../../../services/local-storage/local-storage.service';
-import { SocketService } from '../../../../../../services/socket/socket.service';
-import { WsEvents } from '../../../../../../type/ws-events';
+import { ITicketHistoryType } from '../../../../../interfaces/i-ticket-history-type';
+import { LocalStorageService } from '../../../../../services/local-storage/local-storage.service';
+import { SocketService } from '../../../../../services/socket/socket.service';
+import { WsEvents } from '../../../../../type/ws-events';
+import { ToastOptions } from '../../../../../type/toast-options';
+import { NotificationsService, SimpleNotificationsComponent} from 'angular2-notifications';
 
 
 @Component({
@@ -28,10 +30,13 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit {
   @ViewChildren('replyInput') replyInputField;
   @ViewChild('replyForm') replyForm: NgForm;
 
+  public options = ToastOptions;
+
   constructor(
-    private chatService: ChatService, 
+    private chatService: ChatService,
     private storage: LocalStorageService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private toast: NotificationsService
   ) {
   }
 
@@ -44,7 +49,6 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit {
       .subscribe((data: ITicket) => {
         const historys: ITicketHistory[] = _.orderBy(data.historys, 'date_time', 'asc');
         this.ticketHistorys.push(historys[historys.length - 1]);
-        console.log(historys);
         this.readyToReply();
       });
 
@@ -82,18 +86,22 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit {
   }
 
   async reply(event) {
-    const type = (this.storage.getItem('token').id_user) ? 'USER' : 'OPERATOR';
+    if (!!this.replyForm.form.value.message && this.replyForm.form.value.message.charCodeAt() !== 10) {
+      const type = (this.storage.getItem('token').id_user) ? 'USER' : 'OPERATOR';
 
-    const message: ITicketHistory = {
-      id: 0,
-      id_ticket: this.ticket.id,
-      id_type:  _.find(this.historyType, item => item.type === type).id,
-      action: this.replyForm.form.value.message,
-      readed: 0,
-      date_time: new Date().toISOString()
-    };
+      const message: ITicketHistory = {
+        id: 0,
+        id_ticket: this.ticket.id,
+        id_type:  _.find(this.historyType, item => item.type === type).id,
+        action: this.replyForm.form.value.message,
+        readed: 0,
+        date_time: new Date().toISOString()
+      };
 
-    const ret: ITicketHistory = await this.chatService.sendMessage(message);
+      const ret: ITicketHistory = await this.chatService.sendMessage(message);
+    } else {
+      this.toast.error('Messaggio Vuoto', 'Impossibile spedire messaggi vuoti');
+    }
 
   }
 
