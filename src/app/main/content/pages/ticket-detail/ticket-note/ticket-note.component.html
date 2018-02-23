@@ -1,39 +1,41 @@
 
-<div class="chat mt-2" fxFlex fxLayout="column">
+<div class="chat mt-2 col-12" fxFlex fxLayout="column">
 
   <div id="chat-content" fxFlex fusePerfectScrollbar>
-    note works!
     <!-- CHAT MESSAGES -->
-    <div class="chat-messages" *ngFor="let message of ticketHistorys" >
-      
-
-
+    <div *ngFor="let message of ticketHistorys" >
+        <blockquote  class="reverse">
+          <dl>
+            <dt>{{message.action}}</dt>
+            <dd><span class="time secondary-text text-right">{{message.date_time | date:'medium'}}</span></dd>
+          </dl>
+        </blockquote>
     </div>
-
-    <!-- CHAT FOOTER -->
-    <div class="chat-footer" fxLayout="row" fxLayoutAlign="center center">
-
-        <!-- REPLY FORM -->
-        <form #replyForm="ngForm"
-            (ngSubmit)="reply($event)"
-            (keyup.enter)="reply($event)"
-            fxFlex class="reply-form"
-            fxLayout="row"
-            fxLayoutAlign="start center">
-
-            <mat-form-field class="" fxFlex floatPlaceholder="never">
-                <textarea matInput #replyInput placeholder="Scrivi la nota interna e premi Enter"
-                        ngModel name="message"></textarea>
-            </mat-form-field>
-
-            <button mat-fab class="" type="submit" aria-label="Send message">
-                <mat-icon>note_add</mat-icon>
-            </button>
-
-        </form>
-        <!-- / REPLY FORM -->
-    </div>
-    <!-- / CHAT FOOTER-->
   </div>
+
+  <!-- CHAT FOOTER -->
+  <div class="chat-footer" fxLayout="row" fxLayoutAlign="center center">
+
+      <!-- REPLY FORM -->
+      <form #replyForm="ngForm"
+          (ngSubmit)="reply($event)"
+          (keyup.enter)="reply($event)"
+          fxFlex class="reply-form"
+          fxLayout="row"
+          fxLayoutAlign="start center">
+
+          <mat-form-field class="" fxFlex floatPlaceholder="never">
+              <textarea matInput #replyInput placeholder="Scrivi la nota interna e premi Enter"
+                      ngModel name="message"></textarea>
+          </mat-form-field>
+
+          <button mat-fab color="warn" class="" type="submit" aria-label="Send message">
+              <mat-icon>note_add</mat-icon>
+          </button>
+
+      </form>
+      <!-- / REPLY FORM -->
+  </div>
+  <!-- / CHAT FOOTER-->
 </div>
 <simple-notifications [options]="options"></simple-notifications>

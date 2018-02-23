@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ViewChild, ViewChildren, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
 import { NgForm } from '@angular/forms';
 import { FusePerfectScrollbarDirective } from '../../../../../core/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
@@ -11,16 +11,19 @@ import { SocketService } from '../../../../../services/socket/socket.service';
 import { WsEvents } from '../../../../../type/ws-events';
 import { ToastOptions } from '../../../../../type/toast-options';
 import { NotificationsService, SimpleNotificationsComponent} from 'angular2-notifications';
+import { Observable } from 'rxjs/Observable';
 
 
 @Component({
   selector: 'fuse-ticket-messages',
   templateUrl: './ticket-messages.component.html',
-  styleUrls: ['./ticket-messages.component.scss']
+  styleUrls: ['./ticket-messages.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TicketMessagesComponent implements OnInit, AfterViewInit {
 
-  @Input() ticket: ITicket;
+  @Input('ticket') data: Observable<any>;
+  public ticket: ITicket;
   public ticketHistorys: ITicketHistory[];
   private historyType: ITicketHistoryType[];
 
@@ -33,6 +36,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit {
   public options = ToastOptions;
 
   constructor(
+    private cd: ChangeDetectorRef,
     private chatService: ChatService,
     private storage: LocalStorageService,
     private socketService: SocketService,
@@ -41,22 +45,21 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.ticketHistorys = _.orderBy(this.ticket.historys, 'date_time', 'asc');
-    this.historyType = this.storage.getItem('ticket_history_type');
+    this.data.subscribe(item => {
+      this.ticket = item;
+      this.cd.markForCheck();
+
+      this.ticketHistorys = _.orderBy(this.ticket.historys, 'date_time', 'asc');
+      this.readyToReply();
+    });
     this.chatService.markMessagesReaded(this.ticket.id);
-
-    this.socketService.getMessage(WsEvents.ticketHistory.create)
-      .subscribe((data: ITicket) => {
-        const historys: ITicketHistory[] = _.orderBy(data.historys, 'date_time', 'asc');
-        this.ticketHistorys.push(historys[historys.length - 1]);
-        this.readyToReply();
-      });
-
+    this.historyType = this.storage.getItem('ticket_history_type');
   }
 
   ngAfterViewInit() {
     this.replyInput = this.replyInputField.first.nativeElement;
     this.readyToReply();
+    this.cd.detectChanges();
   }
 
   readyToReply() {

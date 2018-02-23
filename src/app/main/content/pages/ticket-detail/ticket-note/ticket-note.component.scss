@@ -8,75 +8,47 @@
       opacity: 1;
 
         .message-row {
-            padding: 5px;
-        }
-
-
-        .chat-footer {
-            min-height: 64px;
-            max-height: 96px;
-            background-color: #F3F4F5;
-            color: rgba(0, 0, 0, 0.87);
-            border-top: 1px solid rgba(0, 0, 0, .08);
-            padding: 8px 8px 8px 16px;
-
-            .reply-form {
-
-            mat-form-field {
-                margin: 0;
-                padding-right: 16px;
-
-                textarea {
-                overflow: auto;
-                max-height: 80px;        .chat-footer {
-                    min-height: 64px;
-                    max-height: 96px;
-                    background-color: #F3F4F5;
-                    color: rgba(0, 0, 0, 0.87);
-                    border-top: 1px solid rgba(0, 0, 0, .08);
-                    padding: 8px 8px 8px 16px;
-        
-                    .reply-form {
-        
-                    mat-form-field {
-                        margin: 0;
-                        padding-right: 16px;
-        
-                        textarea {
-                        overflow: auto;
-                        max-height: 80px;
-                        transition: height 200ms ease;
-                        &.grow {
-                            height: 80px;
-                        }
-                        }
-        
-                        .mat-errors-spacer {
-                        display: none;
-                        }
-                    }
-        
-                    .mat-button {
-                        margin: 0;
-                    }
-                    }
-                }
-                transition: height 200ms ease;
-                &.grow {
-                    height: 80px;
-                }
-                }
-
-                .mat-errors-spacer {
-                display: none;
-                }
-            }
-
-            .mat-button {
-                margin: 0;
-            }
-            }
+            padding: 3px;
+            background-color: lightgoldenrodyellow;
+            font-weight: bolder;
+            font-style: oblique;
         }
 
     }
+
+    .chat-footer {
+        min-height: 54px;
+        max-height: 96px;
+        // background-color: #F3F4F5;
+        color: rgba(0, 0, 0, 0.87);
+        border-top: 1px solid rgba(0, 0, 0, .08);
+        padding: 8px 8px 8px 16px;
+        background-color: transparent;
+  
+        .reply-form {
+  
+          mat-form-field {
+            margin: 0;
+            padding-right: 16px;
+            background-color: transparent;
+  
+            textarea {
+              overflow: auto;
+              max-height: 80px;
+              transition: height 200ms ease;
+              &.grow {
+                height: 80px;
+              }
+            }
+  
+            .mat-errors-spacer {
+              display: none;
+            }
+          }
+          .mat-button {
+            margin: 0;
+          }
+        }
+      }
+
 }

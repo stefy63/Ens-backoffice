@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChildren, ViewChild } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, ViewChildren, ViewChild, ChangeDetectorRef, ChangeDetectionStrategy} from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import { LocalStorageService } from '../../../../../services/local-storage/local-storage.service';
 import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
@@ -8,42 +8,94 @@ import { NgForm } from '@angular/forms';
 import { ChatService } from '../../../../../services/ticket-messages/ticket-messages.service';
 import { ToastOptions } from '../../../../../type/toast-options';
 import { NotificationsService, SimpleNotificationsComponent} from 'angular2-notifications';
+import { FusePerfectScrollbarDirective } from '../../../../../core/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
+import { SocketService } from '../../../../../services/socket/socket.service';
+import { WsEvents } from '../../../../../type/ws-events';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'fuse-ticket-note',
   templateUrl: './ticket-note.component.html',
-  styleUrls: ['./ticket-note.component.scss']
+  styleUrls: ['./ticket-note.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TicketNoteComponent implements OnInit {
+export class TicketNoteComponent implements OnInit, AfterViewInit {
 
-  @Input() ticket: ITicket;
+  @Input('ticket') data: Observable<any>;
+  public ticket: ITicket;
   public ticketHistorys: ITicketHistory[];
   private historyType: ITicketHistoryType[];
+  @ViewChild(FusePerfectScrollbarDirective) directiveScroll: FusePerfectScrollbarDirective;
   @ViewChildren('replyInput') replyInputField;
   @ViewChild('replyForm') replyForm: NgForm;
 
   public options = ToastOptions;
 
+  private replyInput: any;
+
   constructor(
+    private cd: ChangeDetectorRef,
     private chatService: ChatService,
     private storage: LocalStorageService,
+    private socketService: SocketService,
     private toast: NotificationsService
-  ) { }
-
-  ngOnInit() {
+  ) { 
   }
 
+  ngOnInit() {
+    this.data.subscribe(data => {
+      this.ticket = data;
+      this.cd.markForCheck();
+
+      this.ticketHistorys = _.chain(data.historys)
+                            .filter((item) => item.type.type === 'NOTE')
+                            .orderBy( 'date_time', 'asc')
+                            .value();
+      this.readyToReply();
+    });
+    this.historyType = this.storage.getItem('ticket_history_type');
+  }
+
+  ngAfterViewInit() {
+    this.replyInput = this.replyInputField.first.nativeElement;
+    this.readyToReply();
+    this.cd.detectChanges();
+  }
+
+  readyToReply() {
+    setTimeout(() => {
+      this.replyForm.reset();
+      this.focusReplyInput();
+      this.scrollToBottom(2000);
+    });
+  }
+
+  focusReplyInput() {
+    setTimeout(() => {
+      this.replyInput.focus();
+    });
+  }
+
+  scrollToBottom(speed?: number) {
+    speed = speed || 400;
+    if (this.directiveScroll) {
+      this.directiveScroll.update();
+
+      setTimeout(() => {
+        this.directiveScroll.scrollToBottom(0, speed);
+      });
+    }
+  }
 
   async reply(event) {
     if (!!this.replyForm.form.value.message && this.replyForm.form.value.message.charCodeAt() !== 10) {
-      const type = (this.storage.getItem('token').id_user) ? 'USER' : 'OPERATOR';
 
       const message: ITicketHistory = {
         id: 0,
         id_ticket: this.ticket.id,
-        id_type:  _.find(this.historyType, item => item.type === type).id,
+        id_type:  _.find(this.historyType, item => item.type === 'NOTE').id,
         action: this.replyForm.form.value.message,
-        readed: 0,
+        readed: 1,
         date_time: new Date().toISOString()
       };
 

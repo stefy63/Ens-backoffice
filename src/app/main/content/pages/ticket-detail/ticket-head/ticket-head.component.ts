@@ -12,6 +12,9 @@ import swal, { SweetAlertType, SweetAlertResult } from 'sweetalert2'; // sweetal
 import { ApiTicketHistoryService } from '../../../../../services/api/api-ticket-history.service';
 import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
 import { ITicketHistoryType } from '../../../../../interfaces/i-ticket-history-type';
+import { SocketService } from '../../../../../services/socket/socket.service';
+import { WsEvents } from '../../../../../type/ws-events';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Component({
   selector: 'fuse-ticket-head',
@@ -21,6 +24,7 @@ import { ITicketHistoryType } from '../../../../../interfaces/i-ticket-history-t
 export class TicketHeadComponent implements OnInit {
 
   @Input('openTicket') ticket:  ITicket;
+  public newTicket =  new BehaviorSubject<ITicket>(this.ticket);
   public open = false;
   public ticketReason: string;
   public user;
@@ -31,6 +35,7 @@ export class TicketHeadComponent implements OnInit {
     private location: Location,
     private store: LocalStorageService,
     private apiTicketService: ApiTicketService,
+    private socketService: SocketService,
     private apiTicketHistoryService: ApiTicketHistoryService
   ) {
     this.user = this.store.getItem('user');
@@ -43,8 +48,14 @@ export class TicketHeadComponent implements OnInit {
     this.ticketReason = (initMessage) ? initMessage.action : '';
     if (this.ticket.status.status === 'ONLINE' && this.ticket.id_operator === this.user.id) {
       this.open = true;
-    } 
- 
+    }
+    this.newTicket.next(this.ticket);
+
+    this.socketService.getMessage(WsEvents.ticketHistory.create)
+      .subscribe((data: ITicket) => {
+        // const historys: ITicketHistory[] = _.orderBy(data.historys, 'date_time', 'asc');
+        this.newTicket.next(data);
+      });
   }
 
   async activateChat() {

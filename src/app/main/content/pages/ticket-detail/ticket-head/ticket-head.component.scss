@@ -44,7 +44,12 @@
       background:  url('/assets/images/patterns/rain-grey.png') repeat;
       overflow: auto;
       height: max-content;
-      // opacity: 0.5;
+    }
+
+    #note {
+        background-color: lightgoldenrodyellow;
+        overflow: auto;
+        height: max-content;
     }
 
     #content-bottom {
