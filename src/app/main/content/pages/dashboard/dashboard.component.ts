@@ -23,12 +23,13 @@ export class DashboardComponent implements OnInit, OnDestroy {
   public openTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
   public closedTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
   public myOpenTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
-
+  public totalBadge = 0;
   public options = ToastOptions;
 
 
   ngOnDestroy(): void {
-
+    this.socketService.removeListener(WsEvents.ticket.create);
+    this.socketService.removeListener(WsEvents.ticket.updated);
   }
 
 
@@ -60,6 +61,12 @@ export class DashboardComponent implements OnInit, OnDestroy {
         this.toast.info('Ticket Modificato', 'Il ticket di ' + (data as ITicket).user.surname + ' è stato modificato!');
       });
   }
+
+  private badgeUpdate(badge) {
+    this.totalBadge = badge; 
+  }
+
+
 
   private _setDataOutput() {
     this.newTicket.next(_.filter(this.ticket, item => item.id_status === 1));

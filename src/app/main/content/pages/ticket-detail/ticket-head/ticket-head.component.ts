@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import {Location} from '@angular/common';
 import { find } from 'lodash';
@@ -21,15 +21,17 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
   templateUrl: './ticket-head.component.html',
   styleUrls: ['./ticket-head.component.scss']
 })
-export class TicketHeadComponent implements OnInit {
+export class TicketHeadComponent implements OnInit, OnDestroy {
+
+  private ticketStatus: ITicketStatus;
+  private apiTicketHistoryType: ITicketHistoryType;
 
   @Input('openTicket') ticket:  ITicket;
   public newTicket =  new BehaviorSubject<ITicket>(this.ticket);
   public open = false;
   public ticketReason: string;
   public user;
-  private ticketStatus: ITicketStatus;
-  private apiTicketHistoryType: ITicketHistoryType;
+  public badge = 0;
 
   constructor(
     private location: Location,
@@ -53,9 +55,14 @@ export class TicketHeadComponent implements OnInit {
 
     this.socketService.getMessage(WsEvents.ticketHistory.create)
       .subscribe((data: ITicket) => {
-        // const historys: ITicketHistory[] = _.orderBy(data.historys, 'date_time', 'asc');
+        // data.historys = _.orderBy(data.historys, 'date_time', 'asc');
         this.newTicket.next(data);
       });
+
+  }
+
+  ngOnDestroy() {
+    this.socketService.removeListener(WsEvents.ticketHistory.create);
   }
 
   async activateChat() {

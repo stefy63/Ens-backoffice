@@ -46,12 +46,17 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
     this.data.subscribe(data => {
       this.ticket = data;
       this.cd.markForCheck();
-
+      if (this.ticketHistorys){
+        const length = this.ticketHistorys.length;
+      }
       this.ticketHistorys = _.chain(data.historys)
                             .filter((item) => item.type.type === 'NOTE')
                             .orderBy( 'date_time', 'asc')
                             .value();
-      this.readyToReply();
+                            
+      if (this.ticketHistorys.length > length){
+        this.readyToReply();
+      }
     });
     this.historyType = this.storage.getItem('ticket_history_type');
   }

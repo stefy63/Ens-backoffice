@@ -48,11 +48,10 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit {
     this.data.subscribe(item => {
       this.ticket = item;
       this.cd.markForCheck();
-
+      this.chatService.markMessagesReaded(this.ticket.id);
       this.ticketHistorys = _.orderBy(this.ticket.historys, 'date_time', 'asc');
       this.readyToReply();
     });
-    this.chatService.markMessagesReaded(this.ticket.id);
     this.historyType = this.storage.getItem('ticket_history_type');
   }
 

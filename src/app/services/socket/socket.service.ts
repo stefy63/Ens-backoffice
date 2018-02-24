@@ -14,8 +14,10 @@ export class SocketService {
 
   public getMessage(event: string) {
     return this.socket
-      .fromEvent(event)
-      // .map( data => data.msg )
-      ;
+      .fromEvent(event);
+  }
+
+  public removeListener(event: string) {
+    this.socket.removeListener(event);
   }
 }

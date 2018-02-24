@@ -1,82 +1,70 @@
-<div class="ticket-container col-md-12 container">
+<div class="ticket-container col-12 container">
     <div class="filter-header">
       <mat-form-field class="mat-elevation-z4">
           <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
       </mat-form-field>
     </div>
 
-    <mat-table #table [dataSource]="dataSource" matSort class="col-md-12">
+    <mat-table #table [dataSource]="dataSource" matSort class="col-12">
 
       <!-- service Column -->
       <ng-container matColumnDef="service.service">
-        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-md-1"> Servizio</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="col-md-1"> {{element.service?.service}} </mat-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-1"> Servizio</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="col-1"> {{element.service?.service}} </mat-cell>
       </ng-container>
 
       <!-- status Column -->
       <ng-container matColumnDef="status.status">
-        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-md-1"> Stato</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="col-md-1"> {{element.status?.status}} </mat-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-1"> Stato</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="col-1"> {{element.status?.status}} </mat-cell>
       </ng-container>
 
       <!-- operator Column -->
       <ng-container matColumnDef="operator.firstname">
-        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-md-2"> Operatore</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="col-md-2">{{element.operator?.firstname}} {{element.operator?.lastname}}</mat-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-2"> Operatore</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="col-2">{{element.operator?.firstname}} {{element.operator?.lastname}}</mat-cell>
       </ng-container>
 
       <!-- user Column -->
       <ng-container matColumnDef="user.name">
-        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-md-2"> Utente</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="col-md-2"> {{element.user?.name}} {{element.user?.surname}} </mat-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-2"> Utente</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="col-2"> {{element.user?.name}} {{element.user?.surname}} </mat-cell>
       </ng-container>
 
       <!-- category Column -->
       <ng-container matColumnDef="category.category">
-        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-md-1"> Categoria</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="col-md-1"> {{element.category?.category}} </mat-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-1"> Categoria</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="col-1"> {{element.category?.category}} </mat-cell>
       </ng-container>
       
       <!-- phone Column -->
-      <ng-container matColumnDef="phone"class="col-md-2 text-right">
-        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-md-12 text-right"><span class="col-md-12 text-right">Telefono</span></mat-header-cell>
-        <mat-cell *matCellDef="let element" class="col-md-2 text-right"> {{element.phone}} </mat-cell>
+      <ng-container matColumnDef="phone">
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-2 text-center"><span class="col-12 text-center">Telefono</span></mat-header-cell>
+        <mat-cell *matCellDef="let element" class="col-2 text-right"> {{element.phone}} </mat-cell>
       </ng-container>
 
       <!-- date_time Column -->
       <ng-container matColumnDef="date_time">
-        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-md-2"> Data</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="col-md-2"> {{element.date_time | date:'dd/MM/yyyy HH:mm'}} </mat-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-2"> Data</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="col-2"> {{element.date_time | date:'dd/MM/yyyy HH:mm'}} </mat-cell>
       </ng-container>
-
-      <!-- closed Column -->
-<!--  <ng-container matColumnDef="closed">
-        <mat-header-cell *matHeaderCellDef>
-      <ng-container matColumnDef="id" >
-        <mat-header-cell *matHeaderCellDef class="text-right"> Azioni</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-right"> Chiuso</mat-header-cell>
-        <mat-cell *matCellDef="let element"> {{element.closed}} </mat-cell>
-      </ng-container> 
--->
 
       <!-- id Column -->
       <ng-container matColumnDef="id" >
-        <mat-header-cell *matHeaderCellDef class="text-right col-md-1 "> Azioni</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-right col-md-1">
-          <div style="display: inline-block;text-align:rigth">
+        <mat-header-cell *matHeaderCellDef class="text-right col-1 "> Azioni</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-right col-1">
+          <div class="action" >
 
             <button class="mat-icon-button mat-warn" (click)="showTicketDetail(element)">
               <mat-icon class="">visibility</mat-icon>
             </button>
-<!-- 
-            <button (click)="editItem(row)"  style="display: inline-block;">
-              <mat-icon class="md-18">mode_edit</mat-icon>
-            </button>
+          
 
-            <button (click)="deleteItem(row)"  style="display: inline-block;">
-              <mat-icon class="md-18">delete</mat-icon>
-            </button>
-                  -->
+           <span *ngIf="dataBadge[element.id] > 0" 
+             class="badge badge-pill badge-danger mat-elevation-z8"
+             [innerHTML]="dataBadge[element.id]"></span>
+
+          
           </div>
 
         </mat-cell>
@@ -88,12 +76,3 @@
 
     <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
 </div>
-
-
-<!-- <cdk-table #table [dataSource]="dataSource">
-  <ng-container *ngFor="let colId of ['col1', 'col2', 'col3', 'col4']; let cIndex = index;"
-                cdkColumnDef="{{colId}}">
-    <cdk-header-cell *cdkHeaderCellDef>{{colId}}</cdk-header-cell>
-    <cdk-cell *cdkCellDef="let row; let rIndex = index;"> {{cIndex}},{{rIndex}} </cdk-cell>
-  </ng-container>
-</cdk-table> -->
