@@ -50,6 +50,7 @@
     "ngx-cookie-service": "1.0.9",
     "perfect-scrollbar": "1.0.3",
     "rxjs": "5.5.2",
+    "simplewebrtc": "3.0.1",
     "sweetalert2": "7.12.12",
     "web-animations-js": "2.3.1",
     "zone.js": "0.8.18"

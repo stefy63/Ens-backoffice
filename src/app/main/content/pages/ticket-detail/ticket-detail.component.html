@@ -11,9 +11,11 @@
     <div *ngSwitchCase="'SOCIAL'">
 
     </div>
-    <div *ngSwitchDefault>
-
+    <div *ngSwitchCase="'VIDEOCHAT'">
+        <fuse-ticket-video-chat [openTicket]="ticket"></fuse-ticket-video-chat>
     </div>
-</div>
+    <!-- <div *ngSwitchDefault>
 
+    </div> -->
+</div>
 

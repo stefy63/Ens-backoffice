@@ -8,6 +8,7 @@ import {TicketMessagesComponent} from './ticket-messages/ticket-messages.compone
 import {ChatService} from '../../../../services/ticket-messages/ticket-messages.service';
 import { TicketNoteComponent } from './ticket-note/ticket-note.component';
 import { SimpleNotificationsModule } from 'angular2-notifications';
+import { TicketVideoChatComponent } from './ticket-video-chat/ticket-video-chat.component';
 
 
 const routes: Routes = [
@@ -24,7 +25,8 @@ const routes: Routes = [
       TicketDetailComponent,
       TicketHeadComponent,
       TicketMessagesComponent,
-      TicketNoteComponent
+      TicketNoteComponent,
+      TicketVideoChatComponent
     ],
   imports: [
     SharedModule,

@@ -1,0 +1,15 @@
+<h1>My id - {{mypeerid}}</h1>
+<input type="text" [(ngModel)]="remoteid" />
+<!-- <button class="btn btn-primary" (click)="connect()">Connect</button>
+<button class="btn btn-success" (click)="videoconnect()">VideoChat</button> -->
+<video #localvideo></video>
+<video #remoteVideo></video>
+
+
+<div class="videoContainer">
+    <video id="localVideo" style="height: 150px;" oncontextmenu="return false;"></video>
+    <meter id="localVolume" class="volume" min="-45" max="-20" high="-25" low="-40"></meter>
+</div>
+<div id="localScreenContainer" class="videoContainer">
+</div>
+<div id="remotes"></div>
