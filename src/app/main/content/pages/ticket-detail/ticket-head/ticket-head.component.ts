@@ -16,6 +16,7 @@ import { SocketService } from '../../../../../services/socket/socket.service';
 import { WsEvents } from '../../../../../type/ws-events';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
+
 @Component({
   selector: 'fuse-ticket-head',
   templateUrl: './ticket-head.component.html',
@@ -27,11 +28,12 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   private apiTicketHistoryType: ITicketHistoryType;
 
   @Input('openTicket') ticket:  ITicket;
-  public newTicket =  new BehaviorSubject<ITicket>(this.ticket);
+  public newTicket =  new BehaviorSubject<ITicket>(this.newTicket);
   public open = false;
   public ticketReason: string;
   public user;
   public badge = 0;
+  public msgAlert: boolean;
 
   constructor(
     private location: Location,
@@ -46,12 +48,15 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     }
 
   ngOnInit() {
-    const initMessage = find(this.ticket.historys, item => item.type.type === 'INITIAL');
+    const initMessage = _.find(this.ticket.historys, item => item.type.type === 'INITIAL');
     this.ticketReason = (initMessage) ? initMessage.action : '';
     if (this.ticket.status.status === 'ONLINE' && this.ticket.id_operator === this.user.id) {
       this.open = true;
     }
     this.newTicket.next(this.ticket);
+    this.msgAlert = (this.ticket.id_operator 
+                      &&  this.user.id != this.ticket.id_operator 
+                      && this.ticket.status.status === 'ONLINE');
 
     this.socketService.getMessage(WsEvents.ticketHistory.create)
       .subscribe((data: ITicket) => {
@@ -69,31 +74,35 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     if (this.ticket.status.status === 'ONLINE' && this.ticket.id_operator !== this.user.id) {
       const confirm = await this.confirmAlert('Conferma Trasferimento Ticket?', '', 'warning');
       if (confirm.value) {
-        this.updateTicketStatus(_.find(this.ticketStatus, { status : 'ONLINE'}).id);
-        this.createHistoryTicketSystem(
+        await this.updateTicketStatus(_.find(this.ticketStatus, { status : 'ONLINE'}).id);
+        await this.createHistoryTicketSystem(
           'Trasferito tichet da Operatore: ' + this.user.firstname + ' ' + this.user.lastname
         );
         this.open = true;
+        this.msgAlert = false;
       }
     } else if (this.ticket.status.status === 'CLOSED') {
       const confirm = await this.confirmAlert('Conferma Riapertura Ticket?', '', 'warning');
       if (confirm.value) {
-        this.updateTicketStatus(_.find(this.ticketStatus, { status : 'ONLINE'}).id);
-        this.createHistoryTicketSystem(
+        await this.updateTicketStatus(_.find(this.ticketStatus, { status : 'ONLINE'}).id);
+        await this.createHistoryTicketSystem(
           'Riaperutra tichet da Operatore: '
         );
         this.open = true;
+        this.msgAlert = false;
       }
     } else {
       const confirm = await this.confirmAlert('Conferma acquisizione Ticket?', '', 'question');
       if (confirm.value) {
-        this.updateTicketStatus(_.find(this.ticketStatus, { status : 'ONLINE'}).id);
-        this.createHistoryTicketSystem(
+        await this.updateTicketStatus(_.find(this.ticketStatus, { status : 'ONLINE'}).id);
+        await this.createHistoryTicketSystem(
           'Acquisito tichet da Operatore: ' + this.user.firstname + ' ' + this.user.lastname
         );
         this.open = true;
+        this.msgAlert = false;
       }
     }
+
   }
 
   abortChat() {
@@ -118,7 +127,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     });
   }
 
-  private createHistoryTicketSystem(message: string) {
+   private async createHistoryTicketSystem(message: string) {
     const createHistory: ITicketHistory = {
       id: null,
       id_ticket: this.ticket.id,
@@ -127,15 +136,15 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
       readed: 1,
       date_time: new Date().toISOString()
     };
-    this.apiTicketHistoryService.create(createHistory);
+    await this.apiTicketHistoryService.create(createHistory);
   }
 
-  private updateTicketStatus(id_status: number) {
+  private async updateTicketStatus(id_status: number) {
     const updateTicket = { 
       id: this.ticket.id,
       id_status: id_status,
       id_operator: this.user.id
     };
-    this.apiTicketService.update(updateTicket as ITicket);
+    await this.apiTicketService.update(updateTicket as ITicket);
   }
 }

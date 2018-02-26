@@ -74,8 +74,6 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
     this.socketService.removeListener(WsEvents.ticketHistory.create);
   }
 
-
-
   ngAfterViewInit()
   {
   }

@@ -58,7 +58,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
           this.ticket.splice(index, 1, data as ITicket);
         }
         this._setDataOutput();
-        this.toast.info('Ticket Modificato', 'Il ticket di ' + (data as ITicket).user.surname + ' è stato modificato!');
+        this.toast.info('Ticket Modificato', 'Il ticket ' + (data as ITicket).id + ' è stato modificato!');
       });
   }
 
@@ -69,9 +69,9 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
 
   private _setDataOutput() {
-    this.newTicket.next(_.filter(this.ticket, item => item.id_status === 1));
-    this.openTicket.next(_.filter(this.ticket, item => item.id_status === 2));
-    this.closedTicket.next(_.filter(this.ticket, item => item.id_status === 3));
-    this.myOpenTicket.next(_.filter(this.ticket, item => item.id_status === 2 && item.id_operator === this.idOperator));
+    this.newTicket.next(_.filter(this.ticket, item => item.status.status === 'NEW'));
+    this.openTicket.next(_.filter(this.ticket, item => item.status.status === 'ONLINE' && item.id_operator !== this.idOperator));
+    this.closedTicket.next(_.filter(this.ticket, item => item.status.status === 'CLOSED'));
+    this.myOpenTicket.next(_.filter(this.ticket, item => item.status.status === 'ONLINE' && item.id_operator === this.idOperator));
   }
 }

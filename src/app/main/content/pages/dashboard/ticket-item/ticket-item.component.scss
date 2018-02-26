@@ -38,7 +38,7 @@ mat-row:nth-child(odd){
 }
 
 mat-header-row {
-    background-color:cornflowerblue;
+    background-color:#25b2f7;
     font-weight: bolder;
     mat-header-cell {
         color: white;
@@ -47,6 +47,7 @@ mat-header-row {
 
 .mat-cell {
     position: relative;
+    font-size: 12px;
 
 }
 

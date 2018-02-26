@@ -18,7 +18,9 @@
       </mat-list>
     </mat-tab>
     <mat-tab label="I Miei Ticket Aperti">
-      <fuse-ticket-item (badge)="badgeUpdate($event)"  [allTicket]="myOpenTicket"></fuse-ticket-item>
+      <div>
+        <fuse-ticket-item (badge)="badgeUpdate($event)"  [allTicket]="myOpenTicket"></fuse-ticket-item>
+      </div>  
     </mat-tab>
   </mat-tab-group>
 </div>

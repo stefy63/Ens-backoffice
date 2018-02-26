@@ -17,7 +17,7 @@ export class ApiTicketHistoryService {
     private http: HttpClient,
   ) {  }
 
-  public create(history: ITicketHistory): Promise<ITicketHistory> {
+  public async create(history: ITicketHistory): Promise<ITicketHistory> {
     const headers = this.headers;
     const params = new HttpParams()
       .set('id_ticket', history.id_ticket.toString())
@@ -31,7 +31,7 @@ export class ApiTicketHistoryService {
       params
     };
 
-    return this.http.post(this.baseUrl + '/tickethistory/' + history.id_ticket, null, options).map(data => data as ITicketHistory).toPromise();
+    return await this.http.post(this.baseUrl + '/tickethistory/' + history.id_ticket, null, options).map(data => data as ITicketHistory).toPromise();
   }
 
   public updateReaded(idTicket: number): Promise<boolean> {

@@ -24,7 +24,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit {
 
   @Input('ticket') data: Observable<any>;
   public ticket: ITicket;
-  public ticketHistorys: ITicketHistory[];
+  public ticketHistorys: ITicketHistory[] = [];
   private historyType: ITicketHistoryType[];
 
 
@@ -47,10 +47,10 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.data.subscribe(item => {
       this.ticket = item;
-      this.cd.markForCheck();
       this.chatService.markMessagesReaded(this.ticket.id);
       this.ticketHistorys = _.orderBy(this.ticket.historys, 'date_time', 'asc');
       this.readyToReply();
+      this.cd.markForCheck();
     });
     this.historyType = this.storage.getItem('ticket_history_type');
   }
@@ -92,7 +92,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit {
       const type = (this.storage.getItem('token').id_user) ? 'USER' : 'OPERATOR';
 
       const message: ITicketHistory = {
-        id: 0,
+        id: null,
         id_ticket: this.ticket.id,
         id_type:  _.find(this.historyType, item => item.type === type).id,
         action: this.replyForm.form.value.message,
