@@ -53,7 +53,7 @@ const config: SocketIoConfig = { url: environment.ws_url + ':' + environment.ws_
         SocketIoModule.forRoot(config),
         PagesModule,
         SimpleNotificationsModule.forRoot(),
-        MDBBootstrapModule.forRoot()
+        MDBBootstrapModule.forRoot(),
     ],
     providers: [
         FuseSplashScreenService,

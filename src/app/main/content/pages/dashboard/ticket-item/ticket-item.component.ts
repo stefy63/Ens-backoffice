@@ -10,6 +10,7 @@ import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
 import { SocketService } from '../../../../../services/socket/socket.service';
 import { WsEvents } from '../../../../../type/ws-events';
 
+
 @Component({
   selector: 'fuse-ticket-item',
   templateUrl: './ticket-item.component.html',
@@ -45,7 +46,7 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
     private cd: ChangeDetectorRef,
     private router: Router,
     private socketService: SocketService,
-    private storage: LocalStorageService
+    private storage: LocalStorageService,
   ) {  }
 
   ngOnInit() {

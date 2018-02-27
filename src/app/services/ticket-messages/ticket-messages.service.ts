@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import {FuseUtils} from '../../core/fuseUtils';
 import { ApiTicketHistoryService } from '../api/api-ticket-history.service';
 import { ITicketHistory } from '../../interfaces/i-ticket-history';
+import { ITicket } from '../../interfaces/i-ticket';
 
 @Injectable()
 export class ChatService {
@@ -15,11 +16,11 @@ export class ChatService {
   {
   }
 
-  public async sendMessage(message: ITicketHistory) {
-    return await this.apiTicket.create(message);
+  public sendMessage(message: ITicketHistory): Observable<ITicketHistory> {
+    return this.apiTicket.create(message);
   }
 
-  public async markMessagesReaded(idTicket: number) {
-    return await this.apiTicket.updateReaded(idTicket);
+  public markMessagesReaded(idTicket: number): Observable<boolean>  {
+    return this.apiTicket.updateReaded(idTicket);
   }
 }

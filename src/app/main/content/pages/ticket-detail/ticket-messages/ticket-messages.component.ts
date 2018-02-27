@@ -42,17 +42,17 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit {
     private socketService: SocketService,
     private toast: NotificationsService
   ) {
+    this.historyType = this.storage.getItem('ticket_history_type');
   }
 
   ngOnInit() {
     this.data.subscribe(item => {
       this.ticket = item;
-      this.chatService.markMessagesReaded(this.ticket.id);
+      this.chatService.markMessagesReaded(this.ticket.id).subscribe();
       this.ticketHistorys = _.orderBy(this.ticket.historys, 'date_time', 'asc');
       this.readyToReply();
       this.cd.markForCheck();
     });
-    this.historyType = this.storage.getItem('ticket_history_type');
   }
 
   ngAfterViewInit() {
@@ -87,10 +87,9 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async reply(event) {
+  reply(event) {
     if (!!this.replyForm.form.value.message && this.replyForm.form.value.message.charCodeAt() !== 10) {
       const type = (this.storage.getItem('token').id_user) ? 'USER' : 'OPERATOR';
-
       const message: ITicketHistory = {
         id: null,
         id_ticket: this.ticket.id,
@@ -100,7 +99,10 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit {
         date_time: new Date().toISOString()
       };
 
-      const ret: ITicketHistory = await this.chatService.sendMessage(message);
+      this.chatService.sendMessage(message)
+        .subscribe(data => {
+          const ret: ITicketHistory = data;
+        });
     } else {
       this.toast.error('Messaggio Vuoto', 'Impossibile spedire messaggi vuoti');
     }

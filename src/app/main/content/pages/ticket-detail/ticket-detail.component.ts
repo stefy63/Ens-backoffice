@@ -24,9 +24,12 @@ export class TicketDetailComponent implements OnInit {
     this.idTicket = parseInt(this.route.snapshot.paramMap.get('id'));
   }
 
-  async ngOnInit() {
-    this.ticket = await this.apiTicket.getFromId(this.idTicket);
-    this.service = this.ticket.service.service;
+  ngOnInit() {
+    this.apiTicket.getFromId(this.idTicket)
+      .subscribe((data) => {
+        this.ticket = data;
+        this.service = this.ticket.service.service;
+      });
   }
 
 }

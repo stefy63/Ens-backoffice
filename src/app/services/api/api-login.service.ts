@@ -3,7 +3,6 @@ import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { IDataLogin } from '../../interfaces/i-data-login';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/do';
 import { LocalStorageService } from '../local-storage/local-storage.service';
 
 @Injectable()
@@ -32,7 +31,6 @@ export class ApiLoginService {
     };
 
     return this.http.post(this.baseUrl + '/login/' + isOperator, null, options);
-      // .do((data) =>  this.storage.setItem('user', data));
   }
 
 }

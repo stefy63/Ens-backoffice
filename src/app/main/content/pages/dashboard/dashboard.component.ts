@@ -37,14 +37,17 @@ export class DashboardComponent implements OnInit, OnDestroy {
     private apiTicket: ApiTicketService,
     private storage: LocalStorageService,
     private socketService: SocketService,
-    private toast: NotificationsService
+    private toast: NotificationsService,
   ) {
-    this.idOperator = this.storage.getItem('user').id;
+    this.idOperator = this.storage.getItem('user').id;    
   }
 
-  async ngOnInit() {
-    this.ticket = await this.apiTicket.get();
-    this._setDataOutput();
+  ngOnInit() {
+    this.apiTicket.get()
+        .subscribe(data => {
+          this.ticket = data;
+          this._setDataOutput();
+        });
     this.socketService.getMessage(WsEvents.ticket.create)
       .subscribe((data) => {
         this.ticket.push(data as ITicket);

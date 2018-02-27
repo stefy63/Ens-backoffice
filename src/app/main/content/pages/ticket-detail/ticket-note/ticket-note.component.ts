@@ -87,7 +87,7 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async reply(event) {
+  reply(event) {
     if (!!this.replyForm.form.value.message && this.replyForm.form.value.message.charCodeAt() !== 10) {
 
       const message: ITicketHistory = {
@@ -99,7 +99,11 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
         date_time: new Date().toISOString()
       };
 
-      const ret: ITicketHistory = await this.chatService.sendMessage(message);
+      
+      this.chatService.sendMessage(message)
+        .subscribe( data => {
+          const ret: ITicketHistory = data; 
+        });
     } else {
       this.toast.error('Messaggio Vuoto', 'Impossibile spedire messaggi vuoti');
     }

@@ -4,25 +4,33 @@
     [innerHTML]="totalBadge"></span>
 
   <mat-tab-group class="mat-elevation-z24">
+
     <mat-tab label="Nuove">
-      <fuse-ticket-item [allTicket]="newTicket"></fuse-ticket-item>
+      <mat-list>
+        <fuse-ticket-item [allTicket]="newTicket"></fuse-ticket-item>
+      </mat-list>
     </mat-tab>
+
     <mat-tab label="Aperte">
       <mat-list>
           <fuse-ticket-item [allTicket]="openTicket"></fuse-ticket-item>
       </mat-list>
     </mat-tab>
+
     <mat-tab label="Chiuse">
       <mat-list>
           <fuse-ticket-item [allTicket]="closedTicket"></fuse-ticket-item>
       </mat-list>
     </mat-tab>
+
     <mat-tab label="I Miei Ticket Aperti">
       <div>
         <fuse-ticket-item (badge)="badgeUpdate($event)"  [allTicket]="myOpenTicket"></fuse-ticket-item>
       </div>  
     </mat-tab>
+    
   </mat-tab-group>
 </div>
 
 <simple-notifications [options]="options"></simple-notifications>
+

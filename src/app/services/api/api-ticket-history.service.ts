@@ -4,7 +4,6 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { ITicketHistory } from '../../interfaces/i-ticket-history';
 import * as moment from 'moment';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class ApiTicketHistoryService {
@@ -17,7 +16,7 @@ export class ApiTicketHistoryService {
     private http: HttpClient,
   ) {  }
 
-  public async create(history: ITicketHistory): Promise<ITicketHistory> {
+  public create(history: ITicketHistory): Observable<ITicketHistory> {
     const headers = this.headers;
     const params = new HttpParams()
       .set('id_ticket', history.id_ticket.toString())
@@ -31,16 +30,16 @@ export class ApiTicketHistoryService {
       params
     };
 
-    return await this.http.post(this.baseUrl + '/tickethistory/' + history.id_ticket, null, options).map(data => data as ITicketHistory).toPromise();
+    return this.http.post(this.baseUrl + '/tickethistory/' + history.id_ticket, null, options).map(data => data as ITicketHistory);
   }
 
-  public updateReaded(idTicket: number): Promise<boolean> {
+  public updateReaded(idTicket: number): Observable<boolean> {
     const headers = this.headers;
 
     const options = {
       headers
     };
-    return this.http.put(this.baseUrl + '/tickethistory/' + idTicket, null, options).map(data => data as boolean).toPromise();
+    return this.http.put(this.baseUrl + '/tickethistory/' + idTicket, null, options).map(data => data as boolean);
   }
 
 
