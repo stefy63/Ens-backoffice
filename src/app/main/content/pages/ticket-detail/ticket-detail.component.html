@@ -1,4 +1,4 @@
-<div [ngSwitch]="service">
+<div [ngSwitch]="service" *ngIf="ticket">
     <div *ngSwitchCase="'CHAT'">
         <fuse-ticket-head [openTicket]="ticket"></fuse-ticket-head>
     </div>

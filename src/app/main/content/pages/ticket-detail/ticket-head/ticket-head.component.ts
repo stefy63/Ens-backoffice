@@ -48,6 +48,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     }
 
   ngOnInit() {
+    console.log(this.ticket);
     const initMessage = _.find(this.ticket.historys, item => item.type.type === 'INITIAL');
     this.ticketReason = (initMessage) ? initMessage.action : '';
     if (this.ticket.status.status === 'ONLINE' && this.ticket.id_operator === this.user.id) {

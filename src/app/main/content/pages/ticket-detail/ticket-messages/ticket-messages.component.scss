@@ -15,8 +15,8 @@
         .bubble {
           position: relative;
           padding: 6px 7px 8px 9px;
-          background-color: lightgoldenrodyellow;
-          box-shadow: 5px 5px 5px rgba(0, 0, 0, .5);
+          background-color: white;
+          // box-shadow: 1px 1px 5px rgba(0, 0, 0, .5);
           border-radius: 6px;
 
           &:before {
@@ -60,8 +60,8 @@
 
           .bubble {
             margin-left: auto;
-            background-color: #E8F5E9;
-            border: 1px solid #DFEBE0;
+            background-color: #e8f5e9;
+            border: 1px solid #e8f5e9;
             order: 1;
             &:before {
               right: -11px;
