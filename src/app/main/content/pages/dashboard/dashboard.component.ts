@@ -65,7 +65,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
       });
   }
 
-  private badgeUpdate(badge) {
+  public badgeUpdate(badge) {
     this.totalBadge = badge; 
   }
 
