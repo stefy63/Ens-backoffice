@@ -4,12 +4,12 @@ export const environment = {
 
     
     // Socket.io configuration url
-    ws_url: 'http://localhost',
+    ws_url: 'http://devens2.3punto6.com',
     ws_suffix: '',
     ws_port: 9000,
 
     // API configuration url
-    api_url: 'http://localhost',
+    api_url: 'http://devens2.3punto6.com',
     api_port: 3030,
     api_suffix: '/api',
     
