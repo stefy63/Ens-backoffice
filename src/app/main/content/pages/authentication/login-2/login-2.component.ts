@@ -57,7 +57,6 @@ export class FuseLogin2Component implements OnInit
            (data) => {
                 this.storage.setItem('data', data);
                 if (this.authService.isAuthenticated()) {
-                    console.log(this.authService.getToken().token_session); // TO DO remove this line
                     this.router.navigate(['pages/dashboard']);
                 } else {
                     this.toast.error('Attenzione', 'Login Errato!');
