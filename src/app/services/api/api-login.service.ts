@@ -4,6 +4,9 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { IDataLogin } from '../../interfaces/i-data-login';
 import { Observable } from 'rxjs/Observable';
 import { LocalStorageService } from '../local-storage/local-storage.service';
+import { IOperator } from '../../interfaces/i-operator';
+import { forEach } from 'lodash';
+import { ITokenSession } from '../../interfaces/i-token-session';
 
 @Injectable()
 export class ApiLoginService {
@@ -33,4 +36,17 @@ export class ApiLoginService {
     return this.http.post(this.baseUrl + '/login/' + isOperator, null, options);
   }
 
+  public apiLogout(): Observable<any> {
+    const dataLogout: ITokenSession = this.storage.getItem('token');
+    const headers = this.headers;
+    const params = new HttpParams()
+    .set('idtokensession', dataLogout.id.toString());
+
+    const options = {
+      headers,
+      params
+    };
+
+    return this.http.post(this.baseUrl + '/logout', null, options);
+  }
 }

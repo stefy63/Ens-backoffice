@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { FuseSplashScreenService } from './core/services/splash-screen.service';
 import { TranslateService } from '@ngx-translate/core';
+import { ApiLoginService } from './services/api/api-login.service';
 
 @Component({
     selector   : 'fuse-root',
@@ -9,9 +10,15 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class AppComponent
 {
+    @HostListener('window:beforeunload', ['$event'])
+    beforeunloadHandler(event: Event) {
+        this.apiLoginService.apiLogout().subscribe();
+    }
+
     constructor(
         private fuseSplashScreen: FuseSplashScreenService,
-        private translate: TranslateService
+        private translate: TranslateService,
+        private apiLoginService: ApiLoginService
     )
     {
         // Add languages
@@ -23,4 +30,5 @@ export class AppComponent
         // Use a language
         this.translate.use('en');
     }
+
 }

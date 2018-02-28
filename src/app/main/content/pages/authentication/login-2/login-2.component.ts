@@ -54,7 +54,7 @@ export class FuseLogin2Component implements OnInit
     private onSubmit() {
       this.apiLoginService.apiLogin(this.loginForm.value as IDataLogin, true)
         .subscribe(
-           (data) => {
+           (data) => {console.log(data);
                 this.storage.setItem('data', data);
                 if (this.authService.isAuthenticated()) {
                     this.router.navigate(['pages/dashboard']);

@@ -10,7 +10,7 @@ export const environment = {
 
     // API configuration url
     api_url: 'http://localhost',
-    api_port: 3000,
+    api_port: 3030,
     api_suffix: '/api',
     
 };

@@ -3,6 +3,7 @@ import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { FuseConfigService } from '../../core/services/config.service';
 import { TranslateService } from '@ngx-translate/core';
 import { LocalStorageService } from '../../services/local-storage/local-storage.service';
+import { ApiLoginService } from '../../services/api/api-login.service';
 
 @Component({
     selector: 'fuse-toolbar',
@@ -22,7 +23,8 @@ export class FuseToolbarComponent implements OnInit {
         private router: Router,
         private fuseConfig: FuseConfigService,
         private translate: TranslateService,
-        private storage: LocalStorageService
+        private storage: LocalStorageService,
+        private apiLoginService: ApiLoginService
     ) {
         this.userStatusOptions = [
             {
@@ -91,6 +93,7 @@ export class FuseToolbarComponent implements OnInit {
     }
 
     logout() {
+        this.apiLoginService.apiLogout().subscribe();
         this.storage.clear();
         this.router.navigate(['pages/authentication/login-2']);
     }
