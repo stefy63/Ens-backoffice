@@ -1,68 +1,10 @@
-<div class="container col-12" *ngIf="newTicket">
-        <div class="row left-col col-12">
-          <div class="col-7">
-            <fieldset class="col-12 border mat-elevation-z4">
-            <legend>Dettaglio Ticket:</legend>
-              <table class="table table-bordered">
-                <thead>
-                  <tr>
-                    <th>Stato</th>
-                    <th>Nome</th>
-                    <th>Cognome</th>
-                    <th>Canale</th>
-                    <th>Data e Ora</th>
-                    <th>Numero di Telefono</th>
-                  </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                      <td [ngClass]="{'blink': (ticket.status.status === 'ONLINE') }"  >{{ticket.status.status}}</td>
-                      <td>{{ticket.user.name}}</td>
-                      <td>{{ticket.user.surname}}</td>
-                      <td>{{ticket.service.service}}</td>
-                      <td>{{ticket.date_time | date:'dd/MM/yyyy HH:mm'}}</td>
-                      <td>{{ticket.phone}}</td>
-                    </tr>
-                </tbody>
-              </table>
-            </fieldset>
-          </div>
-      
-          <div class="col-5 right-col">
-            <fieldset class="border mat-elevation-z4">
-            <legend>Descrizione:</legend>
-              <div >
-                  {{ticketReason}}
-              </div>
-            </fieldset>
-          </div>
-          <div class="row col-12">
-            <div class="col-7 text-center">
-              <br>
-              <button *ngIf="!open" class="mat-button done-button mat-accent col-3" (click)="activateChat()"><mat-icon>done</mat-icon> Accetta</button>
-              <button *ngIf="open" class="mat-button delete-button mat-warn col-3" (click)="closeChat()"><mat-icon>close</mat-icon> close</button>
-              <button class="mat-button delete-button mat-warn col-3" (click)="abortChat()"><mat-icon>reply</mat-icon> Indietro</button>
-            </div>
-            <div class="col-5 text-center">
-              <br>
-              <span *ngIf="msgAlert" class="alert text-center col-12">Ticket già aperto da [ {{ticket.operator.firstname + ' ' + ticket.operator.lastname}} ]</span>
-            </div>
-          </div>
-      
-        </div>
-      
-        <div id="content-bottom" class="row col-12 mt-12 mat-elevation-z4" *ngIf="open">
-      
-            <div class="videocontainer">
-                <div>
-                    <video id="localVideo"></video>
-                </div>
-                <div id="remoteVideos" class="remoteVideos"></div>
-            </div>
-        </div>
-      
-      
-      </div>
+
+<div class="videocontainer">
+    <div>
+        <video id="localVideo"></video>
+    </div>
+    <div id="remoteVideos" class="remoteVideos"></div>
+</div>
       
 
 

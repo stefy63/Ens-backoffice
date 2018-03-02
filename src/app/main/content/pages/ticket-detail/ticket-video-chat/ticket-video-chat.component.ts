@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, ContentChildren, ViewChildren} from '@angular/core';
+import { Component, OnInit, ViewChild, Input, ContentChildren, ViewChildren, Renderer2, ElementRef} from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import { Observable } from 'rxjs/Observable';
 import simplewebrtc from 'simplewebrtc';
@@ -10,6 +10,7 @@ import simplewebrtc from 'simplewebrtc';
 })
 export class TicketVideoChatComponent implements OnInit {
  
+  
   public peer: any;
   public remoteid;
   public mypeerid;
@@ -21,16 +22,13 @@ export class TicketVideoChatComponent implements OnInit {
   @ViewChild('remoteVideo') remoteVideo: HTMLVideoElement;
   @ViewChild('localvideo') localVideo: HTMLDivElement;
 
-  constructor() {
+  constructor(private renderer: Renderer2, private elRef: ElementRef) {
    
    }
 
 
 
   ngOnInit() {
-  
-     
-    
     this.n.getUserMedia = this.n.getUserMedia ||
                         this.n.webkitGetUserMedia ||
                         this.n.mozGetUserMedia ||
@@ -45,8 +43,8 @@ export class TicketVideoChatComponent implements OnInit {
       // immediately ask for camera access
       autoRequestMedia: true,
       debug: false,
-      detectSpeakingEvents: true,
-      autoAdjustMic: false,
+      // detectSpeakingEvents: true,
+      // autoAdjustMic: false,
       // url: 'https://example.com/'
     });
     
@@ -66,7 +64,8 @@ export class TicketVideoChatComponent implements OnInit {
     this.peer.on('localScreenRemoved', function (video) {
     });
     this.peer.on('videoAdded', function (video, peer) {
-        const el = this.localvideo.nativeElement.value;
+      const el: HTMLVideoElement = document.querySelector('#remoteVideos video');
+      el.setAttribute('width', '100%');
     });
 
     this.peer.on('videoRemoved', function (video, peer) {
@@ -87,7 +86,7 @@ export class TicketVideoChatComponent implements OnInit {
     this.peer.on('connectivityError', function (peer) {
     });
 
-    // Since we use this twice we put it here
+    // Since we use this twice we put it HTMLVideoElementhere
     function setRoom(name) {
         // document.querySelector('form').remove();
         // document.getElementById('title').innerText = 'Room: ' + name;
@@ -115,16 +114,9 @@ export class TicketVideoChatComponent implements OnInit {
     //     });
     // }
 
-  
-
-
-
-
+   
 
   }
-
-
-
 
 
 
