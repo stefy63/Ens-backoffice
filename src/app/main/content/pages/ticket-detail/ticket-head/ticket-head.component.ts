@@ -60,8 +60,6 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
 
     this.socketService.getMessage(WsEvents.ticketHistory.create)
       .subscribe((data: ITicket) => {
-        // console.log('SOCKET ARRIVED ---- ');
-        // data.historys = _.orderBy(data.historys, 'date_time', 'asc');
         this.newTicket.next(data);
       });
 

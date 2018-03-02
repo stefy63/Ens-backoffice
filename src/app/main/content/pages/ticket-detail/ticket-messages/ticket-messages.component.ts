@@ -7,7 +7,6 @@ import { ITicket } from '../../../../../interfaces/i-ticket';
 import * as _ from 'lodash';
 import { ITicketHistoryType } from '../../../../../interfaces/i-ticket-history-type';
 import { LocalStorageService } from '../../../../../services/local-storage/local-storage.service';
-import { SocketService } from '../../../../../services/socket/socket.service';
 import { WsEvents } from '../../../../../type/ws-events';
 import { ToastOptions } from '../../../../../type/toast-options';
 import { NotificationsService, SimpleNotificationsComponent} from 'angular2-notifications';
@@ -39,7 +38,6 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit {
     private cd: ChangeDetectorRef,
     private chatService: ChatService,
     private storage: LocalStorageService,
-    private socketService: SocketService,
     private toast: NotificationsService
   ) {
     this.historyType = this.storage.getItem('ticket_history_type');

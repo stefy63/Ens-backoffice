@@ -9,7 +9,6 @@ import { ChatService } from '../../../../../services/ticket-messages/ticket-mess
 import { ToastOptions } from '../../../../../type/toast-options';
 import { NotificationsService, SimpleNotificationsComponent} from 'angular2-notifications';
 import { FusePerfectScrollbarDirective } from '../../../../../core/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
-import { SocketService } from '../../../../../services/socket/socket.service';
 import { WsEvents } from '../../../../../type/ws-events';
 import { Observable } from 'rxjs/Observable';
 
@@ -37,7 +36,6 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
     private cd: ChangeDetectorRef,
     private chatService: ChatService,
     private storage: LocalStorageService,
-    private socketService: SocketService,
     private toast: NotificationsService
   ) { 
   }
