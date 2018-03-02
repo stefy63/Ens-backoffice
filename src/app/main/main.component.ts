@@ -4,7 +4,6 @@ import { FuseConfigService } from '../core/services/config.service';
 import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import { AuthService } from '../services/auth/auth.service';
-import { SocketService } from '../services/socket/socket.service';
 import { LocalStorageService } from '../services/local-storage/local-storage.service';
 
 @Component({
@@ -25,7 +24,6 @@ export class FuseMainComponent implements OnInit, OnDestroy
         private fuseConfig: FuseConfigService,
         private platform: Platform,
         private authService: AuthService,
-        private socketService: SocketService,
         private storage: LocalStorageService,
         @Inject(DOCUMENT) private document: any,
     )
@@ -45,18 +43,6 @@ export class FuseMainComponent implements OnInit, OnDestroy
             this.document.body.className += ' is-mobile';
         }
 
-        if (this.authService.isAuthenticated()) {
-            const user = this.storage.getItem('user');
-            this.socketService.sendMessage(
-                'welcome-message',
-                {
-                    userToken: this.authService.getToken().token_session,
-                    idUser: user.id,
-                    status: 'READY',
-                    userType: 'OPERATOR'
-                }
-            );
-        }
     }
 
     ngOnInit()

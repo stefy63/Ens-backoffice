@@ -34,7 +34,15 @@ const appRoutes: Routes = [
     }
 ];
 
-const config: SocketIoConfig = { url: environment.ws_url + ':' + environment.ws_port + environment.ws_suffix, options: {} };
+const options = {
+        reconnection: true,
+        reconnectionDelay: 1000,
+        reconnectionDelayMax : 5000,
+        reconnectionAttempts: Infinity,
+        multiplex: false
+}
+
+const config: SocketIoConfig = { url: environment.ws_url + ':' + environment.ws_port + environment.ws_suffix, options: options };
 
 @NgModule({
     declarations: [
