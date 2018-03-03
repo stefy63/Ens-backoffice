@@ -3,3 +3,17 @@
 div {
     width: 100%;
 }
+
+#content-bottom {
+    height: 68vh;
+    #chat {
+        background:  url('/assets/images/patterns/telegram.jpg') repeat;
+        overflow: auto;
+        height: max-content;
+    }
+    #note {
+        background-color: lightgoldenrodyellow;
+        overflow: auto;
+        height: max-content;
+    }
+}

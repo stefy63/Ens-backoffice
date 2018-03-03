@@ -7,9 +7,8 @@ import { ITicket } from '../../../../../interfaces/i-ticket';
 import * as _ from 'lodash';
 import { ITicketHistoryType } from '../../../../../interfaces/i-ticket-history-type';
 import { LocalStorageService } from '../../../../../services/local-storage/local-storage.service';
-import { WsEvents } from '../../../../../type/ws-events';
 import { ToastOptions } from '../../../../../type/toast-options';
-import { NotificationsService, SimpleNotificationsComponent} from 'angular2-notifications';
+import { NotificationsService} from 'angular2-notifications';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -21,7 +20,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class TicketMessagesComponent implements OnInit, AfterViewInit {
 
-  @Input('ticket') data: Observable<any>;
+  @Input('ticket') data: Observable<ITicket>;
   public ticket: ITicket;
   public ticketHistorys: ITicketHistory[] = [];
   private historyType: ITicketHistoryType[];

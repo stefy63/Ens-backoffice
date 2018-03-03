@@ -16,5 +16,7 @@ export const environment = {
     api_url: 'http://devens2.3punto6.com',
     api_port: 3030,
     api_suffix: '/api',
-    
+
+    // VideoChat Config
+    videoChat_room_suffix: 'Ens_',
 };

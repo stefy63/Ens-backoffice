@@ -1,6 +1,9 @@
-
+  
   .chat {
     height: 66vh;
+    background:  url('/assets/images/patterns/telegram.jpg') repeat;
+    // overflow: auto;
+    // height: max-content;
 
 
     #chat-content {

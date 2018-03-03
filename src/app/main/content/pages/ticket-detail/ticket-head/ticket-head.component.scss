@@ -40,21 +40,21 @@
         }
     }
 
-    #chat {
-      background:  url('/assets/images/patterns/telegram.jpg') repeat;
-      overflow: auto;
-      height: max-content;
-    }
 
-    #note {
-        background-color: lightgoldenrodyellow;
-        overflow: auto;
-        height: max-content;
-    }
 
-    #content-bottom {
-      height: 68vh;
-    }
+    // #content-bottom {
+    //     height: 68vh;
+    //     #chat {
+    //         background:  url('/assets/images/patterns/telegram.jpg') repeat;
+    //         overflow: auto;
+    //         height: max-content;
+    //     }
+    //     #note {
+    //         background-color: lightgoldenrodyellow;
+    //         overflow: auto;
+    //         height: max-content;
+    //     }
+    // }
 
     span.alert {
         color: red;
@@ -71,24 +71,5 @@
         100%{opacity: 0;}   
     }
 
-    // div.button-bar {
-    //     float: inherit;
-    //     border: 1px solid black;
-    //     width: 48%;
-    //     text-align: center;
-    //     height: 70px;
-    //     vertical-align: bottom;
-    //     button {
-    //         margin: 20px 20px;
-    //         .mat-accent {
-    //             font-weight: bolder;
-    //             color: green;
-    //         }
-    //         .mat-warn {
-    //             font-weight: bolder;
-    //             color: red;
-    //         }
-    //     }
-    // }
-
+   
 }

@@ -7,9 +7,8 @@ import * as _ from 'lodash';
 import { NgForm } from '@angular/forms';
 import { ChatService } from '../../../../../services/ticket-messages/ticket-messages.service';
 import { ToastOptions } from '../../../../../type/toast-options';
-import { NotificationsService, SimpleNotificationsComponent} from 'angular2-notifications';
+import { NotificationsService} from 'angular2-notifications';
 import { FusePerfectScrollbarDirective } from '../../../../../core/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
-import { WsEvents } from '../../../../../type/ws-events';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
@@ -37,7 +36,7 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
     private chatService: ChatService,
     private storage: LocalStorageService,
     private toast: NotificationsService
-  ) { 
+  ) {
   }
 
   ngOnInit() {
@@ -48,7 +47,7 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
                             .filter((item) => item.type.type === 'NOTE')
                             .orderBy( 'date_time', 'asc')
                             .value();
-                            
+
       this.readyToReply();
     });
     this.historyType = this.storage.getItem('ticket_history_type');
@@ -97,10 +96,10 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
         date_time: new Date().toISOString()
       };
 
-      
+
       this.chatService.sendMessage(message)
         .subscribe( data => {
-          const ret: ITicketHistory = data; 
+          const ret: ITicketHistory = data;
         });
     } else {
       this.toast.error('Messaggio Vuoto', 'Impossibile spedire messaggi vuoti');

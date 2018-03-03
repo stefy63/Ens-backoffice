@@ -2,7 +2,7 @@ export const environment = {
     production: false,
     hmr       : true,
 
-    
+
     // Socket.io configuration url
     ws_url: 'http://devens2.3punto6.com',
     ws_suffix: '',
@@ -12,4 +12,8 @@ export const environment = {
     api_url: 'http://devens2.3punto6.com',
     api_port: 3030,
     api_suffix: '/api',
+
+
+  // VideoChat Config
+  videoChat_room_suffix: 'Ens_',
 };
