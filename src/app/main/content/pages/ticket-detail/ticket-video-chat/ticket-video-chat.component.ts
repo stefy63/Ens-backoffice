@@ -1,8 +1,10 @@
-import { Component, OnInit, Input} from '@angular/core';
+import { Component, OnInit, Input, OnDestroy} from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import { Observable } from 'rxjs/Observable';
 import simplewebrtc from 'simplewebrtc';
 import {environment} from '../../../../../../environments/environment';
+import { NotificationsService, SimpleNotificationsComponent } from 'angular2-notifications';
+import { ToastOptions } from '../../../../../type/toast-options';
 
 
 @Component({
@@ -10,21 +12,20 @@ import {environment} from '../../../../../../environments/environment';
   templateUrl: './ticket-video-chat.component.html',
   styleUrls: ['./ticket-video-chat.component.scss']
 })
-export class TicketVideoChatComponent implements OnInit {
+export class TicketVideoChatComponent implements OnInit, OnDestroy {
 
 
-  @Input('ticket') data: Observable<ITicket>;
+  @Input() idTicket: number;
 
   public peer: any;
   public remoteid;
-  public mypeerid;
   public n = <any>navigator;
   public room: string;
-  public ticket: ITicket;
+  public options = ToastOptions;
 
-
-  constructor() {
-
+  constructor(
+    private toast: NotificationsService
+  ) {
    }
 
 
@@ -36,41 +37,61 @@ export class TicketVideoChatComponent implements OnInit {
       this.n.mediaDevices.getUserMedia ||
       this.n.msGetUserMedia;
 
-    this.data.subscribe((data: ITicket) => {
-      this.ticket = data;
-      this.room = environment.videoChat_room_suffix + this.ticket.id;
+      this.options.timeOut = 10000;
 
+      this.room = environment.videoChat_room_suffix + this.idTicket;
       this.peer = new simplewebrtc({
         // the id/element dom element that will hold "our" video
         localVideoEl: 'localVideo',
         // the id/element dom element that will hold remote videos
         remoteVideosEl: 'remoteVideos',
         // immediately ask for camera access
+        media: { audio: false, video: true },
         autoRequestMedia: true,
         debug: false,
         // detectSpeakingEvents: true,
         // autoAdjustMic: false,
         // url: 'https://example.com/'
       });
-
+           
       this.peer.on('readyToCall', () => {
-        this.peer.createRoom(this.room, function (err, name) {
-          console.log(' create room cb', arguments);
+        this.peer.createRoom(this.room, (err, name) => {
+          console.log(' create room cb', this.room);
         });
-
         this.peer.joinRoom(this.room);
+        this.toast.info('In Attesa di Connessione...!');
       });
 
-      this.peer.on('videoAdded', function (video, peer) {
-        const el: HTMLVideoElement = document.querySelector('#remoteVideos video');
-        el.setAttribute('width', '100%');
+      this.peer.on('videoAdded', (video, peer) => {
+        console.log('video added at ID: ', this.peer.getDomId(peer));
+        const remoteVideoElement: Element = document.querySelector('#' + this.peer.getDomId(peer));
+        remoteVideoElement.setAttribute('width', '100%');
+
+        if (peer && peer.pc) {
+          peer.pc.on('iceConnectionStateChange', (event) => {
+            switch (peer.pc.iceConnectionState) {
+              case 'checking':
+                  this.toast.info('Connessione...!');
+                  break;
+              case 'connected':
+              case 'completed': // on caller side
+                  this.toast.success('Connessione Stabilita!');
+                  break;
+              case 'disconnected':
+                  this.toast.warn('Disconnesso!');
+                  break;
+              case 'failedthis.localvideo.stpp();':
+                  this.toast.error('Connessione Fallita!');
+                  break;
+              case 'closed':
+                  this.toast.error('Connessione Chiusa!');
+                  break;
+            }
+          });
+        }
       });
-
-    });
-
-
-
-
+      
+     
     // this.peer.on('localStream', (stream) => {
     //
     // });
@@ -103,3 +124,9 @@ export class TicketVideoChatComponent implements OnInit {
 
 
   }
+
+  ngOnDestroy() {
+    this.peer.stopLocalVideo();
+    this.peer.leaveRoom();
+  }
+}

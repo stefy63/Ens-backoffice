@@ -1,18 +1,14 @@
 .videocontainer {
     position: relative;
-}
 
-#localVideo {
-    position: absolute;
-    top: -15px;
-    right: 10px;
-    height: 150px;
-    box-shadow: black 10px 10px 50px;
-}
 
-#remoteVideos {
-}
+    #localVideo {
+        position: absolute;
+        top: -15px;
+        right: 10px;
+        height: 200px;
+        box-shadow: black 10px 10px 50px;
+    }
 
-.videoWall {
-    width: 100% !important;
+
 }

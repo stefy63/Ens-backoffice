@@ -99,7 +99,7 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
     
       _.forEach(myTicket, item => {
         const unreaded: ITicketHistory[] = _.filter(item.historys, history => {
-              return !history.readed;
+              return (!history.readed && history.type.type === 'USER');
             });
         this.dataBadge[item.id] = unreaded.length;
       });
