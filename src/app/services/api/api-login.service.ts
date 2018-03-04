@@ -21,8 +21,7 @@ export class ApiLoginService {
     private storage: LocalStorageService
   ) { }
 
-  public apiLogin(dataLogin: IDataLogin, isOperator: boolean): Observable<any> {
-
+  public apiLogin(dataLogin: IDataLogin): Observable<any> {
     const headers = this.headers;
     const params = new HttpParams()
       .set('username', dataLogin.username)
@@ -33,7 +32,7 @@ export class ApiLoginService {
       params
     };
 
-    return this.http.post(this.baseUrl + '/login/' + isOperator, null, options);
+    return this.http.post(this.baseUrl + '/login/' + dataLogin.operator, null, options);
   }
 
   public apiLogout(): Observable<any> {

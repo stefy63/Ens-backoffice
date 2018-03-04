@@ -33,7 +33,8 @@ import { FuseSearchBarModule } from '../core/components/search-bar/search-bar.mo
         RouterModule,
         FuseNavigationModule,
         FuseShortcutsModule,
-        FuseSearchBarModule
+        FuseSearchBarModule,
+
     ],
     exports     : [
         FuseMainComponent

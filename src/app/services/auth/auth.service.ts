@@ -15,6 +15,11 @@ export class AuthService {
 
   public isAuthenticated(): boolean {
     const token: ITokenSession = this.getToken();
-    return (token !== undefined && moment().isSameOrBefore(token.token_expire_date));
+    return (!!token && moment().isSameOrBefore(token.token_expire_date));
+  }
+
+  public isOperator(): boolean {
+    const token: ITokenSession = this.getToken();
+    return (!!token && !!token.id_operator);
   }
 }

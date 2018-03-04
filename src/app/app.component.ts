@@ -10,11 +10,7 @@ import { ApiLoginService } from './services/api/api-login.service';
 })
 export class AppComponent
 {
-    @HostListener('window:beforeunload', ['$event'])
-    beforeunloadHandler(event: Event) {
-        this.apiLoginService.apiLogout().subscribe();
-    }
-
+   
     constructor(
         private fuseSplashScreen: FuseSplashScreenService,
         private translate: TranslateService,
@@ -29,6 +25,11 @@ export class AppComponent
 
         // Use a language
         this.translate.use('en');
+    }
+    
+    @HostListener('window:beforeunload', ['$event'])
+    beforeunloadHandler(event: Event) {
+        this.apiLoginService.apiLogout().subscribe();
     }
 
 }

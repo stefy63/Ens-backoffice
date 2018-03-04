@@ -3,6 +3,7 @@ import { SharedModule } from '../../../../core/modules/shared.module';
 import { RouterModule, Routes } from '@angular/router';
 import {TicketDetailComponent} from './ticket-detail.component';
 import {AuthGuard} from '../../../../guard/auth.guard';
+import { IsOperatorGuard } from '../../../../guard/is-operator.guard';
 import {TicketHeadComponent} from './ticket-head/ticket-head.component';
 import {TicketMessagesComponent} from './ticket-messages/ticket-messages.component';
 import {ChatService} from '../../../../services/ticket-messages/ticket-messages.service';
@@ -14,7 +15,7 @@ import { TicketVideoChatComponent } from './ticket-video-chat/ticket-video-chat.
 const routes: Routes = [
     {
         path     : 'pages/ticket-detail/:id',
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard, IsOperatorGuard],
         component: TicketDetailComponent
     }
 ];

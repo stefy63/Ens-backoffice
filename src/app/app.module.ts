@@ -26,11 +26,12 @@ import { AuthGuard } from './guard/auth.guard';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { ApiTicketService } from './services/api/api-ticket.service';
 import { ApiTicketHistoryService } from './services/api/api-ticket-history.service';
+import { IsOperatorGuard } from './guard/is-operator.guard';
 
 const appRoutes: Routes = [
     {
         path: '**',
-        redirectTo: 'pages/dashboard'
+        redirectTo: 'pages/user/user-dashboard'
     }
 ];
 
@@ -40,7 +41,7 @@ const options = {
         reconnectionDelayMax : 5000,
         reconnectionAttempts: Infinity,
         multiplex: false
-}
+};
 
 const config: SocketIoConfig = { url: environment.ws_url + ':' + environment.ws_port + environment.ws_suffix, options: options };
 
@@ -76,6 +77,7 @@ const config: SocketIoConfig = { url: environment.ws_url + ':' + environment.ws_
         ApiLoginService,
         AuthService,
         AuthGuard,
+        IsOperatorGuard,
         LocalStorageService,
         ApiTicketHistoryService
     ],

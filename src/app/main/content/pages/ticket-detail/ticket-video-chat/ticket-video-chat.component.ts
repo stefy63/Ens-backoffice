@@ -51,8 +51,11 @@ export class TicketVideoChatComponent implements OnInit, OnDestroy {
         debug: false,
         // detectSpeakingEvents: true,
         // autoAdjustMic: false,
-        // url: 'https://example.com/'
       });
+
+      if (environment.videoChat_server_url) {
+        this.peer.url = environment.videoChat_server_url;
+      }
            
       this.peer.on('readyToCall', () => {
         this.peer.createRoom(this.room, (err, name) => {

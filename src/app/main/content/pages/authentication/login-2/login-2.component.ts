@@ -52,22 +52,26 @@ export class FuseLogin2Component implements OnInit
     }
 
     private onSubmit() {
-      this.apiLoginService.apiLogin(this.loginForm.value as IDataLogin, true)
+      this.apiLoginService.apiLogin(this.loginForm.value as IDataLogin)
         .subscribe(
-           (data) => {console.log(data);
+           (data) => {
                 this.storage.setItem('data', data);
                 if (this.authService.isAuthenticated()) {
-                    // const user = this.storage.getItem('user');
+                    const userType = this.loginForm.value.operator ? 'OPERATOR' : 'USER';
                     this.socketService.sendMessage(
                         'welcome-message',
                         {
                             userToken: this.authService.getToken().token_session,
                             idUser: data.user.id,
                             status: 'READY',
-                            userType: 'OPERATOR'
+                            userType: userType
                         }
                     );
-                    this.router.navigate(['pages/dashboard']);
+                    if (!this.authService.isOperator()){
+                        this.router.navigate(['pages/user/user-dashboard']);
+                    } else {
+                        this.router.navigate(['pages/dashboard']);
+                    }
                 } else {
                     this.toast.error('Attenzione', 'Login Errato!');
                 }
@@ -83,7 +87,8 @@ export class FuseLogin2Component implements OnInit
     {
         this.loginForm = this.formBuilder.group({
             username   : ['', [Validators.required, Validators.minLength(3)]],
-            password: ['', [Validators.required, Validators.minLength(3)]]
+            password: ['', [Validators.required, Validators.minLength(3)]],
+            operator: [false]
         });
 
         this.loginForm.valueChanges.subscribe(() => {
@@ -112,7 +117,7 @@ export class FuseLogin2Component implements OnInit
             }
         }
     }
-
+    
     public bgSeason() {
         const mounth = moment().format('MMMM').toString().toLowerCase();
         return `url('/assets/images/backgrounds/${mounth}.jpg') no-repeat`;
