@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {SocketIoModule, Socket} from 'ng-socket-io';
+import {Socket} from 'ng-socket-io';
 
 
 @Injectable()
