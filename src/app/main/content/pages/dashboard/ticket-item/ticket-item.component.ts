@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ViewChild, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
-import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource, Sort } from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
@@ -20,6 +20,7 @@ import { WsEvents } from '../../../../../type/ws-events';
 export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private user: IUser;
+  private sortedData;
 
 
   @Input() allTicket: Observable<ITicket[]>;
@@ -76,8 +77,35 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit()
-  {
+  { 
+    
+
+
+    this.sort.sortChange.subscribe((sort: Sort) => {
+      this.paginator.pageIndex = 0;
+      console.log('Filter--> ', sort);
+      // const data = this.allTicket.slice();
+      // if (!sort.active || sort.direction == '') {
+      //   this.sortedData = data;
+      //   return;
+      // }
+
+      // this.sortedData = data.sort((a, b) => {
+      //   let isAsc = sort.direction == 'asc';
+      //   switch (sort.active) {
+      //     case 'name': return compare(a.name, b.name, isAsc);
+      //     case 'calories': return compare(+a.calories, +b.calories, isAsc);
+      //     case 'fat': return compare(+a.fat, +b.fat, isAsc);
+      //     case 'carbs': return compare(+a.carbs, +b.carbs, isAsc);
+      //     case 'protein': return compare(+a.protein, +b.protein, isAsc);
+      //     default: return 0;
+      //   }
+      // });
+    });
+  
   }
+  
+
 
   applyFilter(filterValue: string)
   {
