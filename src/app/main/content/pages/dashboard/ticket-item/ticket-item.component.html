@@ -28,7 +28,7 @@
 
       <!-- user Column -->
       <ng-container matColumnDef="user.name">
-        <mat-header-cell *matHeaderCellDef mat-sort-header="name" class="col-2"> Utente</mat-header-cell>
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-2"> Utente</mat-header-cell>
         <mat-cell *matCellDef="let element" class="col-2"> {{element.user?.name}} {{element.user?.surname}} </mat-cell>
       </ng-container>
 
@@ -56,7 +56,7 @@
         <mat-cell *matCellDef="let element" class="text-right col-1">
           <div class="action" >
 
-            <button class="mat-icon-button mat-warn" (click)="showTicketDetail(element)">
+            <button  class="mat-icon-button mat-warn" (click)="showTicketDetail(element)">
               <mat-icon class="">visibility</mat-icon>
             </button>
           
