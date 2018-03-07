@@ -11,6 +11,7 @@ import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
 import { ITicketHistoryType } from '../../../../../interfaces/i-ticket-history-type';
 import { SocketService } from '../../../../../services/socket/socket.service';
 import { Observable } from 'rxjs/Observable';
+import  * as moment from 'moment';
 
 
 @Component({
@@ -101,6 +102,39 @@ export class TicketHeadComponent implements OnInit {
     });
   }
 
+  private refuseChat() {
+    return swal({
+              title: 'Conferma Rifiuto Chat?',
+              text: 'Inserire la motivazione di questa scelta!',
+              input: 'text',
+              showCancelButton: true,
+              confirmButtonText: 'Conferma',
+              showLoaderOnConfirm: true,
+              preConfirm: (message) => {
+                return new Promise((resolve) => {
+                    if (!message) {
+                      swal.showValidationError(
+                        'Questo messaggio è obbligatorio.'
+                      )
+                    }
+                    resolve()
+                })
+              },
+              // allowOutsideClick: () => !swal.isLoading()
+            }).then((result) => {
+              if (result.value) {
+                swal({
+                  type: 'success',
+                  title: 'La Chat è stata rifiutata!',
+                  html: 'Rifiutata per: ' + result.value
+                })
+                this.updateTicketStatus(find(this.ticketStatus, { status : 'REFUSED'}).id);
+                this.createHistoryTicketSystem(result.value);
+                this.location.back();
+              }
+            })
+  }
+
    private createHistoryTicketSystem(message: string) {
     const createHistory: ITicketHistory = {
       id: null,
@@ -108,7 +142,7 @@ export class TicketHeadComponent implements OnInit {
       id_type:  find(this.apiTicketHistoryType, { type : 'SYSTEM'}).id,
       action: message,
       readed: 1,
-      date_time: new Date().toISOString()
+      date_time: moment().toISOString()
     };
     this.apiTicketHistoryService.create(createHistory).subscribe();
   }

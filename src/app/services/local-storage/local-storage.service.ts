@@ -13,6 +13,15 @@ export class LocalStorageService {
     sessionStorage.clear();
   }
 
+  public getKey(key: string): any {
+    try {
+      const data = JSON.parse(sessionStorage.getItem(key));
+      return data;
+    } catch (err) {
+      return undefined;
+    }
+  }
+
   public getItem(key: string): any {
     try {
       const data = JSON.parse(sessionStorage.getItem('data'));

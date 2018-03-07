@@ -27,6 +27,8 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 import { ApiTicketService } from './services/api/api-ticket.service';
 import { ApiTicketHistoryService } from './services/api/api-ticket-history.service';
 import { IsOperatorGuard } from './guard/is-operator.guard';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
 
 const appRoutes: Routes = [
     {
@@ -63,6 +65,7 @@ const config: SocketIoConfig = { url: environment.ws_url + ':' + environment.ws_
         PagesModule,
         SimpleNotificationsModule.forRoot(),
         MDBBootstrapModule.forRoot(),
+        MatTooltipModule
     ],
     providers: [
         FuseSplashScreenService,

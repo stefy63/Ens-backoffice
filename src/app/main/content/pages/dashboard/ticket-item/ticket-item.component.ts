@@ -29,14 +29,13 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() badge: EventEmitter<number> = new EventEmitter<number>();
 
 
-  public displayedColumns = ['service.service', 
-                              'status.status', 
-                              'operator.firstname',
-                              'user.name',
-                              'category.category',
+  public displayedColumns = ['service', 
+                              'status', 
+                              'operator',
+                              'user',
+                              'category',
                               'phone',
                               'date_time',
-                              // 'closed',
                               'id'
                             ];
                           
@@ -78,35 +77,8 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit()
   { 
-    
-
-
-    this.sort.sortChange.subscribe((sort: Sort) => {
-      this.paginator.pageIndex = 0;
-      console.log('Filter--> ', sort);
-      // const data = this.allTicket.slice();
-      // if (!sort.active || sort.direction == '') {
-      //   this.sortedData = data;
-      //   return;
-      // }
-
-      // this.sortedData = data.sort((a, b) => {
-      //   let isAsc = sort.direction == 'asc';
-      //   switch (sort.active) {
-      //     case 'name': return compare(a.name, b.name, isAsc);
-      //     case 'calories': return compare(+a.calories, +b.calories, isAsc);
-      //     case 'fat': return compare(+a.fat, +b.fat, isAsc);
-      //     case 'carbs': return compare(+a.carbs, +b.carbs, isAsc);
-      //     case 'protein': return compare(+a.protein, +b.protein, isAsc);
-      //     default: return 0;
-      //   }
-      // });
-    });
-  
   }
   
-
-
   applyFilter(filterValue: string)
   {
     filterValue = filterValue.trim(); // Remove whitespace

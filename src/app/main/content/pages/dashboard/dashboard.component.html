@@ -3,7 +3,7 @@
     class="badge badge-pill badge-danger mat-elevation-z8"
     [innerHTML]="totalBadge"></span>
 
-  <mat-tab-group class="mat-elevation-z24">
+  <mat-tab-group #tabGroup class="mat-elevation-z24" (selectedTabChange)="tabChanged($event)">
 
     <mat-tab label="Nuove">
       <mat-list>
@@ -11,7 +11,7 @@
       </mat-list>
     </mat-tab>
 
-    <mat-tab label="Aperte">
+    <mat-tab label="In Carico">
       <mat-list>
           <fuse-ticket-item [allTicket]="openTicket"></fuse-ticket-item>
       </mat-list>

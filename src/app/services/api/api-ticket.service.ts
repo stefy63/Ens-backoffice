@@ -23,6 +23,9 @@ export class ApiTicketService {
   public getFromId(id: number): Observable<ITicket> {
     return this.http.get<ITicket>(this.baseUrl + '/ticket/' + id).map((data) => data as ITicket);
   }
+  public getFromCategory(id: number): Observable<ITicket> {
+    return this.http.get<ITicket>(this.baseUrl + '/ticket?id_category=' + id).map((data) => data as ITicket);
+  }
 
   public update(ticket: ITicket): Observable<ITicket> {
     const headers = this.headers;
