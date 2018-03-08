@@ -46,19 +46,19 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
           this._setDataOutput();
         });
     this.socketService.getMessage(WsEvents.ticket.create)
-      .subscribe((data) => {
-        this.ticket.push(data as ITicket);
+      .subscribe((data: ITicket) => {
+        this.ticket.push(data);
         this._setDataOutput();
-        this.toast.info('Nuovo Ticket!', 'Nuovo ticket da ' + (data as ITicket).user.surname);
+        this.toast.info('Nuovo Ticket!', 'Nuovo ticket da ' + data.user.surname);
       });
     this.socketService.getMessage(WsEvents.ticket.updated)
-      .subscribe((data) => {
-        const index = _.findIndex(this.ticket, item => item.id === (data as ITicket).id);
+      .subscribe((data: ITicket) => {
+        const index = _.findIndex(this.ticket, item => item.id === data.id);
         if (index) {
-          this.ticket.splice(index, 1, data as ITicket);
+          this.ticket.splice(index, 1, data);
         }
         this._setDataOutput();
-        this.toast.info('Ticket Modificato', 'Il ticket ' + (data as ITicket).id + ' è stato modificato!');
+        this.toast.info('Ticket Modificato', 'Il ticket ' + data.id + ' è stato modificato!');
       });
   }
 

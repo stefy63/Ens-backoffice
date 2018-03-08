@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
-import {Location} from '@angular/common';
+import { Location } from '@angular/common';
 import { find } from 'lodash';
 import { LocalStorageService } from '../../../../../services/local-storage/local-storage.service';
 import { ApiTicketService } from '../../../../../services/api/api-ticket.service';
@@ -11,7 +11,7 @@ import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
 import { ITicketHistoryType } from '../../../../../interfaces/i-ticket-history-type';
 import { SocketService } from '../../../../../services/socket/socket.service';
 import { Observable } from 'rxjs/Observable';
-import  * as moment from 'moment';
+import * as moment from 'moment';
 
 
 @Component({
@@ -43,10 +43,10 @@ export class TicketHeadComponent implements OnInit {
     this.user = this.store.getItem('user');
     this.ticketStatus = this.store.getItem('ticket_status');
     this.apiTicketHistoryType = this.store.getItem('ticket_history_type');
-    }
+  }
 
   ngOnInit() {
-    this.newTicket.subscribe( (data: ITicket) => {
+    this.newTicket.subscribe((data: ITicket) => {
       this.ticket = data;
       const initMessage = find(data.historys, item => item.type.type === 'INITIAL');
       this.ticketReason = (initMessage) ? initMessage.action : '';
@@ -54,8 +54,8 @@ export class TicketHeadComponent implements OnInit {
         this.open = true;
       }
       this.msgAlert = (data.id_operator
-                        &&  this.user.id !== data.id_operator
-                        && data.status.status === 'ONLINE');
+        && this.user.id !== data.id_operator
+        && data.status.status === 'ONLINE');
     });
   }
 
@@ -74,7 +74,7 @@ export class TicketHeadComponent implements OnInit {
   private async setUserChoise(confirmMessage: string, historyMessage: string) {
     const confirm = await this.confirmAlert(confirmMessage, '', 'warning');
     if (confirm.value) {
-      this.updateTicketStatus(find(this.ticketStatus, { status : 'ONLINE'}).id);
+      this.updateTicketStatus(find(this.ticketStatus, { status: 'ONLINE' }).id);
       this.createHistoryTicketSystem(historyMessage);
       this.msgAlert = false;
     }
@@ -85,7 +85,7 @@ export class TicketHeadComponent implements OnInit {
   }
 
   closeChat() {
-    this.updateTicketStatus(find(this.ticketStatus, { status : 'CLOSED'}).id);
+    this.updateTicketStatus(find(this.ticketStatus, { status: 'CLOSED' }).id);
     this.location.back();
   }
 
@@ -104,42 +104,42 @@ export class TicketHeadComponent implements OnInit {
 
   private refuseChat() {
     return swal({
-              title: 'Conferma Rifiuto Chat?',
-              text: 'Inserire la motivazione di questa scelta!',
-              input: 'text',
-              showCancelButton: true,
-              confirmButtonText: 'Conferma',
-              showLoaderOnConfirm: true,
-              preConfirm: (message) => {
-                return new Promise((resolve) => {
-                    if (!message) {
-                      swal.showValidationError(
-                        'Questo messaggio è obbligatorio.'
-                      )
-                    }
-                    resolve()
-                })
-              },
-              // allowOutsideClick: () => !swal.isLoading()
-            }).then((result) => {
-              if (result.value) {
-                swal({
-                  type: 'success',
-                  title: 'La Chat è stata rifiutata!',
-                  html: 'Rifiutata per: ' + result.value
-                })
-                this.updateTicketStatus(find(this.ticketStatus, { status : 'REFUSED'}).id);
-                this.createHistoryTicketSystem(result.value);
-                this.location.back();
-              }
-            })
+      title: 'Conferma Rifiuto Chat?',
+      text: 'Inserire la motivazione di questa scelta!',
+      input: 'text',
+      showCancelButton: true,
+      confirmButtonText: 'Conferma',
+      showLoaderOnConfirm: true,
+      preConfirm: (message) => {
+        return new Promise((resolve) => {
+          if (!message) {
+            swal.showValidationError(
+              'Questo messaggio è obbligatorio.'
+            );
+          }
+          resolve();
+        });
+      },
+      // allowOutsideClick: () => !swal.isLoading()
+    }).then((result) => {
+      if (result.value) {
+        swal({
+          type: 'success',
+          title: 'La Chat è stata rifiutata!',
+          html: 'Rifiutata per: ' + result.value
+        });
+        this.updateTicketStatus(find(this.ticketStatus, { status: 'REFUSED' }).id);
+        this.createHistoryTicketSystem(result.value);
+        this.location.back();
+      }
+    });
   }
 
-   private createHistoryTicketSystem(message: string) {
+  private createHistoryTicketSystem(message: string) {
     const createHistory: ITicketHistory = {
       id: null,
       id_ticket: this.ticket.id,
-      id_type:  find(this.apiTicketHistoryType, { type : 'SYSTEM'}).id,
+      id_type: find(this.apiTicketHistoryType, { type: 'SYSTEM' }).id,
       action: message,
       readed: 1,
       date_time: moment().toISOString()

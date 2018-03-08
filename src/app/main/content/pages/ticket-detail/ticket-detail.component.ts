@@ -22,13 +22,13 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
-    private store: LocalStorageService,
+    private storage: LocalStorageService,
     private apiTicket: ApiTicketService,
     private socketService: SocketService,
   ) {
     // tslint:disable-next-line:radix
     this.idTicket = parseInt(this.route.snapshot.paramMap.get('id'));
-    this.user = this.store.getItem('user');
+    this.user = this.storage.getItem('user');
   }
 
   ngOnInit() {
@@ -44,7 +44,6 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
 
     this.socketService.getMessage(WsEvents.ticketHistory.create)
       .subscribe((data: ITicket) => {
-        console.log('create--> ', data);
         this.ticket.next(data);
         if (data.status.status === 'ONLINE' && data.id_operator === this.user.id) {
           this.open = true;

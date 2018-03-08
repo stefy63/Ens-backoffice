@@ -8,7 +8,7 @@ import * as _ from 'lodash';
 import { ITicketHistoryType } from '../../../../../interfaces/i-ticket-history-type';
 import { LocalStorageService } from '../../../../../services/local-storage/local-storage.service';
 import { ToastOptions } from '../../../../../type/toast-options';
-import { NotificationsService} from 'angular2-notifications';
+import { NotificationsService } from 'angular2-notifications';
 import { Observable } from 'rxjs/Observable';
 
 
@@ -18,6 +18,7 @@ import { Observable } from 'rxjs/Observable';
   styleUrls: ['./ticket-messages.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
+
 export class TicketMessagesComponent implements OnInit, AfterViewInit {
 
   @Input('ticket') data: Observable<ITicket>;
@@ -45,7 +46,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.data.subscribe(item => {
       this.ticket = item;
-      this.chatService.markMessagesReaded(this.ticket.id).subscribe();
+      this.chatService.markMessagesReaded(item.id).subscribe();
       this.ticketHistorys = _.orderBy(this.ticket.historys, 'date_time', 'asc');
       this.readyToReply();
       this.cd.markForCheck();
@@ -90,7 +91,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit {
       const message: ITicketHistory = {
         id: null,
         id_ticket: this.ticket.id,
-        id_type:  _.find(this.historyType, item => item.type === type).id,
+        id_type: _.find(this.historyType, item => item.type === type).id,
         action: this.replyForm.form.value.message,
         readed: 0,
         date_time: new Date().toISOString()

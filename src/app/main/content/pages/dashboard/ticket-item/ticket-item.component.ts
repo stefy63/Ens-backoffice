@@ -25,7 +25,7 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input() allTicket: Observable<ITicket[]>;
   public dataSource: MatTableDataSource<ITicket>;
-  public dataBadge: any[] = [];
+  public dataBadge: number[] = [];
   @Output() badge: EventEmitter<number> = new EventEmitter<number>();
 
 
@@ -51,18 +51,17 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.user = this.storage.getItem('user');
-    this.allTicket.subscribe(
-      (ticket: ITicket[]) => {
+    this.allTicket
+      .subscribe((ticket: ITicket[]) => {
+        this.sortedData = ticket;
         this.dataSource =  new MatTableDataSource(ticket);
         this.cd.markForCheck();
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
 
-        this.getUnreadedMessage(ticket);
+        this.getUnreadedMessage(this.sortedData);
         this.sumBadge();
-      }
-    );
-
+      });
     this.socketService.getMessage(WsEvents.ticketHistory.create)
       .subscribe((data: ITicket) => {
         this.getUnreadedMessage([data]);
@@ -93,7 +92,7 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
   private getUnreadedMessage(ticket: ITicket[]) {
 
     const myTicket = _.filter(ticket, item => {
-        return (item.id_operator === this.user.id && item.status.status === 'ONLINE');
+        return (item.id_operator === this.user.id && item.status === 'ONLINE');
       });
 
     
