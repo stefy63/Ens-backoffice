@@ -11,6 +11,7 @@ import { NotificationsService, SimpleNotificationsComponent } from 'angular2-not
 import { ToastOptions } from '../../../../type/toast-options';
 import { MatTabChangeEvent } from '@angular/material';
 import { ValueTransformer } from '@angular/compiler/src/util';
+import * as moment from 'moment';
 
 @Component({
   selector: 'fuse-dashboard',
@@ -102,9 +103,9 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
             user_surname: (item.user) ? item.user.surname : '',
             category: (item.category) ? item.category.category : '',
             phone: item.phone,
-            date_time: item.date_time,
+            date_time: moment(item.date_time).format('DD/MM/YYYY HH:mm'),
             historys: item.historys,
-            closed_at: (closed_at) ? closed_at.date_time : undefined
+            closed_at: (closed_at) ? moment(closed_at.date_time).format('DD/MM/YYYY HH:mm') : undefined
         };
     })
     .value();

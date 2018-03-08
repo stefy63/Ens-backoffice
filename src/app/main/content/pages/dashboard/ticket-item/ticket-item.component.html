@@ -47,7 +47,7 @@
       <!-- date_time Column -->
       <ng-container matColumnDef="date_time">
         <mat-header-cell *matHeaderCellDef mat-sort-header class="col-2">Data</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="col-2"> {{element.date_time | date:'dd/MM/yyyy HH:mm'}} </mat-cell>
+        <mat-cell *matCellDef="let element" class="col-2"> {{element.date_time}} </mat-cell>
       </ng-container>
 
       <!-- id Column -->
@@ -56,7 +56,7 @@
         <mat-cell *matCellDef="let element" class="text-right col-1">
           <div class="action">
 
-            <button  class="mat-icon-button mat-warn" (click)="showTicketDetail(element)" mdTooltipPosition="'left'" matTooltip="{{element.closed_at | date:'dd/MM/yyyy HH:mm'}}">
+            <button  class="mat-icon-button mat-warn" (click)="showTicketDetail(element)" mdTooltipPosition="'left'" matTooltip="{{element.closed_at}}">
               <mat-icon class="">visibility</mat-icon>
             </button>
           

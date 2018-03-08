@@ -78,7 +78,6 @@ export class FuseLogin2Component implements OnInit
             },
             (err) => {
                 this.toast.error('Attenzione', 'Login Errato!');
-                console.log(err);
             }
         );
     }
