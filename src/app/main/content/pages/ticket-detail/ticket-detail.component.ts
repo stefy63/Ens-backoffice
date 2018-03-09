@@ -44,9 +44,11 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
 
     this.socketService.getMessage(WsEvents.ticketHistory.create)
       .subscribe((data: ITicket) => {
-        this.ticket.next(data);
-        if (data.status.status === 'ONLINE' && data.id_operator === this.user.id) {
-          this.open = true;
+        if (data.id === this.idTicket) {
+          this.ticket.next(data);
+          if (data.status.status === 'ONLINE' && data.id_operator === this.user.id) {
+            this.open = true;
+          }
         }
     });
 

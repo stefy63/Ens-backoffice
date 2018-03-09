@@ -26,11 +26,12 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   public newTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
   public openTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
   public closedTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
+  public refusedTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
   public myOpenTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
   public totalBadge = 0;
   public options = ToastOptions;
 
-
+  
   constructor(
     private apiTicket: ApiTicketService,
     private storage: LocalStorageService,
@@ -86,7 +87,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   private _setDataOutput() {
     const returnTickets = _.chain(this.ticket)
     .map((item) => {
-        const closed_at = (item.status.status === 'CLOSED') ? _.chain(item.historys)
+        const closed_at = (item.status.status === 'CLOSED' || item.status.status === 'REFUSED' ) ? _.chain(item.historys)
                             .filter(elem => elem.type.type === 'SYSTEM')
                             .orderBy(['date_time'])
                             .findLast()
@@ -113,6 +114,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.newTicket.next(_.filter(returnTickets, item => item.status === 'NEW'));
     this.openTicket.next(_.filter(returnTickets, item => item.status === 'ONLINE' && item.id_operator !== this.idOperator));
     this.closedTicket.next(_.filter(returnTickets, item => item.status === 'CLOSED'));
+    this.refusedTicket.next(_.filter(returnTickets, item => item.status === 'REFUSED'));
     this.myOpenTicket.next(_.filter(returnTickets, item => item.status === 'ONLINE' && item.id_operator === this.idOperator));
 
     // this.newTicket.next(_.filter(this.ticket, item => item.status.status === 'NEW'));

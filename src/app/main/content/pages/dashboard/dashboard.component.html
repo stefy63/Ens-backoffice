@@ -23,6 +23,12 @@
       </mat-list>
     </mat-tab>
 
+    <mat-tab label="Rifiutate">
+      <mat-list>
+          <fuse-ticket-item [allTicket]="refusedTicket"></fuse-ticket-item>
+      </mat-list>
+    </mat-tab>
+
     <mat-tab label="I Miei Ticket Aperti">
       <div>
         <fuse-ticket-item (badge)="badgeUpdate($event)"  [allTicket]="myOpenTicket"></fuse-ticket-item>

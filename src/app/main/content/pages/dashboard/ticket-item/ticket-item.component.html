@@ -53,10 +53,10 @@
       <!-- id Column -->
       <ng-container matColumnDef="id" >
         <mat-header-cell *matHeaderCellDef class="text-right col-1 "> Azioni</mat-header-cell>
-        <mat-cell *matCellDef="let element" class="text-right col-1">
+        <mat-cell *matCellDef="let element" class="text-right col-1" mdTooltipPosition="'left'" matTooltip="{{element.closed_at}}">
           <div class="action">
 
-            <button  class="mat-icon-button mat-warn" (click)="showTicketDetail(element)" mdTooltipPosition="'left'" matTooltip="{{element.closed_at}}">
+            <button  class="mat-icon-button mat-warn" (click)="showTicketDetail(element)">
               <mat-icon class="">visibility</mat-icon>
             </button>
           

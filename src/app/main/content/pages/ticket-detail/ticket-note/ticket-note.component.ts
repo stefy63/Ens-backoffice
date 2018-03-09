@@ -62,7 +62,7 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
   readyToReply() {
     setTimeout(() => {
       this.replyForm.reset();
-      this.focusReplyInput();
+      // this.focusReplyInput();
       this.scrollToBottom(2000);
     });
   }
