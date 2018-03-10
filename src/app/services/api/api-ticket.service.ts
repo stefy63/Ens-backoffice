@@ -3,6 +3,8 @@ import { environment } from '../../../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { ITicket } from '../../interfaces/i-ticket';
 import { Observable } from 'rxjs/Observable';
+import * as _ from 'lodash';
+import * as moment from 'moment';
 
 @Injectable()
 export class ApiTicketService {
@@ -53,4 +55,32 @@ export class ApiTicketService {
     return params;
   }
 
+  public normalizeTickets(ticket: ITicket[]): any[]  {
+
+    return _.chain(ticket)
+                .map((item) => {
+                    const closed_at = (item.status.status === 'CLOSED' || item.status.status === 'REFUSED' ) ? _.chain(item.historys)
+                                        .filter(elem => elem.type.type === 'SYSTEM')
+                                        .orderBy(['date_time'])
+                                        .findLast()
+                                        .value() : '';
+                    return {
+                        id: item.id,
+                        service: item.service.service,
+                        status: item.status.status,
+                        id_operator: item.id_operator,
+                        id_user: item.id_user,
+                        operator_firstname: (item.operator) ? item.operator.firstname : '',
+                        operator_lastname: (item.operator) ? item.operator.lastname : '',
+                        user_name: (item.user) ? item.user.name : '',
+                        user_surname: (item.user) ? item.user.surname : '',
+                        category: (item.category) ? item.category.category : '',
+                        phone: item.phone,
+                        date_time: moment(item.date_time).format('DD/MM/YYYY HH:mm'),
+                        historys: item.historys,
+                        closed_at: (closed_at) ? moment(closed_at.date_time).format('DD/MM/YYYY HH:mm') : undefined
+                    };
+                })
+                .value();
+    }
 }

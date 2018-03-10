@@ -10,7 +10,6 @@ import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
 import { SocketService } from '../../../../../services/socket/socket.service';
 import { WsEvents } from '../../../../../type/ws-events';
 
-
 @Component({
   selector: 'fuse-ticket-item',
   templateUrl: './ticket-item.component.html',
@@ -92,10 +91,10 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
   private getUnreadedMessage(ticket: ITicket[]) {
 
     const myTicket = _.filter(ticket, item => {
-        return (item.id_operator === this.user.id && item.status === 'ONLINE');
+        const status = item.status.status || item.status;
+        return (item.id_operator === this.user.id && status === 'ONLINE');
       });
 
-    
       _.forEach(myTicket, item => {
         const unreaded: ITicketHistory[] = _.filter(item.historys, history => {
               return (!history.readed && history.type.type === 'USER');
@@ -114,16 +113,3 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
     this.badge.emit(sum);
   }
 }
-// updateFilter(event) {
-//   const val = event.target.value.toLowerCase();
-//   this.rows = [...this.temp2]; // and here you have to initialize it with your data
-//   this.temp = [...this.rows];
-//    // filter our data
-//    const temp = this.rows.filter(function(d) {
-//      return d.name.toLowerCase().indexOf(val) !== -1 || !val;
-//    });
-//    // update the rows
-//    this.rows = temp;
-//    // Whenever the filter changes, always go back to the first page
-//    this.table.offset = 0;
-// }

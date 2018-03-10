@@ -57,12 +57,13 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit {
     this.replyInput = this.replyInputField.first.nativeElement;
     this.readyToReply();
     this.cd.detectChanges();
+    this.focusReplyInput();
   }
 
   readyToReply() {
     setTimeout(() => {
       this.replyForm.reset();
-      this.focusReplyInput();
+      // this.focusReplyInput();
       this.scrollToBottom(2000);
     });
 

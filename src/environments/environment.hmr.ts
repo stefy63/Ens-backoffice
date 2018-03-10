@@ -5,7 +5,7 @@ export const environment = {
 
     // Socket.io configuration url
     ws_url: 'https://devens2.3punto6.com',
-    ws_suffix: '/wss',
+    ws_path: '/wss',
     ws_port: null,
 
     // API configuration url

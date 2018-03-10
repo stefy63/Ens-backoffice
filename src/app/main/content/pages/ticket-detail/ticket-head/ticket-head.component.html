@@ -40,7 +40,7 @@
     <div class="row col-12">
       <div class="col-7 text-center">
         <br>
-        <button *ngIf="!open && ticket.status.status !== 'CLOSED'" class="mat-button done-button mat-accent col-3" (click)="activateChat()"><mat-icon>done</mat-icon> Accetta</button>
+        <button *ngIf="!open && ticket.status.status !== 'CLOSED' && ticket.status.status !== 'REFUSED'" class="mat-button done-button mat-accent col-3" (click)="activateChat()"><mat-icon>done</mat-icon> Accetta</button>
         <button *ngIf="open" class="mat-button delete-button mat-warn col-3" (click)="closeChat()"><mat-icon>close</mat-icon> close</button>
         <button *ngIf="!open && ticket.status.status === 'NEW'" class="mat-button delete-button mat-warn col-3" (click)="refuseChat()"><mat-icon>block</mat-icon> Rfiuta</button>
         <button class="mat-button delete-button mat-warn col-3" (click)="abortChat()"><mat-icon>reply</mat-icon> Indietro</button>
