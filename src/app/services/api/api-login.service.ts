@@ -11,7 +11,8 @@ import { ITokenSession } from '../../interfaces/i-token-session';
 @Injectable()
 export class ApiLoginService {
 
-  private baseUrl: string = environment.api_url + ':' + environment.api_port + environment.api_suffix;
+  private  apiPort = (environment.api_port) ?  ':' + environment.api_port : '';
+  private baseUrl: string = environment.api_url + this.apiPort + environment.api_suffix;
 
     private headers = new HttpHeaders()
       .set('Content-Type', 'application/json');

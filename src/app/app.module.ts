@@ -42,10 +42,12 @@ const options = {
         reconnectionDelay: 1000,
         reconnectionDelayMax : 5000,
         reconnectionAttempts: Infinity,
-        multiplex: false
+        multiplex: false,
+        path: environment.ws_suffix
 };
 
-const config: SocketIoConfig = { url: environment.ws_url + ':' + environment.ws_port + environment.ws_suffix, options: options };
+const wssPort =  (environment.ws_port) ? ':' + environment.ws_port : '';
+const config: SocketIoConfig = { url: environment.ws_url + wssPort, options: options };
 
 @NgModule({
     declarations: [
