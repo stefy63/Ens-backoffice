@@ -46,10 +46,7 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
       .subscribe((data: ITicket) => {
         if (data.id === this.idTicket) {
           this.ticket.next(data);
-          // if (data.status.status === 'ONLINE' && data.id_operator === this.user.id) {
-          //   this.open = true;
-          // }
-        }
+        } 
     });
 
   }

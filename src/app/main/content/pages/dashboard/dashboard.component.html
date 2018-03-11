@@ -1,8 +1,5 @@
 <div class="tab-container col-md-12 p-24" fusePerfectScrollbar>
-    <span *ngIf="totalBadge > 0" 
-    class="badge badge-pill badge-danger mat-elevation-z8"
-    [innerHTML]="totalBadge"></span>
-
+  
   <mat-tab-group #tabGroup class="mat-elevation-z24" (selectedTabChange)="tabChanged($event)">
 
     <mat-tab label="Nuove">
@@ -31,7 +28,7 @@
 
     <mat-tab label="I Miei Ticket Aperti">
       <div>
-        <fuse-ticket-item (badge)="badgeUpdate($event)"  [allTicket]="myOpenTicket"></fuse-ticket-item>
+        <fuse-ticket-item [allTicket]="myOpenTicket"></fuse-ticket-item>
       </div>  
     </mat-tab>
     
