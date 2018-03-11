@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import { Location } from '@angular/common';
 import { find } from 'lodash';
@@ -25,12 +25,13 @@ export class TicketHeadComponent implements OnInit {
   private apiTicketHistoryType: ITicketHistoryType;
 
   @Input('ticket') newTicket: Observable<ITicket>;
+  @Output('open') open: EventEmitter<boolean> = new EventEmitter();
   public ticket: ITicket;
   public ticketReason: string;
   public user;
   public badge = 0;
   public msgAlert: boolean;
-  public open = false;
+  public isOpen = false;
 
 
   constructor(
@@ -51,7 +52,8 @@ export class TicketHeadComponent implements OnInit {
       const initMessage = find(data.historys, item => item.type.type === 'INITIAL');
       this.ticketReason = (initMessage) ? initMessage.action : '';
       if (data.status.status === 'ONLINE' && data.id_operator === this.user.id) {
-        this.open = true;
+        this.open.next(true);
+        this.isOpen = true;
       }
       this.msgAlert = (data.id_operator
         && this.user.id !== data.id_operator
@@ -60,7 +62,7 @@ export class TicketHeadComponent implements OnInit {
   }
 
 
-  async activateChat() {
+  activateChat() {
     if (this.ticket.status.status === 'ONLINE' && this.ticket.id_operator !== this.user.id) {
       this.setUserChoise('Conferma Trasferimento Ticket?', 'Trasferito tichet da Operatore: ' + this.user.firstname + ' ' + this.user.lastname);
     } else if (this.ticket.status.status === 'CLOSED') {
@@ -77,6 +79,8 @@ export class TicketHeadComponent implements OnInit {
       this.updateTicketStatus(find(this.ticketStatus, { status: 'ONLINE' }).id);
       this.createHistoryTicketSystem(historyMessage);
       this.msgAlert = false;
+      this.open.next(true);
+      this.isOpen = true;
     }
   }
 

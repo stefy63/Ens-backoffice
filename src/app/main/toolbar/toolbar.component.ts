@@ -90,13 +90,17 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
 
     ngOnInit() {
         const user = this.storage.getItem('user');
+        const token = this.storage.getItem('token');
         if (user) {
             this.profile = user.firstname + ' ' + user.lastname;
         }
 
-        this.unreadedObserver.events.subscribe(msg => {
-            this.totalBadge = msg;
-        });
+        if (token && token.id_operator) {
+            this.unreadedObserver.events.subscribe(msg => {
+                this.totalBadge = msg;
+            });
+        }
+
     }
 
     ngOnDestroy() {

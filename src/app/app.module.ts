@@ -34,7 +34,7 @@ import { UnreadedMessageEmitterService } from './services/helper/unreaded-messag
 const appRoutes: Routes = [
     {
         path: '**',
-        redirectTo: 'pages/user/user-dashboard'
+        redirectTo: 'pages/dashboard'
     }
 ];
 
