@@ -10,6 +10,16 @@
         z-index: 2;
     }
 
+    .badge-container {
+        position: absolute;
+        right: 13em;
+        .badge {
+            position: absolute;
+            right: -2em;
+            top: -10px;
+        }
+    }
+    
     .mat-toolbar {
         background: inherit;
         color: inherit;

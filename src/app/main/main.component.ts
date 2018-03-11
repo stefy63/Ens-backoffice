@@ -5,6 +5,11 @@ import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
 import { AuthService } from '../services/auth/auth.service';
 import { LocalStorageService } from '../services/local-storage/local-storage.service';
+import { UserNavigationModel } from './content/pages/authentication/login-2/user-navigation.model';
+import { NavigationModel } from '../navigation.model';
+import { FuseNavigationService } from '../core/components/navigation/navigation.service';
+
+
 
 @Component({
     selector     : 'fuse-main',
@@ -17,6 +22,8 @@ export class FuseMainComponent implements OnInit, OnDestroy
     onSettingsChanged: Subscription;
     fuseSettings: any;
     @HostBinding('attr.fuse-layout-mode') layoutMode;
+    private navigationModel: NavigationModel;
+    
 
     constructor(
         private _renderer: Renderer2,
@@ -25,6 +32,7 @@ export class FuseMainComponent implements OnInit, OnDestroy
         private platform: Platform,
         private authService: AuthService,
         private storage: LocalStorageService,
+        private navService: FuseNavigationService,
         @Inject(DOCUMENT) private document: any,
     )
     {
@@ -47,6 +55,12 @@ export class FuseMainComponent implements OnInit, OnDestroy
 
     ngOnInit()
     {
+        // if (!this.authService.isOperator()){
+        //     this.navigationModel = new UserNavigationModel();
+        // }  else {
+        //     this.navigationModel = new NavigationModel();
+        // }
+        // this.navService.setNavigationModel(this.navigationModel);
     }
 
     ngOnDestroy()

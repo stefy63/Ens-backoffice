@@ -28,12 +28,13 @@ import { ApiTicketService } from './services/api/api-ticket.service';
 import { ApiTicketHistoryService } from './services/api/api-ticket-history.service';
 import { IsOperatorGuard } from './guard/is-operator.guard';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { UnreadedMessageEmitterService } from './services/helper/unreaded-message-emitter.service';
 
 
 const appRoutes: Routes = [
     {
         path: '**',
-        redirectTo: 'pages/user/user-dashboard'
+        redirectTo: 'pages/dashboard'
     }
 ];
 
@@ -84,7 +85,8 @@ const config: SocketIoConfig = { url: environment.ws_url + wssPort, options: opt
         AuthGuard,
         IsOperatorGuard,
         LocalStorageService,
-        ApiTicketHistoryService
+        ApiTicketHistoryService,
+        UnreadedMessageEmitterService
     ],
     bootstrap: [
         AppComponent

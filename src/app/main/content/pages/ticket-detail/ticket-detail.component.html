@@ -2,7 +2,7 @@
 
 <div [ngSwitch]="service" *ngIf="ticket">
     <div *ngSwitchCase="'CHAT'">
-        <fuse-ticket-head [ticket]="ticket"></fuse-ticket-head>
+        <fuse-ticket-head [ticket]="ticket" (open)="setOpen($event)"></fuse-ticket-head>
         <!-- <fuse-ticket-head [openTicket]="ticket"></fuse-ticket-head> -->
         <div id="content-bottom" class="row col-12 mt-12 mat-elevation-z4" *ngIf="open">
             <fuse-ticket-messages id="chat" class="col-7" [ticket]="ticket"></fuse-ticket-messages>

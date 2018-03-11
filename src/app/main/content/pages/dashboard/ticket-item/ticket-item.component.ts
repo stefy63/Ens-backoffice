@@ -9,6 +9,7 @@ import { IUser } from '../../../../../interfaces/i-user';
 import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
 import { SocketService } from '../../../../../services/socket/socket.service';
 import { WsEvents } from '../../../../../type/ws-events';
+import { UnreadedMessageEmitterService } from '../../../../../services/helper/unreaded-message-emitter.service';
 
 @Component({
   selector: 'fuse-ticket-item',
@@ -25,7 +26,6 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() allTicket: Observable<ITicket[]>;
   public dataSource: MatTableDataSource<ITicket>;
   public dataBadge: number[] = [];
-  @Output() badge: EventEmitter<number> = new EventEmitter<number>();
 
 
   public displayedColumns = ['service', 
@@ -46,6 +46,7 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     private socketService: SocketService,
     private storage: LocalStorageService,
+    private unreadedEmitter: UnreadedMessageEmitterService
   ) {  }
 
   ngOnInit() {
@@ -71,6 +72,7 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.socketService.removeListener(WsEvents.ticketHistory.create);
+    this.unreadedEmitter.next(0);
   }
 
   ngAfterViewInit()
@@ -110,6 +112,6 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
         sum += item;
       }
     });
-    this.badge.emit(sum);
+    this.unreadedEmitter.next(sum);
   }
 }

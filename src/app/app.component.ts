@@ -10,7 +10,7 @@ import { ApiLoginService } from './services/api/api-login.service';
 })
 export class AppComponent
 {
-   
+      
     constructor(
         private fuseSplashScreen: FuseSplashScreenService,
         private translate: TranslateService,

@@ -5,9 +5,6 @@ import { FuseConfigService } from '../../core/services/config.service';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
-import { UserNavigationModel } from './pages/authentication/login-2/user-navigation.model';
-import { NavigationModel } from '../../navigation.model';
-import { FuseNavigationService } from '../../core/components/navigation/navigation.service';
 import { AuthService } from '../../services/auth/auth.service';
 
 
@@ -22,9 +19,6 @@ export class FuseContentComponent implements OnInit, OnDestroy
     onSettingsChanged: Subscription;
     fuseSettings: any;
     
-    private userNavigationModel = new UserNavigationModel();
-    private operatorNavigationModel = new NavigationModel();
-
     @HostBinding('@routerTransitionUp') routeAnimationUp = false;
     @HostBinding('@routerTransitionDown') routeAnimationDown = false;
     @HostBinding('@routerTransitionRight') routeAnimationRight = false;
@@ -35,8 +29,7 @@ export class FuseContentComponent implements OnInit, OnDestroy
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private fuseConfig: FuseConfigService,
-        private authService: AuthService,
-        private navService: FuseNavigationService
+        private authService: AuthService
     )
     {
         this.router.events
@@ -74,11 +67,6 @@ export class FuseContentComponent implements OnInit, OnDestroy
 
     ngOnInit()
     {
-        // if (!this.authService.isOperator()){
-        //     this.navService.setNavigationModel(this.userNavigationModel);
-        // }  else {
-        //     this.navService.setNavigationModel(this.operatorNavigationModel);
-        // }
     }
 
     ngOnDestroy()
