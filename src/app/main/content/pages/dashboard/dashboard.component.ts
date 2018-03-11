@@ -11,7 +11,6 @@ import { NotificationsService, SimpleNotificationsComponent } from 'angular2-not
 import { ToastOptions } from '../../../../type/toast-options';
 import { MatTabChangeEvent } from '@angular/material';
 import * as moment from 'moment';
-import { UnreadedMessageEmitterService } from '../../../../services/helper/unreaded-message-emitter.service';
 
 @Component({
   selector: 'fuse-dashboard',

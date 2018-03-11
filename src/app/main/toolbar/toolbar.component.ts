@@ -27,7 +27,7 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
         private translate: TranslateService,
         private storage: LocalStorageService,
         private apiLoginService: ApiLoginService,
-        private unreadedObserver: UnreadedMessageEmitterService
+        // private unreadedObserver: UnreadedMessageEmitterService
     ) {
         this.userStatusOptions = [
             {
@@ -96,15 +96,18 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
         }
 
         if (token && token.id_operator) {
-            this.unreadedObserver.events.subscribe(msg => {
-                this.totalBadge = msg;
+            UnreadedMessageEmitterService.get('sum_badge').subscribe(msg => {
+                this.totalBadge = +msg;
             });
         }
 
     }
 
     ngOnDestroy() {
-        // this.unreadedObserver.events.unsubscribe();
+        const token = this.storage.getItem('token');
+        if (token && token.id_operator) {
+            UnreadedMessageEmitterService.get('sum_badge').unsubscribe();
+        }
     }
 
     logout() {

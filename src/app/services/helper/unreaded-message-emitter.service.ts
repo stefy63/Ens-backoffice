@@ -1,23 +1,16 @@
 import { Injectable } from '@angular/core';
-import 'rxjs/Rx';
-import { Subject } from 'rxjs/Subject';
-import { Observable } from 'rxjs/Observable';
-import { Subscriber } from 'rxjs/Subscriber';
-import { BehaviorSubject } from 'rxjs/Rx';
+import {EventEmitter} from '@angular/core';
 
 @Injectable()
 export class UnreadedMessageEmitterService {
 
-  // public events = new Subject();
-  public events = new BehaviorSubject(1);
+  private static _emitters: { [channel: string]: EventEmitter<any> } = {};
 
-  constructor() { }
-
-  subscribe(next?, error?, complete?) {
-    return this.events.subscribe(next, error, complete);
-  }
-  next(event) {
-    this.events.next(event);
+  static get(channel: string): EventEmitter<any> {
+    if (!this._emitters[channel]) {
+      this._emitters[channel] = new EventEmitter();
+    }
+    return this._emitters[channel];
   }
 }
 

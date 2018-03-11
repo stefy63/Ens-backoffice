@@ -46,7 +46,6 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
     private router: Router,
     private socketService: SocketService,
     private storage: LocalStorageService,
-    private unreadedEmitter: UnreadedMessageEmitterService
   ) {  }
 
   ngOnInit() {
@@ -72,7 +71,7 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.socketService.removeListener(WsEvents.ticketHistory.create);
-    this.unreadedEmitter.next(0);
+    UnreadedMessageEmitterService.get('sum_badge').emit(0);
   }
 
   ngAfterViewInit()
@@ -112,6 +111,6 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
         sum += item;
       }
     });
-    this.unreadedEmitter.next(sum);
+    UnreadedMessageEmitterService.get('sum_badge').emit(sum);
   }
 }
