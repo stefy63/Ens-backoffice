@@ -7,12 +7,11 @@
       overflow: auto;
       opacity: 1;
 
-        .message-row {
-            padding: 3px;
-            background-color: lightgoldenrodyellow;
-            font-weight: bolder;
-            font-style: oblique;
-        }
+      .message { 
+        word-wrap: break-word;
+        white-space: pre-line;
+        overflow-wrap: break-word;
+      }
 
     }
 

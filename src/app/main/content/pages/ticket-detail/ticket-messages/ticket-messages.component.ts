@@ -93,7 +93,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit {
       indexSpace = (indexSpace === -1) ? 100 : indexSpace;
       const formMessage: string = (this.replyForm.form.value.message.length > 70 && indexSpace > 70) ? 
                                       this.replyForm.form.value.message.substring(0, 70) : this.replyForm.form.value.message;
-      console.log(this.replyForm.form.value.message.length, indexSpace);
+
       const message: ITicketHistory = {
         id: null,
         id_ticket: this.ticket.id,

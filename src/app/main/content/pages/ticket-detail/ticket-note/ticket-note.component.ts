@@ -87,11 +87,16 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
   reply(event) {
     if (!!this.replyForm.form.value.message && this.replyForm.form.value.message.charCodeAt() !== 10) {
 
+      let indexSpace = this.replyForm.form.value.message.indexOf(' ');
+      indexSpace = (indexSpace === -1) ? 100 : indexSpace;
+      const formMessage: string = (this.replyForm.form.value.message.length > 50 && indexSpace > 70) ? 
+                                      this.replyForm.form.value.message.substring(0, 50) : this.replyForm.form.value.message;
       const message: ITicketHistory = {
         id: 0,
         id_ticket: this.ticket.id,
         id_type:  _.find(this.historyType, item => item.type === 'NOTE').id,
-        action: this.replyForm.form.value.message + ` [ ${this.ticket.operator.firstname} ${this.ticket.operator.lastname} ]`,
+        // action: this.replyForm.form.value.message + ` [ ${this.ticket.operator.firstname} ${this.ticket.operator.lastname} ]`,
+        action: `[ ${this.ticket.operator.firstname} ${this.ticket.operator.lastname} ]\n` + formMessage ,
         readed: 1,
         date_time: new Date().toISOString()
       };

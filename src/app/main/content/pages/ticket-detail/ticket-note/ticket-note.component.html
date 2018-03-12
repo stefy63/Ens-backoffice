@@ -6,7 +6,7 @@
     <div *ngFor="let message of ticketHistorys" >
         <blockquote  class="reverse">
           <dl>
-            <dt>{{message.action}}</dt>
+            <dt class="message">{{message.action}}</dt>
             <dd><span class="time secondary-text text-right">{{message.date_time | date:'medium'}}</span></dd>
           </dl>
         </blockquote>
