@@ -12,6 +12,9 @@ import { LocalStorageService } from '../../../../../services/local-storage/local
 import { SocketService } from '../../../../../services/socket/socket.service';
 import { NotificationsService } from 'angular2-notifications';
 import { ToastOptions } from '../../../../../type/toast-options';
+import { FuseNavigationService } from '../../../../../core/components/navigation/navigation.service';
+import { UserNavigationModel } from './user-navigation.model';
+import { NavigationModel } from '../../../../../navigation.model';
 
 @Component({
     selector   : 'fuse-login-2',
@@ -33,6 +36,7 @@ export class FuseLogin2Component implements OnInit
         private router: Router,
         private storage: LocalStorageService,
         private socketService: SocketService,
+        private navService: FuseNavigationService,
         private toast: NotificationsService
     )
     {
@@ -68,8 +72,10 @@ export class FuseLogin2Component implements OnInit
                         }
                     );
                     if (!this.authService.isOperator()){
+                        this.navService.setNavigationModel(new UserNavigationModel());
                         this.router.navigate(['pages/user/user-dashboard']);
                     } else {
+                        this.navService.setNavigationModel(new NavigationModel());
                         this.router.navigate(['pages/dashboard']);
                     }
                 } else {

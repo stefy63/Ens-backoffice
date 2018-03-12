@@ -7,7 +7,7 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 
 const routes: Routes = [
   {
-      path     : 'pages/user/user-chat',
+      path     : 'pages/user/user-videochat',
       canActivate: [AuthGuard],
       component: UserVideochatComponent
   }

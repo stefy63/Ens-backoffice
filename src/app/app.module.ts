@@ -1,7 +1,6 @@
 import { NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpModule } from '@angular/http';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
@@ -24,7 +23,6 @@ import { AuthService } from './services/auth/auth.service';
 import { LocalStorageService } from './services/local-storage/local-storage.service';
 import { AuthGuard } from './guard/auth.guard';
 import { SimpleNotificationsModule } from 'angular2-notifications';
-import { ApiTicketService } from './services/api/api-ticket.service';
 import { ApiTicketHistoryService } from './services/api/api-ticket-history.service';
 import { IsOperatorGuard } from './guard/is-operator.guard';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -34,7 +32,7 @@ import { UnreadedMessageEmitterService } from './services/helper/unreaded-messag
 const appRoutes: Routes = [
     {
         path: '**',
-        redirectTo: 'pages/dashboard'
+        redirectTo: '/'
     }
 ];
 
@@ -56,7 +54,6 @@ const config: SocketIoConfig = { url: environment.ws_url + wssPort, options: opt
     ],
     imports: [
         BrowserModule,
-        HttpModule,
         HttpClientModule,
         BrowserAnimationsModule,
         RouterModule.forRoot(appRoutes),

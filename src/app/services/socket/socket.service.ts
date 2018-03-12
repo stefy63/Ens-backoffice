@@ -1,11 +1,26 @@
 import {Injectable} from '@angular/core';
 import {Socket} from 'ng-socket-io';
+import {LocalStorageService} from '../local-storage/local-storage.service';
 
 
 @Injectable()
 export class SocketService {
 
-  constructor(private socket: Socket) {
+  constructor(
+    private socket: Socket,
+    private storage: LocalStorageService
+  ) {
+    socket.on('disconnect', () => {
+      const token = this.storage.getItem('token');
+      this.sendMessage(
+        'welcome-message',
+        {
+            userToken: token.token_session,
+            idUser: token.id_operator ? token.id_operator : token.id_user,
+            status: 'READY',
+            userType: token.id_operator ? 'OPERATOR' : 'USER'
+        });
+    });
   }
 
   public sendMessage(messageName: string, msg: any) {
@@ -20,4 +35,5 @@ export class SocketService {
   public removeListener(event: string) {
     this.socket.removeListener(event);
   }
+
 }

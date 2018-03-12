@@ -2,6 +2,9 @@ import { Component, HostListener } from '@angular/core';
 import { FuseSplashScreenService } from './core/services/splash-screen.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ApiLoginService } from './services/api/api-login.service';
+import {SocketService} from './services/socket/socket.service';
+import {LocalStorageService} from './services/local-storage/local-storage.service';
+import {AuthService} from './services/auth/auth.service';
 
 @Component({
     selector   : 'fuse-root',
@@ -10,11 +13,14 @@ import { ApiLoginService } from './services/api/api-login.service';
 })
 export class AppComponent
 {
-      
+
     constructor(
         private fuseSplashScreen: FuseSplashScreenService,
         private translate: TranslateService,
-        private apiLoginService: ApiLoginService
+        private apiLoginService: ApiLoginService,
+        private socketService: SocketService,
+        private storage: LocalStorageService,
+        private authService: AuthService
     )
     {
         // Add languages
@@ -25,8 +31,21 @@ export class AppComponent
 
         // Use a language
         this.translate.use('en');
+
+        if (this.authService.isAuthenticated()) {
+          const token = this.storage.getItem('token');
+          this.socketService.sendMessage(
+            'welcome-message',
+            {
+              userToken: token.token_session,
+              idUser: token.id_operator ? token.id_operator : token.id_user,
+              status: 'READY',
+              userType: token.id_operator ? 'OPERATOR' : 'USER'
+            });
+        }
+
     }
-    
+
     @HostListener('window:beforeunload', ['$event'])
     beforeunloadHandler(event: Event) {
         this.apiLoginService.apiLogout().subscribe();
