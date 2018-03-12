@@ -89,11 +89,17 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit {
   reply(event) {
     if (!!this.replyForm.form.value.message && this.replyForm.form.value.message.charCodeAt() !== 10) {
       const type = (this.storage.getItem('token').id_user) ? 'USER' : 'OPERATOR';
+      let indexSpace = this.replyForm.form.value.message.indexOf(' ');
+      indexSpace = (indexSpace === -1) ? 100 : indexSpace;
+      const formMessage: string = (this.replyForm.form.value.message.length > 70 && indexSpace > 70) ? 
+                                      this.replyForm.form.value.message.substring(0, 70) : this.replyForm.form.value.message;
+      console.log(this.replyForm.form.value.message.length, indexSpace);
       const message: ITicketHistory = {
         id: null,
         id_ticket: this.ticket.id,
         id_type: _.find(this.historyType, item => item.type === type).id,
-        action: this.replyForm.form.value.message,
+        // action: this.replyForm.form.value.message,
+        action: formMessage,
         readed: 0,
         date_time: new Date().toISOString()
       };
