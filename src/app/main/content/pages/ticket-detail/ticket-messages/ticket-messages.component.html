@@ -30,7 +30,7 @@
     <!-- / CHAT CONTENT -->
 
     <!-- CHAT FOOTER -->
-    <div class="chat-footer" fxLayout="row" fxLayoutAlign="center center">
+    <div class="chat-footer" fxLayout="row" fxLayoutAlign="center center" *ngIf="ticket.status.status !== 'REFUSED'">
 
         <!-- REPLY FORM -->
         <form #replyForm="ngForm"

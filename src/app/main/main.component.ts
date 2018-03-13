@@ -3,11 +3,8 @@ import { Subscription } from 'rxjs/Subscription';
 import { FuseConfigService } from '../core/services/config.service';
 import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
-import { AuthService } from '../services/auth/auth.service';
-import { LocalStorageService } from '../services/local-storage/local-storage.service';
-import { FuseNavigationService } from '../core/components/navigation/navigation.service';
-
-
+import { AuthService } from '../main/services/auth/auth.service';
+import { LocalStorageService } from '../main/services/local-storage/local-storage.service';
 
 @Component({
     selector     : 'fuse-main',
@@ -20,7 +17,7 @@ export class FuseMainComponent implements OnInit, OnDestroy
     onSettingsChanged: Subscription;
     fuseSettings: any;
     @HostBinding('attr.fuse-layout-mode') layoutMode;
-    
+
 
     constructor(
         private _renderer: Renderer2,

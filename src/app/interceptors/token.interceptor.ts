@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import {
   HttpRequest,
-  HttpResponse,
-  HttpErrorResponse,
   HttpHandler,
   HttpEvent,
   HttpInterceptor
 } from '@angular/common/http';
-import { AuthService } from '../services/auth/auth.service';
-import { LocalStorageService } from '../services/local-storage/local-storage.service';
+import { AuthService } from '../main/services/auth/auth.service';
+import { LocalStorageService } from '../main/services/local-storage/local-storage.service';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/do';
 import 'rxjs/add/operator/catch';
@@ -36,7 +34,7 @@ export class TokenInterceptor implements HttpInterceptor {
               .catch(response => {
                 this.storage.clear();
                 this.router.navigate(['pages/authentication/login-2']);
-        
+
                 return Observable.throw(response);
               });
     }

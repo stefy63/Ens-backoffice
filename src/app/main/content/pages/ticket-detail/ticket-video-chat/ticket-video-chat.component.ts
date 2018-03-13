@@ -1,9 +1,7 @@
 import { Component, OnInit, Input, OnDestroy} from '@angular/core';
-import { ITicket } from '../../../../../interfaces/i-ticket';
-import { Observable } from 'rxjs/Observable';
 import simplewebrtc from 'simplewebrtc';
-import {environment} from '../../../../../../environments/environment';
-import { NotificationsService, SimpleNotificationsComponent } from 'angular2-notifications';
+import { environment } from '../../../../../../environments/environment';
+import { NotificationsService } from 'angular2-notifications';
 import { ToastOptions } from '../../../../../type/toast-options';
 
 
@@ -56,7 +54,7 @@ export class TicketVideoChatComponent implements OnInit, OnDestroy {
       if (environment.videoChat_server_url) {
         this.peer.url = environment.videoChat_server_url;
       }
-           
+
       this.peer.on('readyToCall', () => {
         this.peer.createRoom(this.room, (err, name) => {
           console.log(' create room cb', this.room);
@@ -93,8 +91,8 @@ export class TicketVideoChatComponent implements OnInit, OnDestroy {
           });
         }
       });
-      
-     
+
+
     // this.peer.on('localStream', (stream) => {
     //
     // });

@@ -2,14 +2,14 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import { Location } from '@angular/common';
 import { find } from 'lodash';
-import { LocalStorageService } from '../../../../../services/local-storage/local-storage.service';
-import { ApiTicketService } from '../../../../../services/api/api-ticket.service';
+import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
+import { ApiTicketService } from '../../../../services/api/api-ticket.service';
 import { ITicketStatus } from '../../../../../interfaces/i-ticket-status';
 import swal, { SweetAlertType, SweetAlertResult } from 'sweetalert2';
-import { ApiTicketHistoryService } from '../../../../../services/api/api-ticket-history.service';
+import { ApiTicketHistoryService } from '../../../../services/api/api-ticket-history.service';
 import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
 import { ITicketHistoryType } from '../../../../../interfaces/i-ticket-history-type';
-import { SocketService } from '../../../../../services/socket/socket.service';
+import { SocketService } from '../../../../services/socket/socket.service';
 import { Observable } from 'rxjs/Observable';
 import * as moment from 'moment';
 
@@ -133,7 +133,8 @@ export class TicketHeadComponent implements OnInit {
           html: 'Rifiutata per: ' + result.value
         });
         this.updateTicketStatus(find(this.ticketStatus, { status: 'REFUSED' }).id);
-        this.createHistoryTicketSystem(result.value);
+        this.createHistoryTicketSystem(
+          'Rifiutato tichet da Operatore: ' + this.user.firstname + ' ' + this.user.lastname + 'per il seguente motivo: ' + result.value);
         this.location.back();
       }
     });

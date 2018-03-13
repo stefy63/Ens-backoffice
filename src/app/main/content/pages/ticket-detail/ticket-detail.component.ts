@@ -1,11 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {ApiTicketService} from '../../../../services/api/api-ticket.service';
-import {ITicket} from '../../../../interfaces/i-ticket';
+import { ActivatedRoute } from '@angular/router';
+import { ApiTicketService } from '../../../services/api/api-ticket.service';
+import { ITicket } from '../../../../interfaces/i-ticket';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { SocketService } from '../../../../services/socket/socket.service';
+import { SocketService } from '../../../services/socket/socket.service';
 import { WsEvents } from '../../../../type/ws-events';
-import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
+import { LocalStorageService } from '../../../services/local-storage/local-storage.service';
 
 @Component({
   selector: 'fuse-ticket-detail',
@@ -36,7 +36,7 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
       .subscribe((data: ITicket) => {
         this.ticket.next(data);
         this.service = data.service.service;
-        if (data.status.status === 'ONLINE' && data.id_operator === this.user.id) {
+        if (data.status.status === 'REFUSED' || (data.status.status === 'ONLINE' && data.id_operator === this.user.id)) {
           this.open = true;
         }
       });
@@ -45,7 +45,7 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
       .subscribe((data: ITicket) => {
         if (data.id === this.idTicket) {
           this.ticket.next(data);
-        } 
+        }
     });
 
   }

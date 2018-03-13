@@ -1,16 +1,14 @@
-///<reference path="../../../../services/api/api-ticket.service.ts"/>
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
-import { ApiTicketService } from '../../../../services/api/api-ticket.service';
+import { ApiTicketService } from '../../../services/api/api-ticket.service';
 import { ITicket } from '../../../../interfaces/i-ticket';
-import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
+import { LocalStorageService } from '../../../services/local-storage/local-storage.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import * as _ from 'lodash';
-import { SocketService } from '../../../../services/socket/socket.service';
+import { SocketService } from '../../../services/socket/socket.service';
 import { WsEvents } from '../../../../type/ws-events';
-import { NotificationsService, SimpleNotificationsComponent } from 'angular2-notifications';
+import { NotificationsService } from 'angular2-notifications';
 import { ToastOptions } from '../../../../type/toast-options';
 import { MatTabChangeEvent } from '@angular/material';
-import * as moment from 'moment';
 
 @Component({
   selector: 'fuse-dashboard',
@@ -30,18 +28,19 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   public totalBadge = 0;
   public options = ToastOptions;
 
-  
+
   constructor(
     private apiTicket: ApiTicketService,
     private storage: LocalStorageService,
     private socketService: SocketService,
     private toast: NotificationsService,
   ) {
-    this.idOperator = this.storage.getItem('user').id;    
+    this.idOperator = this.storage.getItem('user').id;
   }
 
   ngOnInit() {
-    this.apiTicket.get()
+    // this.apiTicket.get()
+    this.apiTicket.getFromDate(30)
         .subscribe(data => {
           this.ticket = data;
           this._setDataOutput();
@@ -81,16 +80,12 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private _setDataOutput() {
-    const returnTickets = this.apiTicket.normalizeTickets(this.ticket);
+    // const returnTickets = this.apiTicket.normalizeTickets(this.ticket);
+    const returnTickets = this.ticket;
     this.newTicket.next(_.filter(returnTickets, item => item.status === 'NEW'));
     this.openTicket.next(_.filter(returnTickets, item => item.status === 'ONLINE' && item.id_operator !== this.idOperator));
     this.closedTicket.next(_.filter(returnTickets, item => item.status === 'CLOSED'));
     this.refusedTicket.next(_.filter(returnTickets, item => item.status === 'REFUSED'));
     this.myOpenTicket.next(_.filter(returnTickets, item => item.status === 'ONLINE' && item.id_operator === this.idOperator));
-
-    // this.newTicket.next(_.filter(this.ticket, item => item.status.status === 'NEW'));
-    // this.openTicket.next(_.filter(this.ticket, item => item.status.status === 'ONLINE' && item.id_operator !== this.idOperator));
-    // this.closedTicket.next(_.filter(this.ticket, item => item.status.status === 'CLOSED'));
-    // this.myOpenTicket.next(_.filter(this.ticket, item => item.status.status === 'ONLINE' && item.id_operator === this.idOperator));
   }
 }

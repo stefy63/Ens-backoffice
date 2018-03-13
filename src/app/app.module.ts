@@ -16,17 +16,17 @@ import { FuseSampleModule } from './main/content/sample/sample.module';
 import { TranslateModule } from '@ngx-translate/core';
 import { SocketIoModule, SocketIoConfig } from 'ng-socket-io';
 import { environment } from '../environments/environment';
-import { SocketService } from './services/socket/socket.service';
+import { SocketService } from './main/services/socket/socket.service';
 import { TokenInterceptor } from './interceptors/token.interceptor';
-import { ApiLoginService } from './services/api/api-login.service';
-import { AuthService } from './services/auth/auth.service';
-import { LocalStorageService } from './services/local-storage/local-storage.service';
+import { ApiLoginService } from './main/services/api/api-login.service';
+import { AuthService } from './main/services/auth/auth.service';
+import { LocalStorageService } from './main/services/local-storage/local-storage.service';
 import { AuthGuard } from './guard/auth.guard';
 import { SimpleNotificationsModule } from 'angular2-notifications';
-import { ApiTicketHistoryService } from './services/api/api-ticket-history.service';
+import { ApiTicketHistoryService } from './main/services/api/api-ticket-history.service';
 import { IsOperatorGuard } from './guard/is-operator.guard';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { UnreadedMessageEmitterService } from './services/helper/unreaded-message-emitter.service';
+import { UnreadedMessageEmitterService } from './main/services/helper/unreaded-message-emitter.service';
 
 
 const appRoutes: Routes = [

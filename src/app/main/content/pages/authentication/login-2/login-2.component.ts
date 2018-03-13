@@ -3,13 +3,13 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FuseConfigService } from '../../../../../core/services/config.service';
 import { fuseAnimations } from '../../../../../core/animations';
-import { ApiLoginService } from '../../../../../services/api/api-login.service';
+import { ApiLoginService } from '../../../../services/api/api-login.service';
 import * as moment from 'moment';
 import { IDataLogin } from '../../../../../interfaces/i-data-login';
-import { AuthService } from '../../../../../services/auth/auth.service';
+import { AuthService } from '../../../../services/auth/auth.service';
 import { Router } from '@angular/router';
-import { LocalStorageService } from '../../../../../services/local-storage/local-storage.service';
-import { SocketService } from '../../../../../services/socket/socket.service';
+import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
+import { SocketService } from '../../../../services/socket/socket.service';
 import { NotificationsService } from 'angular2-notifications';
 import { ToastOptions } from '../../../../../type/toast-options';
 import { FuseNavigationService } from '../../../../../core/components/navigation/navigation.service';
@@ -122,7 +122,7 @@ export class FuseLogin2Component implements OnInit
             }
         }
     }
-    
+
     public bgSeason() {
         const mounth = moment().format('MMMM').toString().toLowerCase();
         return `url('/assets/images/backgrounds/${mounth}.jpg') no-repeat`;

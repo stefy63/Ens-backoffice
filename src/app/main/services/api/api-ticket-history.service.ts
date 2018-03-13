@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { ITicketHistory } from '../../interfaces/i-ticket-history';
+import { ITicketHistory } from '../../../interfaces/i-ticket-history';
 import * as moment from 'moment';
 import { Observable } from 'rxjs/Observable';
 

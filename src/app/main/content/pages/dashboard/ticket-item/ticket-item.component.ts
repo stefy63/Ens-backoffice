@@ -1,15 +1,15 @@
 import { Component, OnInit, Input, ViewChild, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
-import { MatPaginator, MatSort, MatTableDataSource, Sort } from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import {Observable} from 'rxjs/Observable';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
-import { LocalStorageService } from '../../../../../services/local-storage/local-storage.service';
+import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
 import { IUser } from '../../../../../interfaces/i-user';
 import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
-import { SocketService } from '../../../../../services/socket/socket.service';
+import { SocketService } from '../../../../services/socket/socket.service';
 import { WsEvents } from '../../../../../type/ws-events';
-import { UnreadedMessageEmitterService } from '../../../../../services/helper/unreaded-message-emitter.service';
+import { UnreadedMessageEmitterService } from '../../../../services/helper/unreaded-message-emitter.service';
 
 @Component({
   selector: 'fuse-ticket-item',
@@ -28,8 +28,8 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
   public dataBadge: number[] = [];
 
 
-  public displayedColumns = ['service', 
-                              'status', 
+  public displayedColumns = ['service',
+                              'status',
                               'operator',
                               'user',
                               'category',
@@ -37,7 +37,7 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
                               'date_time',
                               'id'
                             ];
-                          
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -71,13 +71,13 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.socketService.removeListener(WsEvents.ticketHistory.create);
-    UnreadedMessageEmitterService.get('sum_badge').emit(0);
+     UnreadedMessageEmitterService.next('sum_badge', 0);
   }
 
   ngAfterViewInit()
-  { 
+  {
   }
-  
+
   applyFilter(filterValue: string)
   {
     filterValue = filterValue.trim(); // Remove whitespace
@@ -106,11 +106,11 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private sumBadge() {
     let sum = 0;
-    _.forEach(this.dataBadge, item => { 
+    _.forEach(this.dataBadge, item => {
       if (item) {
         sum += item;
       }
     });
-    UnreadedMessageEmitterService.get('sum_badge').emit(sum);
+    UnreadedMessageEmitterService.next('sum_badge', sum);
   }
 }

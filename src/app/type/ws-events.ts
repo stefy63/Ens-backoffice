@@ -9,10 +9,10 @@ export const WsEvents = {
     },
     ticket: {
         create: 'onTicketCreate',
-        open: 'onTichetOpen',
-        close: 'onTichetClose',
-        updated: 'onTichetUpdated',
-        deleted: 'onTichetDeleted',
+        open: 'onTicketOpen',
+        close: 'onTicketClose',
+        updated: 'onTicketUpdated',
+        deleted: 'onTicketDeleted',
     },
     ticketHistory: {
         create: 'onTicketHistoryCreate',

@@ -1,13 +1,13 @@
 import { Component, OnInit, AfterViewInit, Input, ViewChildren, ViewChild, ChangeDetectorRef, ChangeDetectionStrategy} from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
-import { LocalStorageService } from '../../../../../services/local-storage/local-storage.service';
+import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
 import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
 import { ITicketHistoryType } from '../../../../../interfaces/i-ticket-history-type';
 import * as _ from 'lodash';
 import { NgForm } from '@angular/forms';
-import { ChatService } from '../../../../../services/ticket-messages/ticket-messages.service';
+import { ChatService } from '../../../../services/ticket-messages/ticket-messages.service';
 import { ToastOptions } from '../../../../../type/toast-options';
-import { NotificationsService} from 'angular2-notifications';
+import { NotificationsService } from 'angular2-notifications';
 import { FusePerfectScrollbarDirective } from '../../../../../core/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
 import { Observable } from 'rxjs/Observable';
 
@@ -54,17 +54,21 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.replyInput = this.replyInputField.first.nativeElement;
-    this.readyToReply();
-    this.cd.detectChanges();
+    if (this.ticket.status.status !== 'REFUSED') {
+      this.replyInput = this.replyInputField.first.nativeElement;
+      this.readyToReply();
+      this.cd.detectChanges();
+    }
   }
 
   readyToReply() {
-    setTimeout(() => {
-      this.replyForm.reset();
-      // this.focusReplyInput();
-      this.scrollToBottom(2000);
-    });
+    if (this.ticket.status.status !== 'REFUSED') {
+      setTimeout(() => {
+        this.replyForm.reset();
+        // this.focusReplyInput();
+        this.scrollToBottom(2000);
+      });
+    }
   }
 
   focusReplyInput() {
@@ -89,7 +93,7 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
 
       let indexSpace = this.replyForm.form.value.message.indexOf(' ');
       indexSpace = (indexSpace === -1) ? 100 : indexSpace;
-      const formMessage: string = (this.replyForm.form.value.message.length > 50 && indexSpace > 70) ? 
+      const formMessage: string = (this.replyForm.form.value.message.length > 50 && indexSpace > 70) ?
                                       this.replyForm.form.value.message.substring(0, 50) : this.replyForm.form.value.message;
       const message: ITicketHistory = {
         id: 0,

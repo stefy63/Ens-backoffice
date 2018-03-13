@@ -1,10 +1,10 @@
 import { Component, HostListener } from '@angular/core';
 import { FuseSplashScreenService } from './core/services/splash-screen.service';
 import { TranslateService } from '@ngx-translate/core';
-import { ApiLoginService } from './services/api/api-login.service';
-import {SocketService} from './services/socket/socket.service';
-import {LocalStorageService} from './services/local-storage/local-storage.service';
-import {AuthService} from './services/auth/auth.service';
+import { ApiLoginService } from './main/services/api/api-login.service';
+import {SocketService} from './main/services/socket/socket.service';
+import {LocalStorageService} from './main/services/local-storage/local-storage.service';
+import {AuthService} from './main/services/auth/auth.service';
 
 @Component({
     selector   : 'fuse-root',

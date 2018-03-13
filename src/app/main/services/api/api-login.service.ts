@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { IDataLogin } from '../../interfaces/i-data-login';
+import { IDataLogin } from '../../../interfaces/i-data-login';
 import { Observable } from 'rxjs/Observable';
 import { LocalStorageService } from '../local-storage/local-storage.service';
-import { IOperator } from '../../interfaces/i-operator';
-import { forEach } from 'lodash';
-import { ITokenSession } from '../../interfaces/i-token-session';
+import { ITokenSession } from '../../../interfaces/i-token-session';
 
 @Injectable()
 export class ApiLoginService {
