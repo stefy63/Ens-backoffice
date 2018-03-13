@@ -32,7 +32,7 @@ import { UnreadedMessageEmitterService } from './main/services/helper/unreaded-m
 const appRoutes: Routes = [
     {
         path: '**',
-        redirectTo: '/'
+        redirectTo: 'pages/authentication/login-2'
     }
 ];
 

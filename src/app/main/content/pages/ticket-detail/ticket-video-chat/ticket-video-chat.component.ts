@@ -44,7 +44,7 @@ export class TicketVideoChatComponent implements OnInit, OnDestroy {
         // the id/element dom element that will hold remote videos
         remoteVideosEl: 'remoteVideos',
         // immediately ask for camera access
-        media: { audio: false, video: true },
+        media: { audio: true, video: true },
         autoRequestMedia: true,
         debug: false,
         // detectSpeakingEvents: true,

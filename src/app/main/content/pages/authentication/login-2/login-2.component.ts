@@ -60,7 +60,7 @@ export class FuseLogin2Component implements OnInit
         .subscribe(
            (data) => {
                 this.storage.setItem('data', data);
-                if (this.authService.isAuthenticated()) {
+                if (this.authService.isAuthenticated() && this.loginForm.value.operator) {
                     const userType = this.loginForm.value.operator ? 'OPERATOR' : 'USER';
                     this.socketService.sendMessage(
                         'welcome-message',
