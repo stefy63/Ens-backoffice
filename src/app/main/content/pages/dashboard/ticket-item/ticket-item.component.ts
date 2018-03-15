@@ -52,7 +52,6 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
     this.user = this.storage.getItem('user');
     this.allTicket
       .subscribe((ticket: ITicket[]) => {
-        this.sortedData = ticket;
         this.dataSource =  new MatTableDataSource(ticket);
         this.cd.markForCheck();
         this.dataSource.paginator = this.paginator;
@@ -61,6 +60,7 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
         this.getUnreadedMessage(this.sortedData);
         this.sumBadge();
       });
+
     this.socketService.getMessage(WsEvents.ticketHistory.create)
       .subscribe((data: ITicket) => {
         this.getUnreadedMessage([data]);

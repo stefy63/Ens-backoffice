@@ -9,6 +9,7 @@ import { WsEvents } from '../../../../type/ws-events';
 import { NotificationsService } from 'angular2-notifications';
 import { ToastOptions } from '../../../../type/toast-options';
 import { MatTabChangeEvent } from '@angular/material';
+import * as moment from 'moment';
 
 @Component({
   selector: 'fuse-dashboard',
@@ -39,25 +40,26 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    // this.apiTicket.get()
     this.apiTicket.getFromDate(30)
         .subscribe(data => {
           this.ticket = data;
-          this._setDataOutput();
+          this._setDataOutput(this.ticket);
         });
     this.socketService.getMessage(WsEvents.ticket.create)
       .subscribe((data: ITicket) => {
-        this.ticket.push(data);
-        this._setDataOutput();
+        this.ticket.push(this.normalizeItem([data])[0]);
+        _.orderBy(this.ticket, ['date_time']);
+        this._setDataOutput(this.ticket);
         this.toast.info('Nuovo Ticket!', 'Nuovo ticket da ' + data.user.surname);
       });
     this.socketService.getMessage(WsEvents.ticket.updated)
       .subscribe((data: ITicket) => {
         const index = _.findIndex(this.ticket, item => item.id === data.id);
-        if (index) {
-          this.ticket.splice(index, 1, data);
+        if (index >= 0) {
+          this.ticket.splice(index, 1, this.normalizeItem([data])[0]);
+          _.orderBy(this.ticket, ['date_time']);
         }
-        this._setDataOutput();
+        this._setDataOutput(this.ticket);
         this.toast.info('Ticket Modificato', 'Il ticket ' + data.id + ' è stato modificato!');
       });
 
@@ -79,13 +81,41 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.storage.setItem('dashboard_selected_tabindex', tabChangeEvent.index.toString());
   }
 
-  private _setDataOutput() {
+  private _setDataOutput(data: ITicket[]) {
     // const returnTickets = this.apiTicket.normalizeTickets(this.ticket);
-    const returnTickets = this.ticket;
-    this.newTicket.next(_.filter(returnTickets, item => item.status === 'NEW'));
+    const returnTickets: ITicket[] = data;
+    this.newTicket.next( _.filter(returnTickets, item => item.status === 'NEW'));
     this.openTicket.next(_.filter(returnTickets, item => item.status === 'ONLINE' && item.id_operator !== this.idOperator));
     this.closedTicket.next(_.filter(returnTickets, item => item.status === 'CLOSED'));
     this.refusedTicket.next(_.filter(returnTickets, item => item.status === 'REFUSED'));
     this.myOpenTicket.next(_.filter(returnTickets, item => item.status === 'ONLINE' && item.id_operator === this.idOperator));
   }
+
+  public normalizeItem(ticket: ITicket[]): any  { 
+     return _.map(ticket, (item) => { 
+                    const closed_at = (item.status.status === 'CLOSED' || item.status.status === 'REFUSED' ) ? _.chain(item.historys) 
+                                        .filter(elem => elem.type.type === 'SYSTEM') 
+                                        .orderBy(['date_time']) 
+                                        .findLast() 
+                                        .value() : ''; 
+                    return { 
+                        id: item.id, 
+                        service: item.service.service, 
+                        status: item.status.status, 
+                        id_operator: item.id_operator, 
+                        id_user: item.id_user, 
+                        operator_firstname: (item.operator) ? item.operator.firstname : '', 
+                        operator_lastname: (item.operator) ? item.operator.lastname : '', 
+                        user_name: (item.user) ? item.user.name : '', 
+                        user_surname: (item.user) ? item.user.surname : '', 
+                        category: (item.category) ? item.category.category : '', 
+                        phone: item.phone, 
+                        date_time: moment(item.date_time).format('DD/MM/YYYY HH:mm'), 
+                        historys: item.historys, 
+                        closed_at: (closed_at) ? moment(closed_at.date_time).format('DD/MM/YYYY HH:mm') : undefined 
+                    }; 
+                }); 
+    } 
+
+
 }

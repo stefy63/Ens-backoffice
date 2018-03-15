@@ -34,7 +34,6 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.apiTicket.getFromId(this.idTicket)
       .subscribe((data: ITicket) => {
-        console.log(data);
         this.ticket.next(data);
         this.service = data.service.service;
         if (data.status.status === 'REFUSED' || (data.status.status === 'ONLINE' && data.id_operator === this.user.id)) {
