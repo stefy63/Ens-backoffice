@@ -6,14 +6,15 @@ import { Observable } from 'rxjs/Observable';
 import { LocalStorageService } from '../local-storage/local-storage.service';
 import { ITokenSession } from '../../../interfaces/i-token-session';
 
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
+
 @Injectable()
 export class ApiLoginService {
 
   private  apiPort = (environment.api_port) ?  ':' + environment.api_port : '';
   private baseUrl: string = environment.api_url + this.apiPort + environment.api_suffix;
-
-    private headers = new HttpHeaders()
-      .set('Content-Type', 'application/json');
 
   constructor(
     private http: HttpClient,
@@ -21,30 +22,13 @@ export class ApiLoginService {
   ) { }
 
   public apiLogin(dataLogin: IDataLogin): Observable<any> {
-    const headers = this.headers;
-    const params = new HttpParams()
-      .set('username', dataLogin.username)
-      .set('password', dataLogin.password);
+    const isOperator = dataLogin.operator;
+    delete dataLogin.operator;
 
-    const options = {
-      headers,
-      params
-    };
-
-    return this.http.post(this.baseUrl + '/login/' + dataLogin.operator, null, options);
+    return this.http.post(this.baseUrl + '/login/' + isOperator, dataLogin);
   }
 
   public apiLogout(): Observable<any> {
-    const dataLogout: ITokenSession = this.storage.getItem('token');
-    const headers = this.headers;
-    const params = new HttpParams()
-    .set('idtokensession', dataLogout.id.toString());
-
-    const options = {
-      headers,
-      params
-    };
-
-    return this.http.post(this.baseUrl + '/logout', null, options);
+    return this.http.post(this.baseUrl + '/logout', null);
   }
 }

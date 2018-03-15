@@ -56,12 +56,13 @@ export class FuseLogin2Component implements OnInit
     }
 
     private onSubmit() {
+        const isOperator = this.loginForm.value.operator;
       this.apiLoginService.apiLogin(this.loginForm.value as IDataLogin)
         .subscribe(
            (data) => {
                 this.storage.setItem('data', data);
-                if (this.authService.isAuthenticated() && this.loginForm.value.operator) {
-                    const userType = this.loginForm.value.operator ? 'OPERATOR' : 'USER';
+                if (this.authService.isAuthenticated() && isOperator) {
+                    const userType = isOperator ? 'OPERATOR' : 'USER';
                     this.socketService.sendMessage(
                         'welcome-message',
                         {
@@ -83,7 +84,7 @@ export class FuseLogin2Component implements OnInit
                 }
             },
             (err) => {
-                this.toast.error('Attenzione', 'Login Errato!');
+                this.toast.error('Attenzione', 'Dati Errati!');
             }
         );
     }
