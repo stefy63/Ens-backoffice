@@ -20,7 +20,6 @@ import { UnreadedMessageEmitterService } from '../../../../services/helper/unrea
 export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private user: IUser;
-  private sortedData;
 
 
   @Input() allTicket: Observable<ITicket[]>;
@@ -57,7 +56,7 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
 
-        this.getUnreadedMessage(this.sortedData);
+        this.getUnreadedMessage(ticket);
         this.sumBadge();
       });
 
@@ -90,7 +89,6 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private getUnreadedMessage(ticket: ITicket[]) {
-
     const myTicket = _.filter(ticket, item => {
         const status = item.status.status || item.status;
         return (item.id_operator === this.user.id && status === 'ONLINE');
@@ -98,7 +96,7 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
 
       _.forEach(myTicket, item => {
         const unreaded: ITicketHistory[] = _.filter(item.historys, history => {
-              return (!history.readed && history.type.type === 'USER');
+              return (!history.readed && history.id_type === 2);
             });
         this.dataBadge[item.id] = unreaded.length;
       });
