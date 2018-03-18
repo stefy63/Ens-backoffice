@@ -43,12 +43,13 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.apiTicket.getFromDate(30)
         .subscribe(data => {
           this.ticket = data;
+          _.orderBy(this.ticket, ['date_time'], ['ASC']);
           this._setDataOutput(this.ticket);
         });
     this.socketService.getMessage(WsEvents.ticket.create)
       .subscribe((data: ITicket) => {
         this.ticket.push(this.normalizeItem([data])[0]);
-        _.orderBy(this.ticket, ['date_time']);
+        _.orderBy(this.ticket, ['date_time'], ['ASC']);
         this._setDataOutput(this.ticket);
         this.toast.info('Nuovo Ticket!', 'Nuovo ticket da ' + data.user.surname);
       });
@@ -57,7 +58,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
         const index = _.findIndex(this.ticket, item => item.id === data.id);
         if (index >= 0) {
           this.ticket.splice(index, 1, this.normalizeItem([data])[0]);
-          _.orderBy(this.ticket, ['date_time']);
+          _.orderBy(this.ticket, ['date_time'], ['ASC']);
         }
         this._setDataOutput(this.ticket);
         this.toast.info('Ticket Modificato', 'Il ticket ' + data.id + ' è stato modificato!');
