@@ -77,10 +77,10 @@ export class TicketHeadComponent implements OnInit {
     const confirm = await this.confirmAlert(confirmMessage, '', 'warning');
     if (confirm.value) {
       this.updateTicketStatus(find(this.ticketStatus, { status: 'ONLINE' }).id);
-      this.createHistoryTicketSystem(historyMessage);
       this.msgAlert = false;
       this.open.next(true);
       this.isOpen = true;
+      this.createHistoryTicketSystem(historyMessage);
     }
   }
 
