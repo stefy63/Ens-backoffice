@@ -101,8 +101,7 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
         id_type:  _.find(this.historyType, item => item.type === 'NOTE').id,
         // action: this.replyForm.form.value.message + ` [ ${this.ticket.operator.firstname} ${this.ticket.operator.lastname} ]`,
         action: `[ ${this.ticket.operator.firstname} ${this.ticket.operator.lastname} ]\n` + formMessage ,
-        readed: 1,
-        date_time: new Date().toISOString()
+        readed: 1
       };
 
 

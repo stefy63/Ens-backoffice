@@ -5,6 +5,8 @@ import { ApiLoginService } from './main/services/api/api-login.service';
 import {SocketService} from './main/services/socket/socket.service';
 import {LocalStorageService} from './main/services/local-storage/local-storage.service';
 import {AuthService} from './main/services/auth/auth.service';
+// import * as moment from 'moment';
+// import 'moment/locale/it';
 
 @Component({
     selector   : 'fuse-root',
@@ -44,6 +46,7 @@ export class AppComponent
             });
         }
 
+        // moment.locale('it');
     }
 
     @HostListener('window:beforeunload', ['$event'])

@@ -88,9 +88,13 @@ export class TicketHeadComponent implements OnInit {
     this.location.back();
   }
 
-  closeChat() {
-    this.updateTicketStatus(find(this.ticketStatus, { status: 'CLOSED' }).id);
-    this.location.back();
+  async closeChat() {
+    const confirm = await this.confirmAlert('Conferma chiusura Ticket?', 'Chiusura tichet da Operatore: ' + this.user.firstname + ' ' + this.user.lastname, 'warning');
+    if (confirm.value) {
+      this.updateTicketStatus(find(this.ticketStatus, { status: 'CLOSED' }).id);
+      this.createHistoryTicketSystem('Chiusura tichet da Operatore: ' + this.user.firstname + ' ' + this.user.lastname);
+      this.location.back();
+    }   
   }
 
   private confirmAlert(title: string, text: string, type: SweetAlertType): Promise<SweetAlertResult> {

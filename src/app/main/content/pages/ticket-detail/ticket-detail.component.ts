@@ -41,6 +41,13 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
         }
       });
 
+      this.socketService.getMessage(WsEvents.ticket.updated)
+      .subscribe((data: ITicket) => {
+        if (data.id === this.idTicket){
+          this.ticket.next(data);
+        }
+      });
+
     this.socketService.getMessage(WsEvents.ticketHistory.create)
       .subscribe((data: ITicket) => {
         if (data.id === this.idTicket) {

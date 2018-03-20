@@ -20,7 +20,7 @@ export class ApiTicketHistoryService {
   public create(history: ITicketHistory): Observable<ITicketHistory> {
 
     history.readed = 0;
-    history.date_time = moment().toISOString();
+    // history.date_time = moment().toISOString();
 
     return this.http.post(this.baseUrl + '/tickethistory/' + history.id_ticket, history).map(data => data as ITicketHistory);
   }
