@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import { Location } from '@angular/common';
 import { find } from 'lodash';
@@ -19,7 +19,7 @@ import * as moment from 'moment';
   templateUrl: './ticket-head.component.html',
   styleUrls: ['./ticket-head.component.scss']
 })
-export class TicketHeadComponent implements OnInit {
+export class TicketHeadComponent implements OnInit, OnDestroy {
 
   private ticketStatus: ITicketStatus;
   private apiTicketHistoryType: ITicketHistoryType;
@@ -50,14 +50,9 @@ export class TicketHeadComponent implements OnInit {
     this.newTicket.subscribe(async (data: ITicket) => {
       if (this.ticket && this.ticket.status.status === 'NEW' && data.status.status !== 'NEW' && !this.isOpen) {
         await swal({
-              title: 'ATTENZIONE!...',
+              title: 'ATTENZIONE! TICKET GIA ACQUISITO',
               text: 'TICKET PRESO IN CARICO DA ALTRO OPERATORE',
-              type: 'warning',
-              // showCancelButton: true,
-              // confirmButtonColor: '#3085d6',
-              // cancelButtonColor: '#d33',
-              // confirmButtonText: 'Conferma',
-              // cancelButtonText: 'Annulla'
+              type: 'error'
             });
         this.location.back();
       }
@@ -74,6 +69,9 @@ export class TicketHeadComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    this.ticket = null;
+  }
 
   activateChat() {
     if (this.ticket.status.status === 'ONLINE' && this.ticket.id_operator !== this.user.id) {
@@ -110,21 +108,8 @@ export class TicketHeadComponent implements OnInit {
     }   
   }
 
-  private confirmAlert(title: string, text: string, type: SweetAlertType): Promise<SweetAlertResult> {
-    return swal({
-      title: title,
-      text: text,
-      type: type,
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Conferma',
-      cancelButtonText: 'Annulla'
-    });
-  }
-
-  private refuseChat() {
-    return swal({
+  private async refuseChat() {
+    return await swal({
       title: 'Conferma Rifiuto Chat?',
       text: 'Inserire la motivazione di questa scelta!',
       input: 'text',
@@ -142,18 +127,32 @@ export class TicketHeadComponent implements OnInit {
         });
       },
       // allowOutsideClick: () => !swal.isLoading()
-    }).then((result) => {
+    }).then( async (result) => {
       if (result.value) {
-        swal({
+        this.isOpen = true;
+        this.updateTicketStatus(find(this.ticketStatus, { status: 'REFUSED' }).id);
+        this.createHistoryTicketSystem(
+          'Rifiutato tichet da Operatore: ' + this.user.firstname + ' ' + this.user.lastname + 'per il seguente motivo: ' + result.value);
+        await swal({
           type: 'success',
           title: 'La Chat è stata rifiutata!',
           html: 'Rifiutata per: ' + result.value
         });
-        this.updateTicketStatus(find(this.ticketStatus, { status: 'REFUSED' }).id);
-        this.createHistoryTicketSystem(
-          'Rifiutato tichet da Operatore: ' + this.user.firstname + ' ' + this.user.lastname + 'per il seguente motivo: ' + result.value);
         this.location.back();
       }
+    });
+  }
+
+  private confirmAlert(title: string, text: string, type: SweetAlertType): Promise<SweetAlertResult> {
+    return swal({
+      title: title,
+      text: text,
+      type: type,
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Conferma',
+      cancelButtonText: 'Annulla'
     });
   }
 

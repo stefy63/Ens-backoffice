@@ -59,6 +59,7 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.socketService.removeListener(WsEvents.ticketHistory.create);
+    this.socketService.removeListener(WsEvents.ticket.updated);
   }
 
   setOpen($event) {

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, ViewChild, ViewChildren, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ViewChild, ViewChildren, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
 import { NgForm } from '@angular/forms';
 import { FusePerfectScrollbarDirective } from '../../../../../core/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
@@ -19,7 +19,7 @@ import { Observable } from 'rxjs/Observable';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class TicketMessagesComponent implements OnInit, AfterViewInit {
+export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input('ticket') data: Observable<ITicket>;
   public ticket: ITicket;
@@ -51,6 +51,10 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit {
       this.readyToReply();
       this.cd.markForCheck();
     });
+  }
+
+  ngOnDestroy() {
+    this.ticket = null;
   }
 
   ngAfterViewInit() {
