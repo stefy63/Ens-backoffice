@@ -6,7 +6,7 @@ export class ITicketHistory {
     id_ticket: number;
     id_type: number;
     action: string;
-    date_time: String;
-    readed: number;
+    date_time?: String;
+    readed?: number;
     type?: ITicketHistoryType;
 }

@@ -104,8 +104,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit {
         id_type: _.find(this.historyType, item => item.type === type).id,
         // action: this.replyForm.form.value.message,
         action: formMessage,
-        readed: 0,
-        date_time: new Date().toISOString()
+        readed: 0
       };
 
       this.chatService.sendMessage(message)
