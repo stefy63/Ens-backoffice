@@ -46,8 +46,21 @@ export class TicketHeadComponent implements OnInit {
     this.apiTicketHistoryType = this.store.getItem('ticket_history_type');
   }
 
-  ngOnInit() {
-    this.newTicket.subscribe((data: ITicket) => {
+   ngOnInit() {
+    this.newTicket.subscribe(async (data: ITicket) => {
+      if (this.ticket && this.ticket.status.status === 'NEW' && data.status.status !== 'NEW' && !this.isOpen) {
+        await swal({
+              title: 'ATTENZIONE!...',
+              text: 'TICKET PRESO IN CARICO DA ALTRO OPERATORE',
+              type: 'warning',
+              // showCancelButton: true,
+              // confirmButtonColor: '#3085d6',
+              // cancelButtonColor: '#d33',
+              // confirmButtonText: 'Conferma',
+              // cancelButtonText: 'Annulla'
+            });
+        this.location.back();
+      }
       this.ticket = data;
       const initMessage = find(data.historys, item => item.type.type === 'INITIAL');
       this.ticketReason = (initMessage) ? initMessage.action : '';
@@ -76,10 +89,10 @@ export class TicketHeadComponent implements OnInit {
   private async setUserChoise(confirmMessage: string, historyMessage: string) {
     const confirm = await this.confirmAlert(confirmMessage, '', 'warning');
     if (confirm.value) {
+      this.isOpen = true;
       this.updateTicketStatus(find(this.ticketStatus, { status: 'ONLINE' }).id);
       this.msgAlert = false;
       this.open.next(true);
-      this.isOpen = true;
       this.createHistoryTicketSystem(historyMessage);
     }
   }
