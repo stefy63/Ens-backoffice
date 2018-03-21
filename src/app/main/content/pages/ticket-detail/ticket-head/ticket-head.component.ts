@@ -165,7 +165,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
       .subscribe((data) => {console.log('TicketHistory Subscription success')}, 
       async (err) => {
         await swal({
-          title: 'ATTENZIONE! ERRORE DI GESTIONE TICKET',
+          title: 'FABRIZIO NUN CE PROV\'',
           text: 'Errore nel ticket....' + this.ticket.id,
           type: 'error'
         });
