@@ -75,11 +75,11 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
 
   activateChat() {
     if (this.ticket.status.status === 'ONLINE' && this.ticket.id_operator !== this.user.id) {
-      this.setUserChoise('Conferma Trasferimento Ticket?', 'Trasferito tichet da Operatore: ' + this.user.firstname + ' ' + this.user.lastname);
+      this.setUserChoise('Conferma Trasferimento Ticket?', 'Trasferito ticket da Operatore: ' + this.user.firstname + ' ' + this.user.lastname);
     } else if (this.ticket.status.status === 'CLOSED') {
-      this.setUserChoise('Conferma Riapertura Ticket?', 'Riaperutra tichet da Operatore: ');
+      this.setUserChoise('Conferma Riapertura Ticket?', 'Riaperutra ticket da Operatore: ');
     } else {
-      this.setUserChoise('Conferma acquisizione Ticket?', 'Acquisito tichet da Operatore: ' + this.user.firstname + ' ' + this.user.lastname);
+      this.setUserChoise('Conferma acquisizione Ticket?', 'Acquisito ticket da Operatore: ' + this.user.firstname + ' ' + this.user.lastname);
     }
 
   }
@@ -162,10 +162,9 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
       id_ticket: this.ticket.id,
       id_type: find(this.apiTicketHistoryType, { type: 'SYSTEM' }).id,
       action: message,
-      readed: 1,
-      date_time: moment().toISOString()
+      readed: 1
     };
-    this.apiTicketHistoryService.create(createHistory).subscribe();
+    return this.apiTicketHistoryService.create(createHistory).subscribe();
   }
 
   private updateTicketStatus(id_status: number) {
