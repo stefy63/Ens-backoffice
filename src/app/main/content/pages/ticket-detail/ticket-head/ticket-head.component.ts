@@ -163,10 +163,10 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     };
     this.apiTicketHistoryService.create(createHistory)
       .subscribe((data) => {console.log('TicketHistory Subscription success')}, 
-      (err) => {
-        swal({
+      async (err) => {
+        await swal({
           title: 'ATTENZIONE! ERRORE DI GESTIONE TICKET',
-          text: 'Errore nel ticket....',
+          text: 'Errore nel ticket....' + this.ticket.id,
           type: 'error'
         });
         this.location.back();
