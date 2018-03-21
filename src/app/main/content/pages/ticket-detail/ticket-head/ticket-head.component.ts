@@ -165,11 +165,10 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
       .subscribe((data) => {console.log('TicketHistory Subscription success')}, 
       async (err) => {
         await swal({
-          title: 'FABRIZIO NUN CE PROV\'',
+          title: 'FABRIZIO NUN CE PROVA\'',
           text: 'Errore nel ticket....' + this.ticket.id,
           type: 'error'
         });
-        this.location.back();
       });
       
   }

@@ -21,7 +21,7 @@
                 <td>{{ticket.user.name}}</td>
                 <td>{{ticket.user.surname}}</td>
                 <td>{{ticket.service.service}}</td>
-                <td>{{ticket.date_time | date:'dd/MM/yyyy HH:mm'}}</td>
+                <td>{{ticket.date_time | date:'dd/MM/yyyy HH:mm':'UTC'}}</td>
                 <td>{{ticket.phone}}</td>
               </tr>
           </tbody>
