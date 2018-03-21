@@ -91,7 +91,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
       this.updateTicketStatus(find(this.ticketStatus, { status: 'ONLINE' }).id);
       this.msgAlert = false;
       this.open.next(true);
-      this.createHistoryTicketSystem(historyMessage);
+      this.createHistoryTicketSystem(historyMessage); 
     }
   }
 
@@ -164,7 +164,17 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
       action: message,
       readed: 1
     };
-    return this.apiTicketHistoryService.create(createHistory).subscribe();
+    this.apiTicketHistoryService.create(createHistory)
+      .subscribe((data) => {console.log('TicketHistory Subscription success')}, 
+      (err) => {
+        swal({
+          title: 'ATTENZIONE! ERRORE DI GESTIONE TICKET',
+          text: 'Errore nel ticket....',
+          type: 'error'
+        });
+        this.location.back();
+      });
+      
   }
 
   private updateTicketStatus(id_status: number) {
