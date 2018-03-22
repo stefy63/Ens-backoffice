@@ -50,6 +50,9 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
       this.ticketHistorys = _.orderBy(this.ticket.historys, 'date_time', 'asc');
       this.readyToReply();
       this.cd.markForCheck();
+    },
+    (err) => {
+      console.log(err);
     });
   }
 

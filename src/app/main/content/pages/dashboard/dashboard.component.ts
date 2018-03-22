@@ -81,7 +81,10 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   private _setDataOutput(data: ITicket[]) {
     // const returnTickets = this.apiTicket.normalizeTickets(this.ticket);
-    const returnTickets: ITicket[] = data;
+    const returnTickets: ITicket[] = _.map(data, item => {
+            item.closed_at = (item.closed_at) ? moment.utc(item.closed_at.date_time).format('DD/MM/YYYY HH:mm') : undefined;
+            return item;
+          });
     this.newTicket.next( _.filter(returnTickets, item => item.status === 'NEW'));
     this.openTicket.next(_.filter(returnTickets, item => item.status === 'ONLINE' && item.id_operator !== this.idOperator));
     this.closedTicket.next(_.filter(returnTickets, item => item.status === 'CLOSED'));
@@ -96,6 +99,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
                                         .orderBy(['date_time'], ['ASC']) 
                                         .findLast() 
                                         .value() : ''; 
+                            console.log(closed_at);
                     return { 
                         id: item.id, 
                         service: item.service.service, 
@@ -108,9 +112,9 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
                         user_surname: (item.user) ? item.user.surname : '', 
                         category: (item.category) ? item.category.category : '', 
                         phone: item.phone, 
-                        date_time: moment(item.date_time).format('DD/MM/YYYY HH:mm'), 
+                        date_time: item.date_time, // moment(item.date_time).format('DD/MM/YYYY HH:mm'), 
                         historys: item.historys, 
-                        closed_at: (closed_at) ? moment(closed_at.date_time).format('DD/MM/YYYY HH:mm') : undefined 
+                        closed_at: (closed_at) ? moment.utc(closed_at.date_time).format('DD/MM/YYYY HH:mm') : undefined 
                     }; 
                 }); 
     } 

@@ -11,7 +11,6 @@ import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
 import { ITicketHistoryType } from '../../../../../interfaces/i-ticket-history-type';
 import { SocketService } from '../../../../services/socket/socket.service';
 import { Observable } from 'rxjs/Observable';
-import * as moment from 'moment';
 
 
 @Component({

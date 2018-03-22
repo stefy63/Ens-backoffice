@@ -49,6 +49,9 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
                             .value();
 
       this.readyToReply();
+    },
+    (err) => {
+      console.log(err);
     });
     this.historyType = this.storage.getItem('ticket_history_type');
   }
