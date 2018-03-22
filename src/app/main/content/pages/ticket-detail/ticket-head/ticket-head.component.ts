@@ -66,6 +66,9 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
       this.msgAlert = (data.id_operator
         && this.user.id !== data.id_operator
         && data.status.status === 'ONLINE');
+    },
+    (err) => {
+      console.log(err);
     });
   }
 
@@ -88,7 +91,20 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     const confirm = await this.confirmAlert(confirmMessage, '', 'warning');
     if (confirm.value) {
       this.isOpen = true;
-      this.updateTicketStatus(find(this.ticketStatus, { status: 'ONLINE' }).id, historyMessage);
+      this.updateTicketStatus(find(this.ticketStatus, { status: 'ONLINE' }).id).subscribe(() => {
+        this.createHistoryTicketSystem(historyMessage)
+          .subscribe(
+            (data) => {
+              console.log('TicketHistory Subscription success');
+            }, 
+            (err) => {
+              swal({
+                title: 'FABRIZIO NUN CE PROVA\'',
+                text: 'Errore nel ticket....' + this.ticket.id,
+                type: 'error'
+              });
+            });
+      });
       this.msgAlert = false;
       this.open.next(true);
     }
@@ -101,8 +117,13 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   async closeChat() {
     const confirm = await this.confirmAlert('Conferma chiusura Ticket?', 'Chiusura tichet da Operatore: ' + this.user.firstname + ' ' + this.user.lastname, 'warning');
     if (confirm.value) {
-      this.updateTicketStatus(find(this.ticketStatus, { status: 'CLOSED' }).id, 'Chiusura tichet da Operatore: ' + this.user.firstname + ' ' + this.user.lastname);
-      this.location.back();
+      this.updateTicketStatus(find(this.ticketStatus, { status: 'CLOSED' }).id)
+        .subscribe(() => {
+          this.createHistoryTicketSystem('Chiusura tichet da Operatore: ' + this.user.firstname + ' ' + this.user.lastname)
+            .subscribe(() => {
+              this.location.back();
+            });
+        });
     }   
   }
 
@@ -124,18 +145,21 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
           resolve();
         });
       },
-      // allowOutsideClick: () => !swal.isLoading()
     }).then( async (result) => {
       if (result.value) {
         this.isOpen = true;
-        await this.updateTicketStatus(find(this.ticketStatus, { status: 'REFUSED' }).id, 
-          'Rifiutato tichet da Operatore: ' + this.user.firstname + ' ' + this.user.lastname + 'per il seguente motivo: ' + result.value);
-        await swal({
-          type: 'success',
-          title: 'La Chat è stata rifiutata!',
-          html: 'Rifiutata per: ' + result.value
-        });
-        this.location.back();
+        this.updateTicketStatus(find(this.ticketStatus, { status: 'REFUSED' }).id)
+          .subscribe(() => {
+            this.createHistoryTicketSystem('Rifiutato tichet da Operatore: ' + this.user.firstname + ' ' + this.user.lastname + 'per il seguente motivo: ' + result.value)
+              .subscribe(() => {
+                swal({
+                  type: 'success',
+                  title: 'La Chat è stata rifiutata!',
+                  html: 'Rifiutata per: ' + result.value
+                });
+                this.location.back();
+              });
+          });
       }
     });
   }
@@ -153,7 +177,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     });
   }
 
-  private createHistoryTicketSystem(message: string) {
+  private createHistoryTicketSystem(message: string): Observable<ITicketHistory> {
     const createHistory: ITicketHistory = {
       id: null,
       id_ticket: this.ticket.id,
@@ -161,26 +185,15 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
       action: message,
       readed: 1
     };
-    this.apiTicketHistoryService.create(createHistory)
-      .subscribe((data) => {console.log('TicketHistory Subscription success')}, 
-      async (err) => {
-        await swal({
-          title: 'FABRIZIO NUN CE PROVA\'',
-          text: 'Errore nel ticket....' + this.ticket.id,
-          type: 'error'
-        });
-      });
-      
+    return this.apiTicketHistoryService.create(createHistory);
   }
 
-  private updateTicketStatus(id_status: number, message: string) {
+  private updateTicketStatus(id_status: number): Observable<ITicket> {
     const updateTicket = {
       id: this.ticket.id,
       id_status: id_status,
       id_operator: this.user.id
     };
-    this.apiTicketService.update(updateTicket as ITicket).subscribe(() => {
-      this.createHistoryTicketSystem(message)
-    });
+    return this.apiTicketService.update(updateTicket as ITicket);
   }
 }

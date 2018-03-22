@@ -34,11 +34,14 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.apiTicket.getFromId(this.idTicket)
       .subscribe((data: ITicket) => {
-        this.ticket.next(data);
-        this.service = data.service.service;
-        if (data.status.status === 'REFUSED' || (data.status.status === 'ONLINE' && data.id_operator === this.user.id)) {
-          this.open = true;
-        }
+          this.ticket.next(data);
+          this.service = data.service.service;
+          if (data.status.status === 'REFUSED' || (data.status.status === 'ONLINE' && data.id_operator === this.user.id)) {
+            this.open = true;
+          }
+        },
+      (err) => {
+        console.log(err);
       });
 
       this.socketService.getMessage(WsEvents.ticket.updated)
@@ -46,6 +49,9 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
         if (data.id === this.idTicket){
           this.ticket.next(data);
         }
+      },
+      (err) => {
+        console.log(err);
       });
 
     this.socketService.getMessage(WsEvents.ticketHistory.create)
@@ -53,6 +59,9 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
         if (data.id === this.idTicket) {
           this.ticket.next(data);
         }
+    },
+    (err) => {
+      console.log(err);
     });
 
   }
