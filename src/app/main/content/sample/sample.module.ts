@@ -1,13 +1,16 @@
 import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 
 import { SharedModule } from '../../../core/modules/shared.module';
 
 import { FuseSampleComponent } from './sample.component';
+import { AuthGuard } from '../../../guard/auth.guard';
 
-const routes = [
+
+const routes: Routes = [
     {
         path     : 'sample',
+        canActivate: [AuthGuard],
         component: FuseSampleComponent
     }
 ];
@@ -23,6 +26,7 @@ const routes = [
     exports     : [
         FuseSampleComponent
     ]
+    
 })
 
 export class FuseSampleModule

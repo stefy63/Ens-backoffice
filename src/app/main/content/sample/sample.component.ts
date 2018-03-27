@@ -9,10 +9,14 @@ import { locale as turkish } from './i18n/tr';
     templateUrl: './sample.component.html',
     styleUrls  : ['./sample.component.scss']
 })
+
 export class FuseSampleComponent
 {
-    constructor(private translationLoader: FuseTranslationLoaderService)
+    constructor(
+        private translationLoader: FuseTranslationLoaderService,
+    )
     {
         this.translationLoader.loadTranslations(english, turkish);
+        
     }
 }

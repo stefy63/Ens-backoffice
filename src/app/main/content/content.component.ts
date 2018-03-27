@@ -5,6 +5,8 @@ import { FuseConfigService } from '../../core/services/config.service';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
+import { AuthService } from '../services/auth/auth.service';
+
 
 @Component({
     selector   : 'fuse-content',
@@ -26,7 +28,8 @@ export class FuseContentComponent implements OnInit, OnDestroy
     constructor(
         private router: Router,
         private activatedRoute: ActivatedRoute,
-        private fuseConfig: FuseConfigService
+        private fuseConfig: FuseConfigService,
+        private authService: AuthService
     )
     {
         this.router.events
@@ -64,7 +67,6 @@ export class FuseContentComponent implements OnInit, OnDestroy
 
     ngOnInit()
     {
-
     }
 
     ngOnDestroy()
