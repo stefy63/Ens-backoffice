@@ -90,27 +90,29 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     const confirm = await this.confirmAlert(confirmMessage, '', 'warning');
     if (confirm.value) {
       this.isOpen = true;
-      this.updateTicketStatus(find(this.ticketStatus, { status: 'ONLINE' }).id).subscribe(() => {
-        this.createHistoryTicketSystem(historyMessage)
-          .subscribe(
-            (data) => {
-              console.log('TicketHistory Subscription success');
-            }, 
-            (err) => {
-              swal({
-                title: 'FABRIZIO NUN CE PROVA\'',
-                text: 'Errore nel ticket....' + this.ticket.id,
-                type: 'error'
+      this.updateTicketStatus(find(this.ticketStatus, { status: 'ONLINE' }).id)
+      .subscribe(
+        () => {
+          this.createHistoryTicketSystem(historyMessage)
+            .subscribe(
+              (data) => {
+                console.log('TicketHistory Subscription success');
+              }, 
+              (err) => {
+                swal({
+                  title: 'FABRIZIO NUN CE PROVA\'',
+                  text: 'Errore nel ticket....' + this.ticket.id,
+                  type: 'error'
+                });
               });
-            });
-      },
-      (err) => {
-        swal({
-          title: 'FABRIZIO NUN CE PROVA\'',
-          text: 'Errore nel ticket....' + this.ticket.id,
-          type: 'error'
+        },
+        (err) => {
+          swal({
+            title: 'FABRIZIO NUN CE PROVA\'',
+            text: 'Errore nel ticket....' + this.ticket.id,
+            type: 'error'
+          });
         });
-      });
       this.msgAlert = false;
       this.open.next(true);
     }
