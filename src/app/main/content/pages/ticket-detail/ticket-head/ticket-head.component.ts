@@ -103,6 +103,13 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
                 type: 'error'
               });
             });
+      },
+      (err) => {
+        swal({
+          title: 'FABRIZIO NUN CE PROVA\'',
+          text: 'Errore nel ticket....' + this.ticket.id,
+          type: 'error'
+        });
       });
       this.msgAlert = false;
       this.open.next(true);
