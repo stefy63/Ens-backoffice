@@ -13,6 +13,7 @@ export interface ITicket {
     deleted: number;
 
     service: any;
+    category: any;
     status: any;
     operator: any;
     user: any;

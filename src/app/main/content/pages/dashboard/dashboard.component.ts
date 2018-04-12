@@ -54,15 +54,15 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
           this.tabGroup.selectedIndex = 0;
         });
       });
-    // this.socketService.getMessage(WsEvents.ticket.updated)
-    //   .subscribe((data: ITicket) => {
-    //     const index = _.findIndex(this.ticket, item => item.id === data.id);
-    //     if (index >= 0) {
-    //       this.ticket.splice(index, 1, this.normalizeItem([data])[0]);
-    //     }
-    //     this._setDataOutput(this.ticket);
-    //     this.toast.info('Ticket Modificato', 'Il ticket ' + data.id + ' è stato modificato!');
-    //   });
+    this.socketService.getMessage(WsEvents.ticket.updated)
+      .subscribe((data: ITicket) => {
+        const index = _.findIndex(this.ticket, item => item.id === data.id);
+        if (index >= 0) {
+          this.ticket.splice(index, 1, this.normalizeItem([data])[0]);
+        }
+        this._setDataOutput(this.ticket);
+        // this.toast.info('Ticket Modificato', 'Il ticket ' + data.id + ' è stato modificato!');
+      });
   }
 
   ngOnDestroy(): void {

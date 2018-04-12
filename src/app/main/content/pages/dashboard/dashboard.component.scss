@@ -1,7 +1,10 @@
-.tab-container {
-    position: relative;
-    // .badge {
-    //     position: absolute;
-    //     left: 78em;
-    // }
+:host {
+
+    .tab-container {
+        position: relative;
+
+        .mat-tab-label {
+            font-size: 18px !important;
+        }
+    }
 }

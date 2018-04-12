@@ -8,6 +8,7 @@
           <thead>
             <tr>
               <th>Stato</th>
+              <th>Categoria</th>
               <th>Nome</th>
               <th>Cognome</th>
               <th>Canale</th>
@@ -18,6 +19,7 @@
           <tbody>
               <tr>
                 <td [ngClass]="{'blink': (ticket.status.status === 'ONLINE') }"  >{{ticket.status.status}}</td>
+                <td>{{ticket.category.category}}</td>
                 <td>{{ticket.user.name}}</td>
                 <td>{{ticket.user.surname}}</td>
                 <td>{{ticket.service.service}}</td>
