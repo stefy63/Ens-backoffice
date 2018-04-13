@@ -101,7 +101,6 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
                                         .orderBy(['date_time'], ['ASC'])
                                         .findLast()
                                         .value() : '';
-                            console.log(closed_at);
                     return {
                         id: item.id,
                         service: item.service.service,
