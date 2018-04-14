@@ -14,7 +14,7 @@
   </div>
 
   <!-- CHAT FOOTER -->
-  <div class="chat-footer" fxLayout="row" fxLayoutAlign="center center" *ngIf="ticket.status.status !== 'REFUSED'">
+  <div class="chat-footer" fxLayout="row" fxLayoutAlign="center center" *ngIf="ticket.status.status !== 'REFUSED' && ticket.status.status !== 'CLOSED'">
 
       <!-- REPLY FORM -->
       <form #replyForm="ngForm"

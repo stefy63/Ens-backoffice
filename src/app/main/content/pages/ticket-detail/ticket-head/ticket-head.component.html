@@ -1,7 +1,7 @@
 
-<div class="container col-12" *ngIf="newTicket">
-  <div class="row left-col col-12">
-    <div class="col-7">
+<div class="content col-12" *ngIf="newTicket">
+  <div class="row col-12">
+    <div class="left-col col-7">
       <fieldset class="col-12 border mat-elevation-z4">
       <legend>Dettaglio Ticket:</legend>
         <table class="table table-bordered">
@@ -47,9 +47,16 @@
         <button *ngIf="!isOpen && ticket.status.status === 'NEW'" class="mat-button delete-button mat-warn col-3" (click)="refuseChat()"><mat-icon>block</mat-icon> Rifiuta</button>
         <button class="mat-button delete-button mat-warn col-3" (click)="abortChat()"><mat-icon>reply</mat-icon> Indietro</button>
       </div>
-      <div class="col-5 text-center">
-        <br>
-        <span *ngIf="msgAlert" class="alert text-center col-12">Ticket già aperto da [ {{ticket.operator.firstname + ' ' + ticket.operator.lastname}} ]</span>
+      <div class="pl-5 col-5" fxLayout="row" fxLayoutAlign="center center" *ngIf="isOpen && ticket.status.status !== 'CLOSED' && ticket.status.status !== 'REFUSED'">
+        <div class="col-10">
+          <span *ngIf="msgAlert" class="alert text-center">Ticket già aperto da [ {{ticket.operator.firstname + ' ' + ticket.operator.lastname}} ]</span>
+          <mat-select placeholder="Seleziona frase...." [(ngModel)]="selected" class="text-boxed ">
+            <mat-option *ngFor="let msg of defaultDialog" [value]="msg.description">{{msg.description}}</mat-option>
+          </mat-select>
+        </div>
+        <div class="col-2">
+          <button (click)="onSelectChange()" mat-icon-button class="mat-15"><mat-icon>send</mat-icon></button>
+        </div>
       </div>
     </div>
 

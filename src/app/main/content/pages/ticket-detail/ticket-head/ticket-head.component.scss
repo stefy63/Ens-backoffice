@@ -1,75 +1,79 @@
-.container {
-    legend {
-        color: #25b2f7;
-    }
-
-    .left-col {
-        // height: 54px;
-    }
-    .right-col {
-        div {
-            text-align: left;
-            // padding: 3px;
-            border: black solid 1px;
-            background-color: #DDD;
-            height: 60px;
+:host {
+    .content {
+        padding-top: 10px;
+        legend {
+            color: #25b2f7;
         }
-    }
 
-    table {
-        // width: 100%;
-        border: black solid 1px;
-        thead {
-            background-color: #25b2f7;
-            color: white;
-            tr th {
+        .left-col {
+            // height: 54px;
+        }
+        .right-col {
+            div {
+                text-align: left;
+                // padding: 3px;
                 border: black solid 1px;
-                font-size: 12px;
-                font-weight: bold;
+                background-color: #DDD;
+                height: 60px;
             }
         }
-        tbody {
-            td {
-                font-size: 12px;
-                font-weight: bolder;
-            }
-        }
-        td {
+
+        table {
+            // width: 100%;
             border: black solid 1px;
-            padding: 2px;
+            thead {
+                background-color: #25b2f7;
+                color: white;
+                tr th {
+                    border: black solid 1px;
+                    font-size: 12px;
+                    font-weight: bold;
+                }
+            }
+            tbody {
+                td {
+                    font-size: 12px;
+                    font-weight: bolder;
+                }
+            }
+            td {
+                border: black solid 1px;
+                padding: 2px;
+            }
         }
+
+
+
+        // #content-bottom {
+        //     height: 68vh;
+        //     #chat {
+        //         background:  url('/assets/images/patterns/telegram.jpg') repeat;
+        //         overflow: auto;
+        //         height: max-content;
+        //     }
+        //     #note {
+        //         background-color: lightgoldenrodyellow;
+        //         overflow: auto;
+        //         height: max-content;
+        //     }
+        // }
+
+        span.alert {
+            color: red;
+            font-weight: bold;
+            animation: blink 2s linear infinite;
+        }
+        .blink {
+            animation: blink 2s ease infinite;
+        }
+
+        @keyframes blink {
+            0%{opacity: 0;}
+            50%{opacity: 1;}
+            100%{opacity: 0;}   
+        }
+
+    
     }
-
-
-
-    // #content-bottom {
-    //     height: 68vh;
-    //     #chat {
-    //         background:  url('/assets/images/patterns/telegram.jpg') repeat;
-    //         overflow: auto;
-    //         height: max-content;
-    //     }
-    //     #note {
-    //         background-color: lightgoldenrodyellow;
-    //         overflow: auto;
-    //         height: max-content;
-    //     }
-    // }
-
-    span.alert {
-        color: red;
-        font-weight: bold;
-        animation: blink 2s linear infinite;
-    }
-    .blink {
-        animation: blink 2s ease infinite;
-    }
-
-    @keyframes blink {
-        0%{opacity: 0;}
-        50%{opacity: 1;}
-        100%{opacity: 0;}   
-    }
-
-   
 }
+

@@ -10,6 +10,8 @@ import { LocalStorageService } from '../../../../services/local-storage/local-st
 import { ToastOptions } from '../../../../../type/toast-options';
 import { NotificationsService } from 'angular2-notifications';
 import { Observable } from 'rxjs/Observable';
+import { IDefaultDialog } from '../../../../../interfaces/i-defaul-dialog';
+import { SocketService } from '../../../../services/socket/socket.service';
 
 
 @Component({
@@ -22,9 +24,12 @@ import { Observable } from 'rxjs/Observable';
 export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input('ticket') data: Observable<ITicket>;
+  @Input('dialog') dialog: Observable<string>;
   public ticket: ITicket;
   public ticketHistorys: ITicketHistory[] = [];
   private historyType: ITicketHistoryType[];
+  private defaultDialog: IDefaultDialog;
+  private isTyping = false;
 
 
   private replyInput: any;
@@ -38,9 +43,11 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
     private cd: ChangeDetectorRef,
     private chatService: ChatService,
     private storage: LocalStorageService,
-    private toast: NotificationsService
+    private toast: NotificationsService,
+    private socketService: SocketService
   ) {
     this.historyType = this.storage.getItem('ticket_history_type');
+    this.defaultDialog = this.storage.getItem('default_dialog');
   }
 
   ngOnInit() {
@@ -53,6 +60,11 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
     },
     (err) => {
       console.log(err);
+    });
+    this.dialog.subscribe( message => {
+      if (message) {
+        this.sendMessage(message);
+      }
     });
   }
 
@@ -99,29 +111,47 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
 
   reply(event) {
     if (!!this.replyForm.form.value.message && this.replyForm.form.value.message.charCodeAt() !== 10) {
-      const type = (this.storage.getItem('token').id_user) ? 'USER' : 'OPERATOR';
       let indexSpace = this.replyForm.form.value.message.indexOf(' ');
       indexSpace = (indexSpace === -1) ? 100 : indexSpace;
       const formMessage: string = (this.replyForm.form.value.message.length > 70 && indexSpace > 70) ?
                                       this.replyForm.form.value.message.substring(0, 70) : this.replyForm.form.value.message;
 
+      this.sendMessage(formMessage);
+    } else {
+      this.toast.error('Messaggio Vuoto', 'Impossibile spedire messaggi vuoti');
+    }
+
+  }
+
+  sendMessage(msgToSend: string) {
+      const type = (this.storage.getItem('token').id_user) ? 'USER' : 'OPERATOR';
       const message: ITicketHistory = {
         id: null,
         id_ticket: this.ticket.id,
         id_type: _.find(this.historyType, item => item.type === type).id,
         // action: this.replyForm.form.value.message,
-        action: formMessage,
+        action: msgToSend,
         readed: 0
       };
 
-      this.chatService.sendMessage(message)
-        .subscribe(data => {
-          const ret: ITicketHistory = data;
-        });
-    } else {
-      this.toast.error('Messaggio Vuoto', 'Impossibile spedire messaggi vuoti');
-    }
+      this.chatService.sendMessage(message).subscribe();
+  }
 
+  typing(evt) {
+    if (!this.isTyping) {
+      setTimeout(() => this.isTyping = false, 3000);
+      this.isTyping = true;
+      const token = this.storage.getItem('token');
+      this.socketService.sendMessage(
+        'send-to',
+        {
+          idTicket: this.ticket.id,
+          idTo: (token.id_user) ? this.ticket.id_operator : this.ticket.id_user,
+          event: 'onTicketInWaiting',
+          obj: {}
+        }
+      );
+    }
   }
 
 }
