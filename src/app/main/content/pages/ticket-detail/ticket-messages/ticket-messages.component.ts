@@ -81,7 +81,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngAfterViewInit() {
-    if (this.ticket.status.status !== 'REFUSED') {
+    if (this.ticket.status.status !== 'REFUSED' && this.ticket.status.status !== 'CLOSED') {
       this.replyInput = this.replyInputField.first.nativeElement;
       this.readyToReply();
       this.cd.detectChanges();
@@ -90,7 +90,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   readyToReply() {
-    if (this.ticket.status.status !== 'REFUSED') {
+    if (this.ticket.status.status !== 'REFUSED' && this.ticket.status.status !== 'CLOSED') {
       setTimeout(() => {
         this.replyForm.reset();
         // this.focusReplyInput();

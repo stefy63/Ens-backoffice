@@ -1,27 +1,28 @@
 
+<div class="content"  *ngIf="!!service">
+  <fuse-ticket-head [ticket]="ticket" (open)="setOpen($event)" (dialog)="setDefaultDialog($event)"></fuse-ticket-head>
+  <div [ngSwitch]="service" *ngIf="ticket">
+      <div *ngSwitchCase="'CHAT'">
+          <div id="content-bottom" class="row col-12 mt-12 mat-elevation-z4" *ngIf="open">
+              <fuse-ticket-messages id="chat" class="col-7" [ticket]="ticket" [dialog]="defaultDialog"></fuse-ticket-messages>
+              <fuse-ticket-note id="note" class="col-5" [ticket]="ticket"></fuse-ticket-note>
+          </div>
+      </div>
+      <div *ngSwitchCase="'SMS'">
+          <fuse-ticket-head [ticket]="ticket"></fuse-ticket-head>
 
-<div [ngSwitch]="service" *ngIf="ticket">
-    <div *ngSwitchCase="'CHAT'">
-        <fuse-ticket-head [ticket]="ticket" (open)="setOpen($event)" (dialog)="setDefaultDialog($event)"></fuse-ticket-head>
-        <div id="content-bottom" class="row col-12 mt-12 mat-elevation-z4">
-            <fuse-ticket-messages id="chat" class="col-7" [ticket]="ticket" [dialog]="defaultDialog"></fuse-ticket-messages>
-            <fuse-ticket-note id="note" class="col-5" [ticket]="ticket"></fuse-ticket-note>
-        </div>
-    </div>
-    <div *ngSwitchCase="'SMS'">
-        <fuse-ticket-head [ticket]="ticket"></fuse-ticket-head>
+      </div>
+      <div *ngSwitchCase="'MAIL'">
+          <fuse-ticket-head [ticket]="ticket"></fuse-ticket-head>
 
-    </div>
-    <div *ngSwitchCase="'MAIL'">
-        <fuse-ticket-head [ticket]="ticket"></fuse-ticket-head>
+      </div>
+      <div *ngSwitchCase="'SOCIAL'">
+          <fuse-ticket-head [ticket]="ticket"></fuse-ticket-head>
 
-    </div>
-    <div *ngSwitchCase="'SOCIAL'">
-        <fuse-ticket-head [ticket]="ticket"></fuse-ticket-head>
-
-    </div>
-    <div *ngSwitchCase="'VIDEOCHAT'">
-        <fuse-ticket-head [ticket]="ticket"></fuse-ticket-head>
-        <fuse-ticket-video-chat [idTicket]="idTicket" *ngIf="open"></fuse-ticket-video-chat>
-    </div>
+      </div>
+      <div *ngSwitchCase="'VIDEOCHAT'">
+          <!-- <fuse-ticket-head [ticket]="ticket"></fuse-ticket-head> -->
+          <fuse-ticket-video-chat [idTicket]="idTicket" *ngIf="open"></fuse-ticket-video-chat>
+      </div>
+  </div>
 </div>

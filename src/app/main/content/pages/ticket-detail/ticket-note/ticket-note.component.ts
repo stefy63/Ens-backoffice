@@ -57,7 +57,7 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this.ticket.status.status !== 'REFUSED') {
+    if (this.ticket.status.status !== 'REFUSED' && this.ticket.status.status !== 'CLOSED') {
       this.replyInput = this.replyInputField.first.nativeElement;
       this.readyToReply();
       this.cd.detectChanges();
@@ -65,7 +65,7 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
   }
 
   readyToReply() {
-    if (this.ticket.status.status !== 'REFUSED') {
+    if (this.ticket.status.status !== 'REFUSED' && this.ticket.status.status !== 'CLOSED') {
       setTimeout(() => {
         this.replyForm.reset();
         // this.focusReplyInput();
