@@ -67,7 +67,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
         this.sendMessage(message);
       }
     });
-    this.socketService.getMessage('onTicketInWaiting')
+    this.socketService.getMessage('onUserWriting')
       .subscribe((data: any) => {
         this.activeSpinner = true;
         setTimeout(() => {
@@ -155,7 +155,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
         {
           idTicket: this.ticket.id,
           idTo: (token.id_user) ? this.ticket.id_operator : this.ticket.id_user,
-          event: 'onTicketInWaiting',
+          event: 'onUserWriting',
           obj: {}
         }
       );
