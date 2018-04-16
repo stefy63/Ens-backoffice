@@ -38,9 +38,10 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
           this.ticket.next(data);
           this.service = data.service.service;
           if (data.service.service !== 'VIDEOCHAT' && (
-              data.status.status === 'REFUSED' ||
-              (data.status.status === 'CLOSED'  && data.id_operator === this.user.id) ||
-              (data.status.status === 'ONLINE' && data.id_operator === this.user.id))) {
+              (data.status.status === 'REFUSED' ||
+              data.status.status === 'CLOSED'  ||
+              data.status.status === 'ONLINE') &&
+              data.id_operator === this.user.id)) {
             this.open = true;
           }
         },
