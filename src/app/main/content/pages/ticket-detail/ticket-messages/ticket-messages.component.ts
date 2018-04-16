@@ -27,6 +27,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   @Input('dialog') dialog: Observable<string>;
   public ticket: ITicket;
   public ticketHistorys: ITicketHistory[] = [];
+  public activeSpinner = false;
   private historyType: ITicketHistoryType[];
   private defaultDialog: IDefaultDialog;
   private isTyping = false;
@@ -66,6 +67,13 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
         this.sendMessage(message);
       }
     });
+    this.socketService.getMessage('onTicketInWaiting')
+      .subscribe((data: any) => {
+        this.activeSpinner = true;
+        setTimeout(() => {
+          this.activeSpinner = false;
+        }, 3000);
+      });
   }
 
   ngOnDestroy() {

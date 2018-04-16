@@ -44,6 +44,7 @@
             <mat-form-field class="" fxFlex floatPlaceholder="never">
                 <textarea matInput #replyInput placeholder="Scrivi il messaggio e premi Enter"
                         ngModel name="message"></textarea>
+                <div fxLayout="row" *ngIf="activeSpinner"><mat-hint align="end">L'utente sta scrivendo......<mat-progress-bar mode="buffer">*****</mat-progress-bar></mat-hint></div>
             </mat-form-field>
 
             <button mat-fab class="mat-button" type="submit" aria-label="Send message">
