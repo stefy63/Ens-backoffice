@@ -40,7 +40,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    this.apiTicket.getFromDate(30)
+    this.apiTicket.getFromDate(7)
         .subscribe(data => {
           this.ticket = data;
           this._setDataOutput(this.ticket);
