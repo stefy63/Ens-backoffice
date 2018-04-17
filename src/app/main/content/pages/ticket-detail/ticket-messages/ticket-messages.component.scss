@@ -1,4 +1,4 @@
-  
+
   .chat {
     height: 66vh;
     background:  url('/assets/images/patterns/telegram.jpg') repeat;
@@ -21,9 +21,10 @@
           background-color: white;
           // box-shadow: 1px 1px 5px rgba(0, 0, 0, .5);
           border-radius: 6px;
+          font-size: 14px;
 
-          
-      
+
+
           &:before {
             background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAmCAMAAADp2asXAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAADGUExURQAAAP////b29vn5+f///wAAAP///wAAAAAAAP///9ra2v////j4+PHx8fv7++Hh4fHx8f////////////////39/QAAAP////////z8/P////39/f39/fz8/P////////////z8/P////////////z8/P////////////v7+/Hx8f///9bW1vz8/K2trf////39/f39/WJiYgAAAExMTFtbWwAAAN3d3cjIyPr6+vX19QAAAO7u7vz8/NTU1Ofn5zMzM////zGPlXsAAABBdFJOUwAcm/kREh4CCDWL1SneR6TfAQffhMYK/A5nRrLWfRc5DW2ih5f+19Kn+9v4g/1LCJuXHwQUKgahcXS6DNnlDMMKKzPoTgAAAKBJREFUKM+V08USwmAQA+C/0NIWd3d3d8/7vxTMcIPkQK7f7CG7s8bQAOY/SCuwFYQU1P+eiCqIK2gpWCmoCrAgoKQgJ8CHgIqAMjg0MxxSQ3DogEMWFBZtUPAHYGB1CyDQWE6AH7BrfXzlAxGAQhECTGAmwN1Okz0Gb/LW4fEItIfrOfNELMh3tck7u+PhcT2zQ7l77/K8iY8yJwV3BeYFqpc/uSyPGdAAAAAASUVORK5CYII=);
             content: '';
@@ -37,7 +38,7 @@
             background-size: contain;
           }
 
-          .message { 
+          .message {
             word-wrap: break-word;
             white-space: pre-line;
             overflow-wrap: break-word;
@@ -87,7 +88,7 @@
           .bubble {
             margin-left: auto;
             width: 100%;
-            background-color: lightgray;
+            background-color: lightcyan;
             border: 1px solid black;
             order: 1;
             &:before {

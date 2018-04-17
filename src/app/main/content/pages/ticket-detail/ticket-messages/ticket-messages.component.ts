@@ -48,7 +48,9 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
       this.ticket = item;
       this.chatService.markMessagesReaded(item.id).subscribe();
       this.ticketHistorys = _.orderBy(this.ticket.historys, 'date_time', 'asc');
-      this.readyToReply();
+      setTimeout(() => {
+        this.scrollToBottom(2000);
+      });
       this.cd.markForCheck();
     },
     (err) => {
@@ -113,7 +115,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
         action: formMessage,
         readed: 0
       };
-
+      this.replyForm.reset();
       this.chatService.sendMessage(message)
         .subscribe(data => {
           const ret: ITicketHistory = data;
