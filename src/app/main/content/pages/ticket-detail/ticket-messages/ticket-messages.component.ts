@@ -157,7 +157,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
         'send-to',
         {
           idTicket: this.ticket.id,
-          idTo: (token.id_user) ? this.ticket.id_operator : this.ticket.id_user,
+          sendTo: (token.id_user) ? 'OPERATOR' : 'USER',
           event: 'onUserWriting',
           obj: {}
         }
