@@ -8,13 +8,13 @@ export const environment = {
     hmr       : false,
 
     // Socket.io configuration url
-    // ws_url: 'https://preprodttms.3punto6.com',
+    // ws_url: 'https://devens2.3punto6.com',
     ws_url: 'http://localhost',
     ws_path: '/wss',
     ws_port: 9000,
 
     // API configuration url
-    // api_url: 'https://preprodttms.3punto6.com',
+    // api_url: 'https://devens2.3punto6.com',
     api_url: 'http://localhost',
     api_port: 3030,
     api_suffix: '/api',
