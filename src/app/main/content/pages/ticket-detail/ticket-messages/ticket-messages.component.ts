@@ -56,7 +56,9 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
       this.ticket = item;
       this.chatService.markMessagesReaded(item.id).subscribe();
       this.ticketHistorys = _.orderBy(this.ticket.historys, 'date_time', 'asc');
-      this.readyToReply();
+      setTimeout(() => {
+        this.scrollToBottom(2000);
+      });
       this.cd.markForCheck();
     },
     (err) => {
@@ -132,17 +134,18 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   sendMessage(msgToSend: string) {
-      const type = (this.storage.getItem('token').id_user) ? 'USER' : 'OPERATOR';
-      const message: ITicketHistory = {
-        id: null,
-        id_ticket: this.ticket.id,
-        id_type: _.find(this.historyType, item => item.type === type).id,
-        // action: this.replyForm.form.value.message,
-        action: msgToSend,
-        readed: 0
-      };
+    this.replyForm.reset();
+    const type = (this.storage.getItem('token').id_user) ? 'USER' : 'OPERATOR';
+    const message: ITicketHistory = {
+      id: null,
+      id_ticket: this.ticket.id,
+      id_type: _.find(this.historyType, item => item.type === type).id,
+      // action: this.replyForm.form.value.message,
+      action: msgToSend,
+      readed: 0
+    };
 
-      this.chatService.sendMessage(message).subscribe();
+    this.chatService.sendMessage(message).subscribe();
   }
 
   typing(evt) {
