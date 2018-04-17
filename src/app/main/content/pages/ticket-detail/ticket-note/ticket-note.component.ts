@@ -47,8 +47,9 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
                             .filter((item) => item.type.type === 'NOTE')
                             .orderBy( 'date_time', 'asc')
                             .value();
-
-      this.readyToReply();
+      setTimeout(() => {
+        this.scrollToBottom(2000);
+      });
     },
     (err) => {
       console.log(err);
@@ -107,6 +108,7 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
         readed: 1
       };
 
+      this.replyForm.reset();
 
       this.chatService.sendMessage(message)
         .subscribe( data => {
