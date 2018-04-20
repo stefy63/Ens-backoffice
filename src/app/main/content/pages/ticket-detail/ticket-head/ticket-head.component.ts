@@ -12,6 +12,7 @@ import { ITicketHistoryType } from '../../../../../interfaces/i-ticket-history-t
 import { SocketService } from '../../../../services/socket/socket.service';
 import { Observable } from 'rxjs/Observable';
 import { IDefaultDialog } from '../../../../../interfaces/i-defaul-dialog';
+import * as moment from 'moment';
 
 
 @Component({
@@ -23,6 +24,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
 
   private ticketStatus: ITicketStatus;
   private apiTicketHistoryType: ITicketHistoryType;
+  private interval;
 
   @Input('ticket') newTicket: Observable<ITicket>;
   @Output('open') open: EventEmitter<boolean> = new EventEmitter();
@@ -35,6 +37,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   public isOpen = false;
   public defaultDialog: IDefaultDialog;
   public selected: string;
+  public timeout = false;
 
 
   constructor(
@@ -66,6 +69,9 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
       if (data.status.status === 'ONLINE' && data.id_operator === this.user.id) {
         this.open.next(true);
         this.isOpen = true;
+        this.interval = setInterval(() => {
+          this.timeout = moment().isAfter(moment(data.date_time).add(15, 'm'));
+        }, 10000);
       }
       this.msgAlert = (data.id_operator
         && this.user.id !== data.id_operator
@@ -78,6 +84,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.ticket = null;
+    clearInterval(this.interval);
   }
 
   onSelectChange() {
@@ -107,7 +114,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
             .subscribe(
               (data) => {
                 console.log('TicketHistory Subscription success');
-              }, 
+              },
               (err) => {
                 swal({
                   title: 'FABRIZIO NUN CE PROVA\'',
@@ -142,7 +149,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
               this.location.back();
             });
         });
-    }   
+    }
   }
 
   private async refuseChat() {
