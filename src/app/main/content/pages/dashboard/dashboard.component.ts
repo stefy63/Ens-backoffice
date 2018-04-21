@@ -28,7 +28,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   public myOpenTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
   public totalBadge = 0;
   public options = ToastOptions;
-  public beep = new Audio();
+  public beep;
 
 
   constructor(
@@ -38,6 +38,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     private toast: NotificationsService,
   ) {
     this.idOperator = this.storage.getItem('user').id;
+    this.beep = new Audio();
     this.beep.src = '../../../../assets/audio/beep.wav';
     this.beep.load();
   }

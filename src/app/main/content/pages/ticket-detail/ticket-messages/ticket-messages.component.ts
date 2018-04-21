@@ -148,7 +148,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
     this.chatService.sendMessage(message).subscribe();
   }
 
-  typing(evt) {
+  public typing(evt) {
     if (!this.isTyping) {
       setTimeout(() => this.isTyping = false, 3000);
       this.isTyping = true;
@@ -157,7 +157,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
         'send-to',
         {
           idTicket: this.ticket.id,
-          sendTo: (token.id_user) ? 'OPERATOR' : 'USER',
+          // sendTo: (token.id_user) ? 'OPERATOR' : 'USER',
           event: 'onUserWriting',
           obj: {}
         }
