@@ -28,6 +28,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   public myOpenTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
   public totalBadge = 0;
   public options = ToastOptions;
+  public beep = new Audio();
 
 
   constructor(
@@ -37,6 +38,8 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     private toast: NotificationsService,
   ) {
     this.idOperator = this.storage.getItem('user').id;
+    this.beep.src = '../../../../assets/audio/beep.wav';
+    this.beep.load();
   }
 
   ngOnInit() {
@@ -50,6 +53,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
         this.ticket.push(this.normalizeItem([data])[0]);
         this._setDataOutput(this.ticket);
         const message = this.toast.info('Nuovo Ticket!', 'Nuovo ticket da ' + data.user.surname);
+        this.beep.play();
         message.click.subscribe((e) => {
           this.tabGroup.selectedIndex = 0;
         });
