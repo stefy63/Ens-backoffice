@@ -10,6 +10,7 @@ import { NotificationsService } from 'angular2-notifications';
 import { ToastOptions } from '../../../../type/toast-options';
 import { MatTabChangeEvent } from '@angular/material';
 import * as moment from 'moment';
+import { environment } from '../../../../../environments/environment';
 
 @Component({
   selector: 'fuse-dashboard',
@@ -44,7 +45,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    this.apiTicket.getFromDate(2)
+    this.apiTicket.getFromDate(environment.APP_TICKET_RETENTION_DAY)
         .subscribe(data => {
           this.ticket = data;
           this._setDataOutput(this.ticket);

@@ -22,4 +22,7 @@ export const environment = {
     // VideoChat Config
     videoChat_room_suffix: 'Ens_',
     videoChat_server_url: null,
+
+    // App Config
+    APP_TICKET_RETENTION_DAY: 2,
 };
