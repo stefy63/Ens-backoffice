@@ -9,13 +9,13 @@ export const environment = {
 
     // Socket.io configuration url
     // ws_url: 'https://devens2.3punto6.com',
-    ws_url: 'http://localhost',
+    ws_url: 'http://192.168.100.96',
     ws_path: '/wss',
     ws_port: 9000,
 
     // API configuration url
     // api_url: 'https://devens2.3punto6.com',
-    api_url: 'http://localhost',
+    api_url: 'http://192.168.100.96',
     api_port: 3030,
     api_suffix: '/api',
 
