@@ -95,9 +95,9 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
         }
 
         if (token && token.id_operator) {
-            UnreadedMessageEmitterService.subscribe('sum_badge',(data) => {
+            UnreadedMessageEmitterService.subscribe('sum_badge', (data) => {
                 this.totalBadge = data;
-            })
+            });
         }
 
     }

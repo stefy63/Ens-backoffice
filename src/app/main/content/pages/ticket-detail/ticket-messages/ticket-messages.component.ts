@@ -72,12 +72,15 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
     this.socketService.getMessage('onUserWriting')
       .subscribe((data: any) => {
         console.log('onUserWriting -> ', data);
-        if (!this.activeSpinner) {
+        if (!this.activeSpinner && data.obj.idTicket === this.ticket.id) {
         this.activeSpinner = true;
           setTimeout(() => {
             this.activeSpinner = false;
           }, 3000);
         }
+        // if (data.obj.idTicket !== this.ticket.id) {
+
+        // }
       });
   }
 
