@@ -41,7 +41,6 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.idOperator = this.storage.getItem('user').id;
     this.beep = new Audio();
     this.beep.src = '../../../../assets/audio/beep.wav';
-    this.beep.load();
   }
 
   ngOnInit() {
@@ -55,6 +54,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
         this.ticket.push(this.normalizeItem([data])[0]);
         this._setDataOutput(this.ticket);
         const message = this.toast.info('Nuovo Ticket!', 'Nuovo ticket da ' + data.user.surname);
+        this.beep.load();
         this.beep.play();
         message.click.subscribe((e) => {
           this.tabGroup.selectedIndex = 0;
