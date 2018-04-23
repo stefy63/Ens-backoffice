@@ -28,10 +28,13 @@
 
     </div>
     <!-- / CHAT CONTENT -->
+      
+    <div #onWritingMsg class="on-writing">L'utente sta scrivendo........</div>
+    
 
-    <div class="row"><span *ngIf="activeSpinner" align="end">L'utente sta scrivendo......</span></div>
     <!-- CHAT FOOTER -->
     <div class="chat-footer" fxLayout="row" fxLayoutAlign="center center" *ngIf="ticket.status.status !== 'REFUSED' && ticket.status.status !== 'CLOSED'">
+  
 
         <!-- REPLY FORM -->
         <form #replyForm="ngForm"
@@ -50,14 +53,12 @@
             <button mat-fab class="mat-button" type="submit" aria-label="Send message">
                 <mat-icon>send</mat-icon>
             </button>
-
         </form>
-
         <!-- / REPLY FORM -->
     </div>
     <!-- / CHAT FOOTER-->
 
-
 </div>
 
+   
 <simple-notifications [options]="options"></simple-notifications>

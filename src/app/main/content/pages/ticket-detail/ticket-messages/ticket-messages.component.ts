@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, ViewChild, ViewChildren, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, ViewChild, ViewChildren, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, ElementRef } from '@angular/core';
 import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
 import { NgForm } from '@angular/forms';
 import { FusePerfectScrollbarDirective } from '../../../../../core/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
@@ -35,6 +35,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   @ViewChild(FusePerfectScrollbarDirective) directiveScroll: FusePerfectScrollbarDirective;
   @ViewChildren('replyInput') replyInputField;
   @ViewChild('replyForm') replyForm: NgForm;
+  @ViewChild('onWritingMsg') onWritingMsg: ElementRef;
 
   public options = ToastOptions;
 
@@ -81,6 +82,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
       this.focusReplyInput();
     }
 
+    this.onWritingMsg.nativeElement.style.display = 'none';
     this.socketService.getMessage('onUserWriting')
       .subscribe((data: any) => {
         if (!this.activeSpinner && data.idTicket === this.ticket.id) {
@@ -88,7 +90,9 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
         this.activeSpinner = true;
           setTimeout(() => {
             this.activeSpinner = false;
+            this.onWritingMsg.nativeElement.style.display = 'none';
           }, 3000);
+          this.onWritingMsg.nativeElement.style.display = 'block';
         }
       });
   }
