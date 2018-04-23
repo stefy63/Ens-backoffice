@@ -57,27 +57,26 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
         this.scrollToBottom(2000);
       });
       this.cd.markForCheck();
-    },
-    (err) => {
-      console.log(err);
-    });
-
-    this.socketService.getMessage('onUserWriting')
+      this.socketService.getMessage('onUserWriting')
       .subscribe((data: any) => {
-        console.log('onUserWriting -> ', data);
         if (!this.activeSpinner && data.idTicket === this.ticket.id) {
+        console.log('onUserWriting -> ', data);
         this.activeSpinner = true;
           setTimeout(() => {
             this.activeSpinner = false;
           }, 3000);
         }
       });
+    },
+    (err) => {
+      console.log(err);
+    });
 
-      UnreadedMessageEmitterService.subscribe('defaul-message', (data) => {
-        this.replyForm.reset();
-        this.replyInput.value = data.description;
-        this.replyForm.form.value.message = data.description;
-      });
+    UnreadedMessageEmitterService.subscribe('defaul-message', (data) => {
+      this.replyForm.reset();
+      this.replyInput.value = data.description;
+      this.replyForm.form.value.message = data.description;
+    });
   }
 
   ngOnDestroy() {
