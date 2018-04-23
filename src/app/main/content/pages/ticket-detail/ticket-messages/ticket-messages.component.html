@@ -29,7 +29,7 @@
     </div>
     <!-- / CHAT CONTENT -->
 
-    <mat-hint *ngIf="activeSpinner" class="row" align="end">L'utente sta scrivendo......<mat-progress-bar mode="buffer">*****</mat-progress-bar></mat-hint>
+    <div class="row"><span *ngIf="activeSpinner" align="end">L'utente sta scrivendo......</span></div>
     <!-- CHAT FOOTER -->
     <div class="chat-footer" fxLayout="row" fxLayoutAlign="center center" *ngIf="ticket.status.status !== 'REFUSED' && ticket.status.status !== 'CLOSED'">
 
