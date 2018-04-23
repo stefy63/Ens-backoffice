@@ -29,6 +29,7 @@
     </div>
     <!-- / CHAT CONTENT -->
 
+    <mat-hint *ngIf="activeSpinner" class="row" align="end">L'utente sta scrivendo......<mat-progress-bar mode="buffer">*****</mat-progress-bar></mat-hint>
     <!-- CHAT FOOTER -->
     <div class="chat-footer" fxLayout="row" fxLayoutAlign="center center" *ngIf="ticket.status.status !== 'REFUSED' && ticket.status.status !== 'CLOSED'">
 
@@ -44,7 +45,6 @@
             <mat-form-field class="" fxFlex floatPlaceholder="never">
                 <textarea matInput #replyInput placeholder="Scrivi il messaggio e premi Enter"
                         ngModel name="message"></textarea>
-                <mat-hint *ngIf="activeSpinner" align="end">L'utente sta scrivendo......<mat-progress-bar mode="buffer">*****</mat-progress-bar></mat-hint>
             </mat-form-field>
 
             <button mat-fab class="mat-button" type="submit" aria-label="Send message">
@@ -52,6 +52,7 @@
             </button>
 
         </form>
+
         <!-- / REPLY FORM -->
     </div>
     <!-- / CHAT FOOTER-->

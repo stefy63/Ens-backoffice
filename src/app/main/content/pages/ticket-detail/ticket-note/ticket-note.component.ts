@@ -40,7 +40,7 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
     private storage: LocalStorageService,
     private toast: NotificationsService
   ) {
-    this.defaultDialog =  _.orderBy(this.storage.getItem('default_dialog'), 'order');
+    this.defaultDialog =  _.orderBy(this.storage.getItem('default_dialog'), 'ordine');
   }
 
   ngOnInit() {
