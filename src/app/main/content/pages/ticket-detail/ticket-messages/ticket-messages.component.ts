@@ -57,16 +57,6 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
         this.scrollToBottom(2000);
       });
       this.cd.markForCheck();
-      this.socketService.getMessage('onUserWriting')
-      .subscribe((data: any) => {
-        if (!this.activeSpinner && data.idTicket === this.ticket.id) {
-        console.log('onUserWriting -> ', data);
-        this.activeSpinner = true;
-          setTimeout(() => {
-            this.activeSpinner = false;
-          }, 3000);
-        }
-      });
     },
     (err) => {
       console.log(err);
@@ -90,6 +80,17 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
       this.cd.detectChanges();
       this.focusReplyInput();
     }
+
+    this.socketService.getMessage('onUserWriting')
+      .subscribe((data: any) => {
+        if (!this.activeSpinner && data.idTicket === this.ticket.id) {
+        console.log('onUserWriting -> ', data);
+        this.activeSpinner = true;
+          setTimeout(() => {
+            this.activeSpinner = false;
+          }, 3000);
+        }
+      });
   }
 
   readyToReply() {
