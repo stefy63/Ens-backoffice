@@ -18,7 +18,6 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
   public service: string;
   public ticket = new BehaviorSubject<ITicket>(this.ticket);
   public open = false;
-  public defaultDialog = new BehaviorSubject<string>('');
   public user;
 
   constructor(
@@ -78,10 +77,6 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
 
   setOpen($event) {
     this.open = $event;
-  }
-
-  setDefaultDialog($event) {
-    this.defaultDialog.next($event);
   }
 
 }

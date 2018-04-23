@@ -10,8 +10,8 @@ import { LocalStorageService } from '../../../../services/local-storage/local-st
 import { ToastOptions } from '../../../../../type/toast-options';
 import { NotificationsService } from 'angular2-notifications';
 import { Observable } from 'rxjs/Observable';
-import { IDefaultDialog } from '../../../../../interfaces/i-defaul-dialog';
 import { SocketService } from '../../../../services/socket/socket.service';
+import { UnreadedMessageEmitterService } from '../../../../services/helper/unreaded-message-emitter.service';
 
 
 @Component({
@@ -24,12 +24,10 @@ import { SocketService } from '../../../../services/socket/socket.service';
 export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @Input('ticket') data: Observable<ITicket>;
-  @Input('dialog') dialog: Observable<string>;
   public ticket: ITicket;
   public ticketHistorys: ITicketHistory[] = [];
   public activeSpinner = false;
   private historyType: ITicketHistoryType[];
-  private defaultDialog: IDefaultDialog;
   private isTyping = false;
 
 
@@ -48,7 +46,6 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
     private socketService: SocketService
   ) {
     this.historyType = this.storage.getItem('ticket_history_type');
-    this.defaultDialog = this.storage.getItem('default_dialog');
   }
 
   ngOnInit() {
@@ -64,11 +61,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
     (err) => {
       console.log(err);
     });
-    this.dialog.subscribe( message => {
-      if (message) {
-        this.sendMessage(message);
-      }
-    });
+
     this.socketService.getMessage('onUserWriting')
       .subscribe((data: any) => {
         console.log('onUserWriting -> ', data);
@@ -78,9 +71,12 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
             this.activeSpinner = false;
           }, 3000);
         }
-        // if (data.obj.idTicket !== this.ticket.id) {
+      });
 
-        // }
+      UnreadedMessageEmitterService.subscribe('defaul-message', (data) => {
+        this.replyForm.reset();
+        this.replyInput.value = data.description;
+        this.replyForm.form.value.message = data.description;
       });
   }
 

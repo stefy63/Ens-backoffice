@@ -28,15 +28,15 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
 
   @Input('ticket') newTicket: Observable<ITicket>;
   @Output('open') open: EventEmitter<boolean> = new EventEmitter();
-  @Output('dialog') dialog: EventEmitter<string> = new EventEmitter();
+  // @Output('dialog') dialog: EventEmitter<string> = new EventEmitter();
   public ticket: ITicket;
   public ticketReason: string;
   public user;
   public badge = 0;
   public msgAlert: boolean;
   public isOpen = false;
-  public defaultDialog: IDefaultDialog;
-  public selected: string;
+  // public defaultDialog: IDefaultDialog;
+  // public selected: string;
   public timeout = false;
 
 
@@ -50,7 +50,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     this.user = this.store.getItem('user');
     this.ticketStatus = this.store.getItem('ticket_status');
     this.apiTicketHistoryType = this.store.getItem('ticket_history_type');
-    this.defaultDialog =  orderBy(this.store.getItem('default_dialog'), 'order');
+    // this.defaultDialog =  orderBy(this.store.getItem('default_dialog'), 'order');
   }
 
    ngOnInit() {
@@ -87,9 +87,9 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     clearInterval(this.interval);
   }
 
-  onSelectChange() {
-    this.dialog.next(this.selected);
-  }
+  // onSelectChange() {
+  //   this.dialog.next(this.selected);
+  // }
 
 
   activateChat() {

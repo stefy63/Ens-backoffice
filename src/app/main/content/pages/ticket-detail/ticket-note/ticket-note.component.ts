@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input, ViewChildren, ViewChild, ChangeDetectorRef, ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, ViewChildren, ViewChild, ChangeDetectorRef, ChangeDetectionStrategy  } from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
 import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
@@ -10,6 +10,8 @@ import { ToastOptions } from '../../../../../type/toast-options';
 import { NotificationsService } from 'angular2-notifications';
 import { FusePerfectScrollbarDirective } from '../../../../../core/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
 import { Observable } from 'rxjs/Observable';
+import { IDefaultDialog } from '../../../../../interfaces/i-defaul-dialog';
+import { UnreadedMessageEmitterService } from '../../../../services/helper/unreaded-message-emitter.service';
 
 @Component({
   selector: 'fuse-ticket-note',
@@ -20,16 +22,17 @@ import { Observable } from 'rxjs/Observable';
 export class TicketNoteComponent implements OnInit, AfterViewInit {
 
   @Input('ticket') data: Observable<any>;
-  public ticket: ITicket;
-  public ticketHistorys: ITicketHistory[];
-  private historyType: ITicketHistoryType[];
   @ViewChild(FusePerfectScrollbarDirective) directiveScroll: FusePerfectScrollbarDirective;
   @ViewChildren('replyInput') replyInputField;
   @ViewChild('replyForm') replyForm: NgForm;
 
+  public ticket: ITicket;
+  public ticketHistorys: ITicketHistory[];
+  public defaultDialog: IDefaultDialog;
   public options = ToastOptions;
 
   private replyInput: any;
+  private historyType: ITicketHistoryType[];
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -37,6 +40,7 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
     private storage: LocalStorageService,
     private toast: NotificationsService
   ) {
+    this.defaultDialog =  _.orderBy(this.storage.getItem('default_dialog'), 'order');
   }
 
   ngOnInit() {
@@ -58,11 +62,15 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    if (this.ticket.status.status !== 'REFUSED' && this.ticket.status.status !== 'CLOSED') {
-      this.replyInput = this.replyInputField.first.nativeElement;
-      this.readyToReply();
-      this.cd.detectChanges();
-    }
+    // if (this.ticket.status.status !== 'REFUSED' && this.ticket.status.status !== 'CLOSED') {
+    //   this.replyInput = this.replyInputField.first.nativeElement;
+    //   this.readyToReply();
+    //   this.cd.detectChanges();
+    // }
+  }
+
+  onSelectChange(elem) {
+    UnreadedMessageEmitterService.next('defaul-message', elem);
   }
 
   readyToReply() {

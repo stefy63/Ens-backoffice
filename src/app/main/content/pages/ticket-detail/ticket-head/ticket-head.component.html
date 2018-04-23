@@ -47,7 +47,7 @@
         </fieldset>
       </div>
 
-      <div class="row"  *ngIf="isOpen && ticket.status.status !== 'CLOSED' && ticket.status.status !== 'REFUSED'">
+      <!-- <div class="row"  *ngIf="isOpen && ticket.status.status !== 'CLOSED' && ticket.status.status !== 'REFUSED'">
         <div class="col-10 default-select">
           <mat-select placeholder="Seleziona frase...." [(ngModel)]="selected" class="text-boxed ">
             <mat-option *ngFor="let msg of defaultDialog" [value]="msg.description">{{msg.description}}</mat-option>
@@ -56,7 +56,7 @@
         <div class="col-2">
           <button (click)="onSelectChange()" mat-icon-button class="mat-15"><mat-icon>send</mat-icon></button>
         </div>
-      </div>
+      </div> -->
       <div class="col-12 text-center msg-alert">
         <span *ngIf="msgAlert" class="alert">Ticket già aperto da [ {{ticket.operator.firstname + ' ' + ticket.operator.lastname}} ]</span>
       </div>

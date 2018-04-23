@@ -21,7 +21,8 @@
           background-color: white;
           // box-shadow: 1px 1px 5px rgba(0, 0, 0, .5);
           border-radius: 6px;
-          font-size: 14px;
+          font-size: 15px;
+          font-weight: bold;
 
 
 
@@ -71,6 +72,8 @@
             background-color: #e8f5e9;
             border: 1px solid #e8f5e9;
             order: 1;
+            font-size: 15px;
+            font-weight: bold;
             &:before {
               right: -11px;
               left: auto;
@@ -91,6 +94,8 @@
             background-color: lightcyan;
             border: 1px solid black;
             order: 1;
+            font-size: 15px;
+            font-weight: bold;
             &:before {
               right: -11px;
               left: auto;
