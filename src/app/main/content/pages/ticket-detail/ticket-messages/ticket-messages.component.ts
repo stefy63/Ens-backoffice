@@ -63,11 +63,20 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
       console.log(err);
     });
 
-    UnreadedMessageEmitterService.subscribe('defaul-message', (data) => {
-      this.replyForm.reset();
-      this.replyInput.value = data.description;
-      this.replyForm.form.value.message = data.description;
-    });
+    this.socketService.getMessage('onUserWriting')
+      .subscribe((data: any) => {
+        if (!this.activeSpinner && data.idTicket === this.ticket.id) {
+        console.log('onUserWriting -> ', data);
+        this.activeSpinner = true;
+          setTimeout(() => {
+            this.activeSpinner = false;
+            this.onWritingMsg.nativeElement.style.display = 'none';
+          }, 3000);
+          this.onWritingMsg.nativeElement.style.display = 'block';
+        }
+      });
+
+
   }
 
   ngOnDestroy() {
@@ -83,18 +92,11 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     this.onWritingMsg.nativeElement.style.display = 'none';
-    this.socketService.getMessage('onUserWriting')
-      .subscribe((data: any) => {
-        if (!this.activeSpinner && data.idTicket === this.ticket.id) {
-        console.log('onUserWriting -> ', data);
-        this.activeSpinner = true;
-          setTimeout(() => {
-            this.activeSpinner = false;
-            this.onWritingMsg.nativeElement.style.display = 'none';
-          }, 3000);
-          this.onWritingMsg.nativeElement.style.display = 'block';
-        }
-      });
+    UnreadedMessageEmitterService.subscribe('defaul-message', (data) => {
+      this.replyForm.reset();
+      this.replyInput.value = data.description;
+      this.replyForm.form.value.message = data.description;
+    });
   }
 
   readyToReply() {
