@@ -51,9 +51,9 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
                             .filter((item) => item.type.type === 'NOTE')
                             .orderBy( 'date_time', 'asc')
                             .value();
-      setTimeout(() => {
-        this.scrollToBottom(2000);
-      });
+      // setTimeout(() => {
+      //   this.scrollToBottom(2000);
+      // });
     },
     (err) => {
       console.log(err);
@@ -78,7 +78,7 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
       setTimeout(() => {
         this.replyForm.reset();
         // this.focusReplyInput();
-        this.scrollToBottom(2000);
+        // this.scrollToBottom(2000);
       });
     }
   }

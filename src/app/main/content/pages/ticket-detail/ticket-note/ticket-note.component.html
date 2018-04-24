@@ -9,12 +9,12 @@
 
 
     <div class="row"  *ngIf="ticket.status.status !== 'CLOSED' && ticket.status.status !== 'REFUSED'">
-      <div class="col-10 default-dialog">
-            <button 
+      <div class="col-12 default-dialog">
+            <button
                 class=" mat-elevation-z4"
-                fxLayout="row" 
+                fxLayout="row"
                 mat-raised-button color="accent"
-                *ngFor="let msg of defaultDialog" 
+                *ngFor="let msg of defaultDialog"
                 (click)="onSelectChange(msg)" >
                 {{msg.description}}
               </button>

@@ -51,21 +51,12 @@
       }
 
       .default-dialog {
-        padding-top: 10px;
-        min-width: 100%;;
-        ul a {
-          padding-bottom: 5px;
-          &:hover {
-            text-decoration:  none;
-          }
-        }
         .mat-raised-button {
-          line-height: 26px !important;
-          margin-bottom: 5px;
           width: 100%;
           font-style: oblique;
           font-size: 15px;
-        } 
+          margin: 5px;
+        }
       }
 
 }
