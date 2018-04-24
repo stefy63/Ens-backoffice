@@ -6,6 +6,9 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SocketService } from '../../../services/socket/socket.service';
 import { WsEvents } from '../../../../type/ws-events';
 import { LocalStorageService } from '../../../services/local-storage/local-storage.service';
+import { ITicketHistory } from '../../../../interfaces/i-ticket-history';
+import * as _ from 'lodash';
+import { UnreadedMessageEmitterService } from '../../../services/helper/unreaded-message-emitter.service';
 
 @Component({
   selector: 'fuse-ticket-detail',
@@ -62,6 +65,14 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
       .subscribe((data: ITicket) => {
         if (data.id === this.idTicket) {
           this.ticket.next(data);
+        } else if (data.id_operator === this.user.id) {
+          const status = data.status.status || data.status;
+          if (status === 'ONLINE') {
+            const unreaded: ITicketHistory[] = _.filter(data.historys, history => {
+              return (!history.readed && history.id_type === 2);
+              });
+            UnreadedMessageEmitterService.next('sum_badge', unreaded.length);
+          }
         }
     },
     (err) => {

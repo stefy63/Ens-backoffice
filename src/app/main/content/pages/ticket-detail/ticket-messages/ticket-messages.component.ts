@@ -65,7 +65,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
 
     this.socketService.getMessage('onUserWriting')
       .subscribe((data: any) => {
-        if (!this.activeSpinner && data.idTicket === this.ticket.id) {
+        if (!this.activeSpinner && this.ticket && data.idTicket === this.ticket.id) {
         this.activeSpinner = true;
           setTimeout(() => {
             this.activeSpinner = false;
@@ -128,7 +128,8 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   reply(event) {
-    if (!!this.replyForm.form.value.message && this.replyForm.form.value.message.charCodeAt() !== 10) {
+    this.replyForm.form.value.message = this.replyForm.form.value.message.trim();
+    if (!!this.replyForm.form.value.message) {
       let indexSpace = this.replyForm.form.value.message.indexOf(' ');
       indexSpace = (indexSpace === -1) ? 100 : indexSpace;
       const formMessage: string = (this.replyForm.form.value.message.length > 70 && indexSpace > 70) ?
@@ -137,6 +138,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
       this.sendMessage(formMessage);
     } else {
       this.toast.error('Messaggio Vuoto', 'Impossibile spedire messaggi vuoti');
+      this.replyForm.reset();
     }
 
   }
