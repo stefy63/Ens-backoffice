@@ -95,6 +95,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
       this.replyForm.reset();
       this.replyInput.value = data.description;
       this.replyForm.form.value.message = data.description;
+      this.reply(null);
     });
   }
 
