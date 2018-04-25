@@ -1,0 +1,66 @@
+
+
+
+
+
+<div class="chat mt-2 col-12" fxFlex fxLayout="column">
+
+  <div id="chat-content" fxFlex fusePerfectScrollbar>
+
+
+    <div class="row"  *ngIf="ticket.status.status !== 'CLOSED' && ticket.status.status !== 'REFUSED'">
+      <div class="col-12 default-dialog">
+            <button
+                class=" mat-elevation-z4"
+                fxLayout="row"
+                mat-raised-button color="accent"
+                *ngFor="let msg of defaultDialog"
+                (click)="onSelectChange(msg)" >
+                {{msg.description}}
+              </button>
+      </div>
+      <!-- <div class="col-2">
+        <button (click)="onSelectChange()" mat-icon-button class="mat-15"><mat-icon>send</mat-icon></button>
+      </div> -->
+    </div>
+
+
+
+    <!-- CHAT MESSAGES -->
+    <!-- <div *ngFor="let message of ticketHistorys">
+        <blockquote  class="reverse">
+          <dl>
+            <dt class="message">{{message.action}}</dt>
+            <dd><span class="time secondary-text text-right">{{message.date_time | date:'medium':'UTC'}}</span></dd>
+          </dl>
+        </blockquote>
+    </div>
+  </div> -->
+
+  <!-- CHAT FOOTER -->
+  <div class="chat-footer" fxLayout="row" fxLayoutAlign="center center" *ngIf="false && ticket.status.status !== 'REFUSED' && ticket.status.status !== 'CLOSED'">
+
+      <!-- REPLY FORM -->
+      <form #replyForm="ngForm"
+          (ngSubmit)="reply($event)"
+          (keyup.enter)="reply($event)"
+          fxFlex class="reply-form"
+          fxLayout="row"
+          fxLayoutAlign="start center">
+
+          <mat-form-field class="" fxFlex floatPlaceholder="never">
+              <textarea matInput #replyInput placeholder="Scrivi la nota interna e premi Enter"
+                      ngModel name="message"></textarea>
+          </mat-form-field>
+
+          <button mat-fab color="warn" class="" type="submit" aria-label="Send message">
+              <mat-icon>note_add</mat-icon>
+          </button>
+
+      </form>
+      <!-- / REPLY FORM -->
+  </div>
+  <!-- / CHAT FOOTER-->
+</div>
+
+<!-- <simple-notifications [options]="options"></simple-notifications> -->

@@ -3,6 +3,8 @@ import { Subscription } from 'rxjs/Subscription';
 import { FuseConfigService } from '../core/services/config.service';
 import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
+import { AuthService } from '../main/services/auth/auth.service';
+import { LocalStorageService } from '../main/services/local-storage/local-storage.service';
 
 @Component({
     selector     : 'fuse-main',
@@ -16,14 +18,18 @@ export class FuseMainComponent implements OnInit, OnDestroy
     fuseSettings: any;
     @HostBinding('attr.fuse-layout-mode') layoutMode;
 
+
     constructor(
         private _renderer: Renderer2,
         private _elementRef: ElementRef,
         private fuseConfig: FuseConfigService,
         private platform: Platform,
-        @Inject(DOCUMENT) private document: any
+        private authService: AuthService,
+        private storage: LocalStorageService,
+        @Inject(DOCUMENT) private document: any,
     )
     {
+
         this.onSettingsChanged =
             this.fuseConfig.onSettingsChanged
                 .subscribe(
@@ -37,6 +43,7 @@ export class FuseMainComponent implements OnInit, OnDestroy
         {
             this.document.body.className += ' is-mobile';
         }
+
     }
 
     ngOnInit()

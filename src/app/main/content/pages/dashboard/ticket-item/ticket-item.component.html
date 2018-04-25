@@ -1,0 +1,79 @@
+<div class="ticket-container col-12 container" >
+    <div class="filter-header">
+      <mat-form-field class="mat-elevation-z4">
+          <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+      </mat-form-field>
+    </div>
+    
+<br>
+    <mat-table #table [dataSource]="dataSource" matSort class="col-12">
+
+      <!-- service Column -->
+      <ng-container matColumnDef="service">
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-1">Servizio</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="col-1"> {{element.service }} </mat-cell>
+      </ng-container>
+
+      <!-- status Column -->
+      <ng-container matColumnDef="status" >
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-1">Stato</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="col-1"> {{element.status}} </mat-cell>
+      </ng-container>
+     
+      <!-- operator Column -->
+      <ng-container matColumnDef="operator">
+        <mat-header-cell *matHeaderCellDef mat-sort-header="operator_firstname" class="col-2">Operatore</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="col-2">{{element.operator_firstname}} {{element.operator_lastname}}</mat-cell>
+      </ng-container>
+
+      <!-- user Column -->
+      <ng-container matColumnDef="user">
+        <mat-header-cell *matHeaderCellDef mat-sort-header="user_name" class="col-2">Utente</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="col-2"> {{element.user_name}} {{element.user_surname}} </mat-cell>
+      </ng-container>
+
+      <!-- category Column -->
+      <ng-container matColumnDef="category">
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-1">Categoria</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="col-1"> {{element.category}} </mat-cell>
+      </ng-container>
+      
+      <!-- phone Column -->
+      <ng-container matColumnDef="phone">
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-2 text-center"><span class="col-12 text-center">Telefono</span></mat-header-cell>
+        <mat-cell *matCellDef="let element" class="col-2 text-right"> {{element.phone}} </mat-cell>
+      </ng-container>
+
+      <!-- date_time Column -->
+      <ng-container matColumnDef="date_time">
+        <mat-header-cell *matHeaderCellDef mat-sort-header class="col-2">Data</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="col-2"> {{element.date_time | date:'dd/MM/yyyy HH:mm':'UTC'}} </mat-cell>
+      </ng-container>
+
+      <!-- id Column -->
+      <ng-container matColumnDef="id" >
+        <mat-header-cell *matHeaderCellDef class="text-right col-1 "> Azioni</mat-header-cell>
+        <mat-cell *matCellDef="let element" class="text-right col-1" mdTooltipPosition="'left'" matTooltip="{{element.closed_at}}">
+          <div class="action">
+
+            <button  class="mat-icon-button mat-warn" (click)="showTicketDetail(element)">
+              <mat-icon class="">visibility</mat-icon>
+            </button>
+          
+
+           <span *ngIf="dataBadge[element.id] > 0" 
+             class="badge badge-pill badge-danger mat-elevation-z8"
+             [innerHTML]="dataBadge[element.id]"></span>
+
+          
+          </div>
+
+        </mat-cell>
+      </ng-container>
+
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+
+    <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+</div>
