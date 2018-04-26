@@ -54,8 +54,6 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
       this.ticket = item;
       this.chatService.markMessagesReaded(item.id).subscribe();
       this.ticketHistorys = _.orderBy(this.ticket.historys, 'date_time', 'asc');
-      console.log("RECEIVED", item);
-
       setTimeout(() => {
         this.scrollToBottom(2000);
       });
