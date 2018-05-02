@@ -12,7 +12,7 @@ import { NotificationsService } from 'angular2-notifications';
 import { Observable } from 'rxjs/Observable';
 import { SocketService } from '../../../../services/socket/socket.service';
 import { UnreadedMessageEmitterService } from '../../../../services/helper/unreaded-message-emitter.service';
-import "rxjs/add/operator/distinctUntilChanged";
+import 'rxjs/add/operator/distinctUntilChanged';
 
 @Component({
   selector: 'fuse-ticket-messages',

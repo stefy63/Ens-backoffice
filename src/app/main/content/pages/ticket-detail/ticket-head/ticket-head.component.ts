@@ -13,6 +13,8 @@ import { SocketService } from '../../../../services/socket/socket.service';
 import { Observable } from 'rxjs/Observable';
 import { IDefaultDialog } from '../../../../../interfaces/i-defaul-dialog';
 import * as moment from 'moment';
+import { WsEvents } from '../../../../../type/ws-events';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -42,7 +44,8 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     private store: LocalStorageService,
     private apiTicketService: ApiTicketService,
     private socketService: SocketService,
-    private apiTicketHistoryService: ApiTicketHistoryService
+    private apiTicketHistoryService: ApiTicketHistoryService,
+    private router: Router
   ) {
     this.user = this.store.getItem('user');
     this.ticketStatus = this.store.getItem('ticket_status');
@@ -69,6 +72,21 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
           this.timeout = moment().isAfter(moment(data.date_time).add(15, 'm'));
         }, 10000);
       }
+
+      this.socketService.getMessage(WsEvents.ticket.updated)
+      .subscribe(async (ticket: ITicket) => {
+        if (ticket.id_operator !== this.user.id){
+          this.open.next(false);
+          this.isOpen = false;
+          await swal({
+            title: 'ATTENZIONE! TICKET ACQUISITO',
+            text: 'TICKET PRESO IN CARICO DA ALTRO OPERATORE',
+            type: 'error'
+          });
+          this.router.navigate(['/pages/dashboard']);
+        }
+      });
+
       this.msgAlert = (data.id_operator
         && this.user.id !== data.id_operator
         && data.status.status === 'ONLINE');
