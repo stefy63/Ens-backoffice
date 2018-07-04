@@ -1,4 +1,5 @@
 import { Component, ElementRef, HostBinding, HostListener, Input, OnDestroy, OnInit, Renderer2, ViewChild, ViewEncapsulation } from '@angular/core';
+import { environment } from '../../../../environments/environment';
 import { Subscription } from 'rxjs/Subscription';
 import { FuseMatchMedia } from '../../../core/services/match-media.service';
 import { FuseNavbarVerticalService } from './navbar-vertical.service';
@@ -51,6 +52,7 @@ export class FuseNavbarVerticalComponent implements OnInit, OnDestroy
     fusePerfectScrollbarUpdateTimeout;
 
     player: AnimationPlayer;
+  public title = environment.nav_title;
 
     constructor(
         private fuseMainComponent: FuseMainComponent,

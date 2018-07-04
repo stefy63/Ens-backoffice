@@ -6,6 +6,8 @@
 export const environment = {
     production: false,
     hmr       : false,
+    nav_title : 'Ermes',
+    login_title : 'Benvenuti in Ermes!',
 
     // Socket.io configuration url
     ws_url: 'https://preprodttms.3punto6.com',

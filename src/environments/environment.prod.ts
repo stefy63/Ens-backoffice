@@ -1,6 +1,8 @@
 export const environment = {
     production: true,
-    hmr       : false,
+    hmr: false,
+    nav_title: 'Ermes',
+    login_title: 'Benvenuti in Ermes!',
 
 
     // Socket.io configuration url
