@@ -3,8 +3,8 @@ import { Subscription } from 'rxjs/Subscription';
 import { FuseConfigService } from '../core/services/config.service';
 import { Platform } from '@angular/cdk/platform';
 import { DOCUMENT } from '@angular/common';
-import { AuthService } from '../main/services/auth/auth.service';
-import { LocalStorageService } from '../main/services/local-storage/local-storage.service';
+// import { AuthService } from '../main/services/auth/auth.service';
+// import { LocalStorageService } from '../main/services/local-storage/local-storage.service';
 
 @Component({
     selector     : 'fuse-main',
@@ -24,8 +24,8 @@ export class FuseMainComponent implements OnInit, OnDestroy
         private _elementRef: ElementRef,
         private fuseConfig: FuseConfigService,
         private platform: Platform,
-        private authService: AuthService,
-        private storage: LocalStorageService,
+        // private authService: AuthService,
+        // private storage: LocalStorageService,
         @Inject(DOCUMENT) private document: any,
     )
     {

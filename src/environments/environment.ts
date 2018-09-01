@@ -10,13 +10,15 @@ export const environment = {
     login_title : 'Benvenuti in Ermes!',
 
     // Socket.io configuration url
-    ws_url: 'https://preprodttms.3punto6.com',
+    // ws_url: 'https://preprodttms.3punto6.com',
+    ws_url: 'http://localhost',
     ws_path: '/wss',
-    ws_port: null,
+    ws_port: 9000,
 
     // API configuration url
-    api_url: 'https://preprodttms.3punto6.com',
-    api_port: null,
+    // api_url: 'https://preprodttms.3punto6.com',
+    api_url: 'http://localhost',
+    api_port: 3030,
     api_suffix: '/api',
 
     // VideoChat Config

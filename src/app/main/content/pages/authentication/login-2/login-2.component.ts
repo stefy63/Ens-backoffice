@@ -59,21 +59,23 @@ export class FuseLogin2Component implements OnInit {
     this.apiLoginService.apiLogin(this.loginForm.value as IDataLogin).subscribe(
       data => {
         this.storage.setItem('data', data);
-        if (this.authService.isAuthenticated() && isOperator) {
-          const userType = isOperator ? 'OPERATOR' : 'USER';
+        if (this.authService.isAuthenticated()) {
+          // const userType = isOperator ? 'OPERATOR' : 'USER';
           this.socketService.sendMessage('welcome-message', {
             userToken: this.authService.getToken().token_session,
             idUser: data.user.id,
             status: 'READY',
-            userType: userType
+            userType: 'OPERATOR'
           });
-          if (!this.authService.isOperator()) {
-            this.navService.setNavigationModel(new UserNavigationModel());
-            this.router.navigate(['pages/user/user-dashboard']);
-          } else {
-            this.navService.setNavigationModel(new NavigationModel());
-            this.router.navigate(['pages/dashboard']);
-          }
+          // if (!this.authService.isOperator()) {
+          //   this.navService.setNavigationModel(new UserNavigationModel());
+          //   this.router.navigate(['pages/user/user-dashboard']);
+          // } else {
+          //   this.navService.setNavigationModel(new NavigationModel());
+          //   this.router.navigate(['pages/dashboard']);
+          // }
+          this.navService.setNavigationModel(new NavigationModel());
+          this.router.navigate(['pages/dashboard']);
         } else {
           this.toast.error('Attenzione', 'Login Errato!');
         }
@@ -88,7 +90,7 @@ export class FuseLogin2Component implements OnInit {
     this.loginForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       password: ['', [Validators.required, Validators.minLength(3)]],
-      operator: [false]
+      // operator: [false]
     });
 
     this.loginForm.valueChanges.subscribe(() => {
