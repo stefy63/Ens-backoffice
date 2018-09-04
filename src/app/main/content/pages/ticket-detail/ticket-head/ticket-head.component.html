@@ -17,11 +17,11 @@
           </thead>
           <tbody>
               <tr>
-                <td [ngClass]="{'blink': (ticket.status.status === 'ONLINE') }"  >{{ticket.status.status}}</td>
-                <td>{{ticket.category.category}}</td>
-                <td>{{ticket.user.name}}</td>
-                <td>{{ticket.user.surname}}</td>
-                <td>{{ticket.service.service}}</td>
+                <td [ngClass]="{'blink': (ticket.status.status === 'ONLINE') }"  >{{ticket.status}}</td>
+                <td>{{ticket.category}}</td>
+                <td>{{ticket.user_name}}</td>
+                <td>{{ticket.user_surname}}</td>
+                <td>{{ticket.service}}</td>
                 <td [ngClass]="{'warn-900-fg blink': timeout }">{{ticket.date_time | date:'dd/MM/yyyy HH:mm':'UTC'}}</td>
                 <td>{{ticket.phone}}</td>
               </tr>
@@ -58,7 +58,7 @@
         </div>
       </div> -->
       <div class="col-12 text-center msg-alert">
-        <span *ngIf="msgAlert" class="alert">Ticket già aperto da [ {{ticket.operator.firstname + ' ' + ticket.operator.lastname}} ]</span>
+        <span *ngIf="msgAlert" class="alert">Ticket già aperto da [ {{ticket.operator_name + ' ' + ticket.operator_surname}} ]</span>
       </div>
     </div>
 </div>

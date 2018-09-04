@@ -15,6 +15,7 @@ import { IDefaultDialog } from '../../../../../interfaces/i-defaul-dialog';
 import * as moment from 'moment';
 import { WsEvents } from '../../../../../type/ws-events';
 import { Router } from '@angular/router';
+import { NormalizeTicket } from '../../../../services/helper/normalize-ticket';
 
 
 @Component({
@@ -62,7 +63,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
             });
         this.location.back();
       }
-      this.ticket = data;
+      this.ticket = NormalizeTicket.normalizeItem([data])[0];
       const initMessage = find(data.historys, item => item.type.type === 'INITIAL');
       this.ticketReason = (initMessage) ? initMessage.action : '';
       if (data.status.status === 'ONLINE' && data.id_operator === this.user.id) {
@@ -102,12 +103,12 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   }
 
   activateChat() {
-    if (this.ticket.status.status === 'ONLINE' && this.ticket.id_operator !== this.user.id) {
-      this.setUserChoise('Conferma Trasferimento Ticket?', 'Trasferito ticket da Operatore: ' + this.user.firstname + ' ' + this.user.lastname);
-    } else if (this.ticket.status.status === 'CLOSED') {
+    if (this.ticket.status === 'ONLINE' && this.ticket.id_operator !== this.user.id) {
+      this.setUserChoise('Conferma Trasferimento Ticket?', 'Trasferito ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
+    } else if (this.ticket.status === 'CLOSED') {
       this.setUserChoise('Conferma Riapertura Ticket?', 'Riaperutra ticket da Operatore: ');
     } else {
-      this.setUserChoise('Conferma acquisizione Ticket?', 'Acquisito ticket da Operatore: ' + this.user.firstname + ' ' + this.user.lastname);
+      this.setUserChoise('Conferma acquisizione Ticket?', 'Acquisito ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
     }
 
   }
@@ -149,11 +150,11 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   }
 
   async closeChat() {
-    const confirm = await this.confirmAlert('Conferma chiusura Ticket?', 'Chiusura tichet da Operatore: ' + this.user.firstname + ' ' + this.user.lastname, 'warning');
+    const confirm = await this.confirmAlert('Conferma chiusura Ticket?', 'Chiusura tichet da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname, 'warning');
     if (confirm.value) {
       this.updateTicketStatus(find(this.ticketStatus, { status: 'CLOSED' }).id)
         .subscribe(() => {
-          this.createHistoryTicketSystem('Chiusura tichet da Operatore: ' + this.user.firstname + ' ' + this.user.lastname)
+          this.createHistoryTicketSystem('Chiusura tichet da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname)
             .subscribe(() => {
               this.location.back();
             });
@@ -184,7 +185,8 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
         this.isOpen = true;
         this.updateTicketStatus(find(this.ticketStatus, { status: 'REFUSED' }).id)
           .subscribe(() => {
-            this.createHistoryTicketSystem('Rifiutato tichet da Operatore: ' + this.user.firstname + ' ' + this.user.lastname + 'per il seguente motivo: ' + result.value)
+            // tslint:disable-next-line:max-line-length
+            this.createHistoryTicketSystem('Rifiutato tichet da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname + 'per il seguente motivo: ' + result.value)
               .subscribe(() => {
                 swal({
                   type: 'success',

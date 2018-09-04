@@ -145,7 +145,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
 
   sendMessage(msgToSend: string) {
     this.replyForm.reset();
-    const type = (this.storage.getItem('token').id_user) ? 'USER' : 'OPERATOR';
+    const type = 'OPERATOR';
     const message: ITicketHistory = {
       id: null,
       id_ticket: this.ticket.id,

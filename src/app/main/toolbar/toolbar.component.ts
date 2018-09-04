@@ -91,10 +91,10 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
         const user = this.storage.getItem('user');
         const token = this.storage.getItem('token');
         if (user) {
-            this.profile = user.firstname + ' ' + user.lastname;
+            this.profile = user.userdata.name + ' ' + user.userdata.surname;
         }
 
-        if (token && token.id_operator) {
+        if (token && token.id_user) {
             UnreadedMessageEmitterService.subscribe('sum_badge', (data) => {
                 this.totalBadge = data;
             });

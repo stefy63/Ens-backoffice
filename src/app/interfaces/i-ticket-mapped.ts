@@ -9,8 +9,8 @@ export interface ITicketMapped {
     closed: number;
     deleted: number;
 
-    operator_firstname: string;
-    operator_lastname: string;
+    operator_name: string;
+    operator_surname: string;
     user_name: string;
     user_surname: string;
     service: string;
