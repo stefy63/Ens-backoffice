@@ -112,6 +112,10 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
         this.router.navigate(['/']);
     }
 
+    edit_profile() {
+      this.router.navigate(['/pages/profile']);
+    }
+
     search(value) {
         // Do your search here...
         console.log(value);

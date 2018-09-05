@@ -13,7 +13,7 @@ import { SocketService } from '../../../../services/socket/socket.service';
 import { NotificationsService } from 'angular2-notifications';
 import { ToastOptions } from '../../../../../type/toast-options';
 import { FuseNavigationService } from '../../../../../core/components/navigation/navigation.service';
-import { UserNavigationModel } from './user-navigation.model';
+// import { UserNavigationModel } from '../../../../../user-navigation.model';
 import { NavigationModel } from '../../../../../navigation.model';
 
 @Component({
