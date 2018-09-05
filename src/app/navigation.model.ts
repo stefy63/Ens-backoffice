@@ -47,7 +47,7 @@ export class NavigationModel
                       'title'   : 'Gestione Calendario',
                       'type'    : 'item',
                       'icon'    : 'alarm',
-                      'url'     : '/pages/profile'
+                      'url'     : '/pages/calendarmanager'
                     }
                 ]
             },
