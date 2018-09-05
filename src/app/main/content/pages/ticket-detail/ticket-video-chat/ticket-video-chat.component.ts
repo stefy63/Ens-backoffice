@@ -46,14 +46,15 @@ export class TicketVideoChatComponent implements OnInit, OnDestroy {
         // immediately ask for camera access
         media: { audio: true, video: true },
         autoRequestMedia: true,
-        debug: false,
+        debug: true,
+        url: (environment.videoChat_server_url) ? environment.videoChat_server_url : null,
         // detectSpeakingEvents: true,
         // autoAdjustMic: false,
       });
 
-      if (environment.videoChat_server_url) {
-        this.peer.url = environment.videoChat_server_url;
-      }
+      // if (environment.videoChat_server_url) {
+      //   this.peer.url = environment.videoChat_server_url;
+      // }
 
       this.peer.on('readyToCall', () => {
         this.peer.createRoom(this.room, (err, name) => {
