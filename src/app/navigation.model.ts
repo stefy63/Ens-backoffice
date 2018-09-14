@@ -28,27 +28,27 @@ export class NavigationModel
                         //     },
                         // ]
                     },
-                    {
-                      'id'      : 'usermanager',
-                      'title'   : 'Gestione Utenti',
-                      'type'    : 'item',
-                      'icon'    : 'face',
-                      'url'     : '/pages/usermanager'
-                    },
-                    {
-                      'id'      : 'permissionmanager',
-                      'title'   : 'Gestione Permessi',
-                      'type'    : 'item',
-                      'icon'    : 'fingerprint',
-                      'url'     : '/pages/permissionmanager'
-                    },
-                    {
-                      'id'      : 'calenadarmanager',
-                      'title'   : 'Gestione Calendario',
-                      'type'    : 'item',
-                      'icon'    : 'alarm',
-                      'url'     : '/pages/calendarmanager'
-                    }
+                    // {
+                    //   'id'      : 'usermanager',
+                    //   'title'   : 'Gestione Utenti',
+                    //   'type'    : 'item',
+                    //   'icon'    : 'face',
+                    //   'url'     : '/pages/usermanager'
+                    // },
+                    // {
+                    //   'id'      : 'permissionmanager',
+                    //   'title'   : 'Gestione Permessi',
+                    //   'type'    : 'item',
+                    //   'icon'    : 'fingerprint',
+                    //   'url'     : '/pages/permissionmanager'
+                    // },
+                    // {
+                    //   'id'      : 'calenadarmanager',
+                    //   'title'   : 'Gestione Calendario',
+                    //   'type'    : 'item',
+                    //   'icon'    : 'alarm',
+                    //   'url'     : '/pages/calendarmanager'
+                    // }
                 ]
             },
             // {
