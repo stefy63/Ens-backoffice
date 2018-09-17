@@ -7,6 +7,7 @@ export class UnreadedMessageEmitterService {
   static subject = new BehaviorSubject<ManifestPayload>({channel: 'all', data: null});
 
   static subscribe(channel: string, next?, error?, complete?) {
+    // tslint:disable-next-line:triple-equals
     this.subject.filter((payload: ManifestPayload, index: number) => payload.channel == channel)
     .map(payload => payload.data)
     .subscribe(next, error, complete);

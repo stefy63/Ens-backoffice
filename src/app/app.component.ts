@@ -40,9 +40,9 @@ export class AppComponent
             'welcome-message',
             {
               userToken: token.token_session,
-              idUser: token.id_operator ? token.id_operator : token.id_user,
+              idUser: token.id_user,
               status: 'READY',
-              userType: token.id_operator ? 'OPERATOR' : 'USER'
+              userType: 'OPERATOR'
             });
         }
 

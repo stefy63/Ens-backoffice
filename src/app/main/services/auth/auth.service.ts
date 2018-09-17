@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import * as moment from 'moment';
 import { ITokenSession } from '../../../interfaces/i-token-session';
 import { LocalStorageService } from '../local-storage/local-storage.service';
+import { IUser } from '../../../interfaces/i-user';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +20,11 @@ export class AuthService {
   }
 
   public isOperator(): boolean {
-    const token: ITokenSession = this.getToken();
-    return (!!token && !!token.id_operator);
+    // const token: ITokenSession = this.getToken();
+    // return (!!token && !!token.id_operator);
+
+    const user: IUser = this.storage.getItem('user');
+    return user.isOperator;
+
   }
 }

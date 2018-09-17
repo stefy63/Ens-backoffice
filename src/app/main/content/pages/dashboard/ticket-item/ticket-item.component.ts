@@ -109,6 +109,8 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
         sum += item;
       }
     });
+
     UnreadedMessageEmitterService.next('sum_badge', sum);
   }
+
 }

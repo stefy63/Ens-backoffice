@@ -9,16 +9,22 @@
           </div>
       </div>
       <div *ngSwitchCase="'SMS'">
-          <fuse-ticket-head [ticket]="ticket"></fuse-ticket-head>
-
+        <div id="content-bottom" class="row col-12 mt-12 mat-elevation-z4" *ngIf="open">
+            <fuse-ticket-messages id="sms" class="col-7" [ticket]="ticket" ></fuse-ticket-messages>
+            <fuse-ticket-note id="note" class="col-5" [ticket]="ticket"></fuse-ticket-note>
+        </div>
       </div>
       <div *ngSwitchCase="'MAIL'">
-          <fuse-ticket-head [ticket]="ticket"></fuse-ticket-head>
-
+          <div id="content-bottom" class="row col-12 mt-12 mat-elevation-z4" *ngIf="open">
+              <fuse-ticket-messages id="mail" class="col-7" [ticket]="ticket" ></fuse-ticket-messages>
+              <fuse-ticket-note id="note" class="col-5" [ticket]="ticket"></fuse-ticket-note>
+          </div>
       </div>
       <div *ngSwitchCase="'SOCIAL'">
-          <fuse-ticket-head [ticket]="ticket"></fuse-ticket-head>
-
+          <div id="content-bottom" class="row col-12 mt-12 mat-elevation-z4" *ngIf="open">
+              <fuse-ticket-messages id="social" class="col-7" [ticket]="ticket" ></fuse-ticket-messages>
+              <fuse-ticket-note id="note" class="col-5" [ticket]="ticket"></fuse-ticket-note>
+          </div>
       </div>
       <div *ngSwitchCase="'VIDEOCHAT'">
           <!-- <fuse-ticket-head [ticket]="ticket"></fuse-ticket-head> -->

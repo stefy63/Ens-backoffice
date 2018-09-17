@@ -2,22 +2,13 @@
 export interface IUser {
 
     id: number;
-    name: string;
-    surname: string;
-    gender: number;
-    city: string;
-    email: string;
-    phone: string;
-    ens_card: string;
-    ens_city: string;
-    login: string;
+    id_userdata: number;
+    username: string;
     password: string;
-    pwd_mode: number;
-    pwd: string;
-    id_contact: number;
-    id_newsletter: number;
-    user_available: number;
-    user_code: string;
-    phone_update: string;
-    user_evaluation: number;
+    isOperator: boolean;
+    disabled: boolean;
+    date_creations: Date;
+    date_update: Date;
+    id_role: number;
+    id_office: number;
 }

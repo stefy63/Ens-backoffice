@@ -12,7 +12,7 @@ import { NotificationsService } from 'angular2-notifications';
 import { Observable } from 'rxjs/Observable';
 import { SocketService } from '../../../../services/socket/socket.service';
 import { UnreadedMessageEmitterService } from '../../../../services/helper/unreaded-message-emitter.service';
-
+import 'rxjs/add/operator/distinctUntilChanged';
 
 @Component({
   selector: 'fuse-ticket-messages',
@@ -50,7 +50,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngOnInit() {
-    this.data.subscribe(item => {
+    this.data.distinctUntilChanged().subscribe(item => {
       this.ticket = item;
       this.chatService.markMessagesReaded(item.id).subscribe();
       this.ticketHistorys = _.orderBy(this.ticket.historys, 'date_time', 'asc');
@@ -145,7 +145,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
 
   sendMessage(msgToSend: string) {
     this.replyForm.reset();
-    const type = (this.storage.getItem('token').id_user) ? 'USER' : 'OPERATOR';
+    const type = 'OPERATOR';
     const message: ITicketHistory = {
       id: null,
       id_ticket: this.ticket.id,

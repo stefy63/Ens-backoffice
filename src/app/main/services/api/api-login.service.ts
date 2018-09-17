@@ -22,10 +22,10 @@ export class ApiLoginService {
   ) { }
 
   public apiLogin(dataLogin: IDataLogin): Observable<any> {
-    const isOperator = dataLogin.operator;
+    // const isOperator = dataLogin.operator;
     delete dataLogin.operator;
 
-    return this.http.post(this.baseUrl + '/login/' + isOperator, dataLogin);
+    return this.http.post(this.baseUrl + '/login', dataLogin);
   }
 
   public apiLogout(): Observable<any> {

@@ -5,7 +5,7 @@ import { FuseConfigService } from '../../core/services/config.service';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
-import { AuthService } from '../services/auth/auth.service';
+// import { AuthService } from '../services/auth/auth.service';
 
 
 @Component({
@@ -29,7 +29,7 @@ export class FuseContentComponent implements OnInit, OnDestroy
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private fuseConfig: FuseConfigService,
-        private authService: AuthService
+        // private authService: AuthService
     )
     {
         this.router.events

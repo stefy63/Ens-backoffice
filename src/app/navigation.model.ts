@@ -27,7 +27,28 @@ export class NavigationModel
                         //         'url'  : '/pages/authentication/login-2'
                         //     },
                         // ]
-                    }
+                    },
+                    // {
+                    //   'id'      : 'usermanager',
+                    //   'title'   : 'Gestione Utenti',
+                    //   'type'    : 'item',
+                    //   'icon'    : 'face',
+                    //   'url'     : '/pages/usermanager'
+                    // },
+                    // {
+                    //   'id'      : 'permissionmanager',
+                    //   'title'   : 'Gestione Permessi',
+                    //   'type'    : 'item',
+                    //   'icon'    : 'fingerprint',
+                    //   'url'     : '/pages/permissionmanager'
+                    // },
+                    // {
+                    //   'id'      : 'calenadarmanager',
+                    //   'title'   : 'Gestione Calendario',
+                    //   'type'    : 'item',
+                    //   'icon'    : 'alarm',
+                    //   'url'     : '/pages/calendarmanager'
+                    // }
                 ]
             },
             // {
@@ -49,7 +70,7 @@ export class NavigationModel
             //         }
             //     ]
             // }
-            
+
         ];
     }
 }

@@ -27,10 +27,10 @@
 
         <div class="" fxFlex="0 1 auto" fxLayout="row" fxLayoutAlign="start center">
 
-            <div class="badge-container" *ngIf="totalBadge > 0">   
+            <div class="badge-container" *ngIf="totalBadge > 0">
                 <mat-icon>notifications_active</mat-icon>
                 <span class="badge badge-pill badge-danger mat-elevation-z8">{{totalBadge}}</span>
-            </div> 
+            </div>
 
 
             <button mat-button [matMenuTriggerFor]="userMenu"
@@ -44,12 +44,12 @@
 
             <mat-menu #userMenu="matMenu">
 
-                <!-- <button mat-menu-item>
+                <button mat-menu-item class="" (click)="edit_profile()">
                     <mat-icon>account_circle</mat-icon>
-                    <span>My Profile</span>
+                    <span>Profilo</span>
                 </button>
 
-                <button mat-menu-item class="">
+                <!-- <button mat-menu-item class="">
                     <mat-icon>mail</mat-icon>
                     <span>Inbox</span>
                 </button> -->
