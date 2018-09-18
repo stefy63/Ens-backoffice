@@ -3,25 +3,25 @@
   <fuse-ticket-head [ticket]="ticket" (open)="setOpen($event)"></fuse-ticket-head>
   <div [ngSwitch]="service" *ngIf="ticket">
       <div *ngSwitchCase="'CHAT'">
-          <div id="content-bottom" class="row col-12 mt-12 mat-elevation-z4" *ngIf="open">
+          <div id="content-bottom" class="row col-12 mat-elevation-z4" *ngIf="open">
               <fuse-ticket-messages id="chat" class="col-7" [ticket]="ticket" ></fuse-ticket-messages>
               <fuse-ticket-note id="note" class="col-5" [ticket]="ticket"></fuse-ticket-note>
           </div>
       </div>
       <div *ngSwitchCase="'SMS'">
-        <div id="content-bottom" class="row col-12 mt-12 mat-elevation-z4" *ngIf="open">
+        <div id="content-bottom" class="row col-12 mat-elevation-z4" *ngIf="open">
             <fuse-ticket-messages id="sms" class="col-7" [ticket]="ticket" ></fuse-ticket-messages>
             <fuse-ticket-note id="note" class="col-5" [ticket]="ticket"></fuse-ticket-note>
         </div>
       </div>
       <div *ngSwitchCase="'MAIL'">
-          <div id="content-bottom" class="row col-12 mt-12 mat-elevation-z4" *ngIf="open">
+          <div id="content-bottom" class="row col-12 mat-elevation-z4" *ngIf="open">
               <fuse-ticket-messages id="mail" class="col-7" [ticket]="ticket" ></fuse-ticket-messages>
               <fuse-ticket-note id="note" class="col-5" [ticket]="ticket"></fuse-ticket-note>
           </div>
       </div>
       <div *ngSwitchCase="'SOCIAL'">
-          <div id="content-bottom" class="row col-12 mt-12 mat-elevation-z4" *ngIf="open">
+          <div id="content-bottom" class="row col-12 mat-elevation-z4" *ngIf="open">
               <fuse-ticket-messages id="social" class="col-7" [ticket]="ticket" ></fuse-ticket-messages>
               <fuse-ticket-note id="note" class="col-5" [ticket]="ticket"></fuse-ticket-note>
           </div>

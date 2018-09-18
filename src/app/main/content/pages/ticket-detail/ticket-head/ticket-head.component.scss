@@ -86,22 +86,32 @@
 
 .table__service__chat {
     background-color: lightskyblue;
-    font-weight: bold;
+    font-weight: bold !important;
     text-align: center;
 }
 
 .table__service__sms {
     background-color: coral;
-    font-weight: bold;
+    font-weight: bold !important;
     text-align: center;
 }
 
 .table__service__mail {
     background-color: lightgreen;
-    font-weight: bold;
+    font-weight: bold !important;
     text-align: center;
 }
 
 .table__ticket__detail {
     font-size: 15px !important;
+    vertical-align: middle;
+}
+
+.table__ticket__detail__description {
+    max-height: 40px;
+    overflow: auto;
+}
+
+.table__ticket__detail__description__cell {
+    max-width: 200px;
 }
