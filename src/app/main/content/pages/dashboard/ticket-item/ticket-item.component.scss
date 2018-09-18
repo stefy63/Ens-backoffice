@@ -63,6 +63,23 @@ mat-header-row {
 
 }
 
+.table__service__chat {
+    background-color: lightskyblue;
+    font-weight: bold;
+    text-align: center;
+}
+
+.table__service__sms {
+    background-color: coral;
+    font-weight: bold;
+    text-align: center;
+}
+
+.table__service__mail {
+    background-color: lightgreen;
+    font-weight: bold;
+    text-align: center;
+}
 
 
 // .mat-cell:nth-child(1),

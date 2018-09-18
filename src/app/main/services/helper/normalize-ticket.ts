@@ -15,6 +15,7 @@ export class NormalizeTicket {
                               .value() : '';
           return {
               id: item.id,
+              id_service: item.id_service,
               service: item.service.service,
               status: item.status.status,
               id_operator: item.id_operator,

@@ -11,7 +11,6 @@ import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
 import { ITicketHistoryType } from '../../../../../interfaces/i-ticket-history-type';
 import { SocketService } from '../../../../services/socket/socket.service';
 import { Observable } from 'rxjs/Observable';
-import { IDefaultDialog } from '../../../../../interfaces/i-defaul-dialog';
 import * as moment from 'moment';
 import { WsEvents } from '../../../../../type/ws-events';
 import { Router } from '@angular/router';
@@ -76,7 +75,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
 
       this.socketService.getMessage(WsEvents.ticket.updated)
       .subscribe(async (ticket: ITicket) => {
-        if (ticket.id_operator !== this.user.id){
+        if (this.ticket && this.ticket.id === ticket.id && ticket.id_operator !== this.user.id){
           this.open.next(false);
           this.isOpen = false;
           await swal({
