@@ -19,7 +19,7 @@
                     <div class="message">{{message.action}}</div>
                     <div class="message__attachment__container" *ngIf="message.attachments">
                         <div class="message__attachment" *ngFor="let attachment of message.attachments">
-                            Allegato: <a href="/attachments/{{attachment.path}}">{{attachment.name}}</a>
+                            Allegato: <a href="/attachments/{{attachment.path}}" target="_blank">{{attachment.name}}</a>
                         </div>
                     </div>
                     <div class="time secondary-text">{{message.date_time | date:'medium':'UTC'}}</div>
