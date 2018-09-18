@@ -50,7 +50,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngOnInit() {
-    this.data.distinctUntilChanged().subscribe(item => {
+    this.data.subscribe(item => {
       this.ticket = item;
       this.chatService.markMessagesReaded(item.id).subscribe();
       this.ticketHistorys = _.orderBy(this.ticket.historys, 'date_time', 'asc');
