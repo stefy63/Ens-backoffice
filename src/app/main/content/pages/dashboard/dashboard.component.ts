@@ -54,7 +54,8 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
       .subscribe((data: ITicket) => {
         this.ticket.push(NormalizeTicket.normalizeItem([data])[0]);
         this._setDataOutput(this.ticket);
-        const message = this.toast.info('Nuovo Ticket!', 'Nuovo ticket da ' + data.user.userdata.surname);
+        const newUserSurname = (data.id_user != null) ? data.user.userdata.surname : 'Unknown';
+        const message = this.toast.info('Nuovo Ticket!', 'Nuovo ticket da ' + newUserSurname);
         this.beep.load();
         this.beep.play();
         message.click.subscribe((e) => {
