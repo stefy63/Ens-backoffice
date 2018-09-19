@@ -13,6 +13,7 @@ import { Observable } from 'rxjs/Observable';
 import { SocketService } from '../../../../services/socket/socket.service';
 import { UnreadedMessageEmitterService } from '../../../../services/helper/unreaded-message-emitter.service';
 import 'rxjs/add/operator/distinctUntilChanged';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'fuse-ticket-messages',
@@ -44,7 +45,8 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
     private chatService: ChatService,
     private storage: LocalStorageService,
     private toast: NotificationsService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private spinner: NgxSpinnerService
   ) {
     this.historyType = this.storage.getItem('ticket_history_type');
   }
@@ -155,7 +157,10 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
       readed: 0
     };
 
-    this.chatService.sendMessage(message).subscribe();
+    this.spinner.show();
+    this.chatService.sendMessage(message).subscribe((data) => {
+      this.spinner.hide();
+    });
   }
 
   public typing(evt) {

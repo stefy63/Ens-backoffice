@@ -48,6 +48,7 @@
     "ng-socket-io": "0.2.4",
     "ngx-color-picker": "4.4.0",
     "ngx-cookie-service": "1.0.9",
+    "ngx-spinner": "2.0.0",
     "perfect-scrollbar": "1.0.3",
     "rxjs": "5.5.2",
     "simplewebrtc": "3.0.1",
