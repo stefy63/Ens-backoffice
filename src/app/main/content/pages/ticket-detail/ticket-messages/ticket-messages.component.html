@@ -33,14 +33,17 @@
 
     </div>
     <!-- / CHAT CONTENT -->
-      
+
     <div #onWritingMsg class="on-writing">L'utente sta scrivendo........</div>
-    
+
 
     <!-- CHAT FOOTER -->
     <div class="chat-footer" fxLayout="row" fxLayoutAlign="center center" *ngIf="ticket.status.status !== 'REFUSED' && ticket.status.status !== 'CLOSED'">
-  
 
+        <button mat-mini-fab color="accent" (click)="toglePuseScroll()" [ngClass]=" {'mat-button-pause-on' : !pause2scroll, 'mat-button-pause-off': pause2scroll}  ">
+            <mat-icon *ngIf="pause2scroll">pause</mat-icon>
+            <mat-icon *ngIf="!pause2scroll">play_arrow</mat-icon>
+          </button>
         <!-- REPLY FORM -->
         <form #replyForm="ngForm"
             (ngSubmit)="reply($event)"
@@ -65,5 +68,5 @@
 
 </div>
 
-   
+
 <simple-notifications [options]="options"></simple-notifications>

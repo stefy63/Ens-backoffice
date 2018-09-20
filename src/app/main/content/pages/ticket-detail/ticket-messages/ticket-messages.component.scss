@@ -137,6 +137,16 @@
           margin: 0;
         }
       }
+      .mat-button-pause-on {
+        margin-right: 10px;
+        opacity: 0.6;
+        background-color: mediumseagreen;
+      }
+      .mat-button-pause-off {
+        margin-right: 10px;
+        opacity: 0.6;
+        background-color: orange;
+      }
     }
 
     .on-writing {

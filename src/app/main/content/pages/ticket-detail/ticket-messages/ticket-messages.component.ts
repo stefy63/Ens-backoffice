@@ -28,11 +28,13 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   public ticket: ITicket;
   public ticketHistorys: ITicketHistory[] = [];
   public activeSpinner = false;
+  public pause2scroll = true;
+
   private historyType: ITicketHistoryType[];
   private isTyping = false;
-
-
   private replyInput: any;
+
+
   @ViewChild(FusePerfectScrollbarDirective) directiveScroll: FusePerfectScrollbarDirective;
   @ViewChildren('replyInput') replyInputField;
   @ViewChild('replyForm') replyForm: NgForm;
@@ -120,7 +122,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
 
   scrollToBottom(speed?: number) {
     speed = speed || 400;
-    if (this.directiveScroll) {
+    if (this.directiveScroll && this.pause2scroll) {
       this.directiveScroll.update();
 
       setTimeout(() => {
@@ -128,6 +130,15 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
       });
     }
   }
+
+  toglePuseScroll() {
+    this.pause2scroll = !this.pause2scroll;
+    if (this.pause2scroll) {
+      this.scrollToBottom();
+    }
+  }
+
+
 
   reply(event) {
     this.replyForm.form.value.message = this.replyForm.form.value.message.trim();
