@@ -20,6 +20,7 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     horizontalNav: boolean;
     profile: string;
     public totalBadge = 0;
+    public beep;
 
     constructor(
         private router: Router,
@@ -28,6 +29,8 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
         private storage: LocalStorageService,
         private apiLoginService: ApiLoginService,
     ) {
+        this.beep = new Audio();
+        this.beep.src = '../../../../assets/audio/beep.wav';
         this.userStatusOptions = [
             {
                 'title': 'Online',
@@ -96,7 +99,11 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
 
         if (token && token.id_user) {
             UnreadedMessageEmitterService.subscribe('sum_badge', (data) => {
-                this.totalBadge = data;
+              if (this.totalBadge < data && this.totalBadge !== 0) {
+                this.beep.load();
+                this.beep.play();
+              }
+              this.totalBadge = data;
             });
         }
 
