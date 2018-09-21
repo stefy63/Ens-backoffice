@@ -105,7 +105,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     if (this.ticket.status === 'ONLINE' && this.ticket.id_operator !== this.user.id) {
       this.setUserChoise('Conferma Trasferimento Ticket?', 'Trasferito ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
     } else if (this.ticket.status === 'CLOSED') {
-      this.setUserChoise('Conferma Riapertura Ticket?', 'Riaperutra ticket da Operatore: ');
+      this.setUserChoise('Conferma Riapertura Ticket?', 'Riaperutra ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
     } else {
       this.setUserChoise('Conferma acquisizione Ticket?', 'Acquisito ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
     }
