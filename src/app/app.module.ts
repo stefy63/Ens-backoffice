@@ -1,4 +1,4 @@
-import { NgModule, NO_ERRORS_SCHEMA} from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA, ErrorHandler } from '@angular/core';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -27,6 +27,7 @@ import { ApiTicketHistoryService } from './main/services/api/api-ticket-history.
 import { IsOperatorGuard } from './guard/is-operator.guard';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { UnreadedMessageEmitterService } from './main/services/helper/unreaded-message-emitter.service';
+import { RollbarErrorHandler } from './main/services/errors/RollbarErrorHandler.service';
 
 
 const appRoutes: Routes = [
@@ -83,7 +84,8 @@ const config: SocketIoConfig = { url: environment.ws_url + wssPort, options: opt
         IsOperatorGuard,
         LocalStorageService,
         ApiTicketHistoryService,
-        UnreadedMessageEmitterService
+        UnreadedMessageEmitterService,
+        {provide: ErrorHandler, useClass: RollbarErrorHandler},
     ],
     bootstrap: [
         AppComponent

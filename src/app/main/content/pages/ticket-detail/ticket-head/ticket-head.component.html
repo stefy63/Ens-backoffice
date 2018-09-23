@@ -1,60 +1,57 @@
-<div class="content row col-12" *ngIf="newTicket">
-  <div class="col-12">
-    <fieldset class="col-12 border">
-      <legend>Dettaglio Ticket</legend>
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Stato</th>
-            <th>Categoria</th>
-            <th>Nome</th>
-            <th>Cognome</th>
-            <th>Canale</th>
-            <th>Data e Ora</th>
-            <th>Numero di Telefono</th>
-            <!-- <th>Descrizione</th> -->
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td class="table__ticket__detail" [ngClass]="{'blink': (ticket.status.status === 'ONLINE') }">{{ticket.status}}</td>
-            <td class="table__ticket__detail">{{ticket.category}}</td>
-            <td class="table__ticket__detail">{{ticket.user_name}}</td>
-            <td class="table__ticket__detail">{{ticket.user_surname}}</td>
-            <td class="table__ticket__detail" [ngClass]="{
-                  table__service__chat: ticket.id_service == 1,
-                  table__service__sms: ticket.id_service == 2,
-                  table__service__mail: ticket.id_service == 3
-                  }">{{ticket.service}}</td>
-            <td class="table__ticket__detail" [ngClass]="{'warn-900-fg blink': timeout }">{{ticket.date_time |
-              date:'dd/MM/yyyy HH:mm':'UTC'}}</td>
-            <td class="table__ticket__detail">{{ticket.phone}}</td>
-          </tr>
-          <tr>
-            <td class="table__ticket__detail table__ticket__detail__description__cell"  colspan="7">
-              <p class="table__ticket__detail__description">{{ticketReason}}</p>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="text-center">
-        <span *ngIf="msgAlert" class="alert">Ticket già aperto da [ {{ticket.operator_name + ' ' +
-          ticket.operator_surname}} ]</span>
-      </div>
-    </fieldset>
-    <div class="col-12 text-center">
-      <br>
-      <button *ngIf="!isOpen && ticket.status !== 'CLOSED' && ticket.status !== 'REFUSED'" class="mat-button done-button mat-accent col-3"
+<div class="content m-0 p-0" *ngIf="newTicket">
+    <div>
+        <fieldset class="border" style="width: 100%">
+            <legend>Dettaglio Ticket</legend>
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th>Stato</th>
+                  <th>Categoria</th>
+                  <th>Nome</th>
+                  <th>Cognome</th>
+                  <th>Canale</th>
+                  <th>Data e Ora</th>
+                  <th>Numero di Telefono</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="table__ticket__detail" [ngClass]="{'blink': (ticket.status.status === 'ONLINE') }">{{ticket.status}}</td>
+                  <td class="table__ticket__detail">{{ticket.category}}</td>
+                  <td class="table__ticket__detail">{{ticket.user_name}}</td>
+                  <td class="table__ticket__detail">{{ticket.user_surname}}</td>
+                  <td class="table__ticket__detail" [ngClass]="{
+                        table__service__chat: ticket.id_service == 1,
+                        table__service__sms: ticket.id_service == 2,
+                        table__service__mail: ticket.id_service == 3
+                        }">{{ticket.service}}</td>
+                  <td class="table__ticket__detail" [ngClass]="{'warn-900-fg blink': timeout }">{{ticket.date_time |
+                    date:'dd/MM/yyyy HH:mm':'UTC'}}</td>
+                  <td class="table__ticket__detail">{{ticket.phone}}</td>
+                </tr>
+              </tbody>
+            </table>
+            <div class="table__ticket__detail__description" *ngIf="ticketReason">
+                <strong>Descrizione:</strong> {{ticketReason}}
+            </div>
+            <div class="text-center">
+              <span *ngIf="msgAlert" class="alert">Ticket già aperto da [ {{ticket.operator_name + ' ' +
+                ticket.operator_surname}} ]</span>
+            </div>
+          </fieldset>
+    </div>
+    <div class="row m-2">
+      <button *ngIf="!isOpen && ticket.status !== 'CLOSED' && ticket.status !== 'REFUSED'" class="mat-button done-button mat-accent col"
         (click)="activateChat()">
         <mat-icon>done</mat-icon> Accetta
       </button>
-      <button *ngIf="isOpen" class="mat-button delete-button mat-warn col-3" (click)="closeChat()">
+      <button *ngIf="isOpen" class="mat-button delete-button mat-warn col" (click)="closeChat()">
         <mat-icon>close</mat-icon> close
       </button>
-      <button *ngIf="!isOpen && ticket.status == 'NEW'" class="mat-button delete-button mat-warn col-3" (click)="refuseChat()">
+      <button *ngIf="!isOpen && ticket.status == 'NEW'" class="mat-button delete-button mat-warn col" (click)="refuseChat()">
         <mat-icon>block</mat-icon> Rifiuta
       </button>
-      <button class="mat-button delete-button mat-warn col-3" (click)="abortChat()">
+      <button class="mat-button delete-button mat-warn col" (click)="abortChat()">
         <mat-icon>reply</mat-icon> Indietro
       </button>
     </div>

@@ -54,23 +54,25 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngOnInit() {
+    this.spinner.show();
     this.data.subscribe(item => {
       this.ticket = item;
       this.chatService.markMessagesReaded(item.id).subscribe();
       this.ticketHistorys = _.orderBy(this.ticket.historys, 'date_time', 'asc');
+      this.spinner.hide();
       setTimeout(() => {
         this.scrollToBottom(2000);
       });
       this.cd.markForCheck();
     },
-    (err) => {
-      console.log(err);
-    });
+      (err) => {
+        console.log(err);
+      });
 
     this.socketService.getMessage('onUserWriting')
       .subscribe((data: any) => {
         if (!this.activeSpinner && this.ticket && data.idTicket === this.ticket.id) {
-        this.activeSpinner = true;
+          this.activeSpinner = true;
           setTimeout(() => {
             this.activeSpinner = false;
             this.onWritingMsg.nativeElement.style.display = 'none';
@@ -96,12 +98,10 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
 
     this.onWritingMsg.nativeElement.style.display = 'none';
     UnreadedMessageEmitterService.subscribe('defaul-message', (data) => {
-      if (!!this.ticket) {
-        this.replyForm.reset();
-        this.replyInput.value = data.description;
-        this.replyForm.form.value.message = data.description;
-        this.reply(null);
-      }
+      this.replyForm.reset();
+      this.replyInput.value = data.description;
+      this.replyForm.form.value.message = data.description;
+      this.reply(null);
     });
   }
 
@@ -148,7 +148,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
       let indexSpace = this.replyForm.form.value.message.indexOf(' ');
       indexSpace = (indexSpace === -1) ? 100 : indexSpace;
       const formMessage: string = (this.replyForm.form.value.message.length > 70 && indexSpace > 70) ?
-                                      this.replyForm.form.value.message.substring(0, 70) : this.replyForm.form.value.message;
+        this.replyForm.form.value.message.substring(0, 70) : this.replyForm.form.value.message;
 
       this.sendMessage(formMessage);
     } else {
@@ -159,21 +159,24 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   sendMessage(msgToSend: string) {
-    this.replyForm.reset();
-    const type = 'OPERATOR';
-    const message: ITicketHistory = {
-      id: null,
-      id_ticket: this.ticket.id,
-      id_type: _.find(this.historyType, item => item.type === type).id,
-      // action: this.replyForm.form.value.message,
-      action: msgToSend,
-      readed: 0
-    };
+    if (this.ticket) {
+      this.replyForm.reset();
+      const type = 'OPERATOR';
+      const message: ITicketHistory = {
+        id: null,
+        id_ticket: this.ticket.id,
+        id_type: _.find(this.historyType, item => item.type === type).id,
+        // action: this.replyForm.form.value.message,
+        action: msgToSend,
+        readed: 0
+      };
 
-    this.spinner.show();
-    this.chatService.sendMessage(message).subscribe((data) => {
-      this.spinner.hide();
-    });
+      this.spinner.show();
+      this.chatService.sendMessage(message).subscribe((data) => {
+        this.spinner.hide();
+      });
+
+    }
   }
 
   public typing(evt) {
