@@ -13,6 +13,7 @@ import { Observable } from 'rxjs/Observable';
 import { SocketService } from '../../../../services/socket/socket.service';
 import { UnreadedMessageEmitterService } from '../../../../services/helper/unreaded-message-emitter.service';
 import 'rxjs/add/operator/distinctUntilChanged';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'fuse-ticket-messages',
@@ -27,11 +28,13 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   public ticket: ITicket;
   public ticketHistorys: ITicketHistory[] = [];
   public activeSpinner = false;
+  public pause2scroll = true;
+
   private historyType: ITicketHistoryType[];
   private isTyping = false;
-
-
   private replyInput: any;
+
+
   @ViewChild(FusePerfectScrollbarDirective) directiveScroll: FusePerfectScrollbarDirective;
   @ViewChildren('replyInput') replyInputField;
   @ViewChild('replyForm') replyForm: NgForm;
@@ -44,29 +47,32 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
     private chatService: ChatService,
     private storage: LocalStorageService,
     private toast: NotificationsService,
-    private socketService: SocketService
+    private socketService: SocketService,
+    private spinner: NgxSpinnerService
   ) {
     this.historyType = this.storage.getItem('ticket_history_type');
   }
 
   ngOnInit() {
+    this.spinner.show();
     this.data.subscribe(item => {
       this.ticket = item;
       this.chatService.markMessagesReaded(item.id).subscribe();
       this.ticketHistorys = _.orderBy(this.ticket.historys, 'date_time', 'asc');
+      this.spinner.hide();
       setTimeout(() => {
         this.scrollToBottom(2000);
       });
       this.cd.markForCheck();
     },
-    (err) => {
-      console.log(err);
-    });
+      (err) => {
+        console.log(err);
+      });
 
     this.socketService.getMessage('onUserWriting')
       .subscribe((data: any) => {
         if (!this.activeSpinner && this.ticket && data.idTicket === this.ticket.id) {
-        this.activeSpinner = true;
+          this.activeSpinner = true;
           setTimeout(() => {
             this.activeSpinner = false;
             this.onWritingMsg.nativeElement.style.display = 'none';
@@ -118,7 +124,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
 
   scrollToBottom(speed?: number) {
     speed = speed || 400;
-    if (this.directiveScroll) {
+    if (this.directiveScroll && this.pause2scroll) {
       this.directiveScroll.update();
 
       setTimeout(() => {
@@ -127,13 +133,22 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
     }
   }
 
+  toglePuseScroll() {
+    this.pause2scroll = !this.pause2scroll;
+    if (this.pause2scroll) {
+      this.scrollToBottom();
+    }
+  }
+
+
+
   reply(event) {
     this.replyForm.form.value.message = this.replyForm.form.value.message.trim();
     if (!!this.replyForm.form.value.message) {
       let indexSpace = this.replyForm.form.value.message.indexOf(' ');
       indexSpace = (indexSpace === -1) ? 100 : indexSpace;
       const formMessage: string = (this.replyForm.form.value.message.length > 70 && indexSpace > 70) ?
-                                      this.replyForm.form.value.message.substring(0, 70) : this.replyForm.form.value.message;
+        this.replyForm.form.value.message.substring(0, 70) : this.replyForm.form.value.message;
 
       this.sendMessage(formMessage);
     } else {
@@ -144,18 +159,24 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   sendMessage(msgToSend: string) {
-    this.replyForm.reset();
-    const type = 'OPERATOR';
-    const message: ITicketHistory = {
-      id: null,
-      id_ticket: this.ticket.id,
-      id_type: _.find(this.historyType, item => item.type === type).id,
-      // action: this.replyForm.form.value.message,
-      action: msgToSend,
-      readed: 0
-    };
+    if (this.ticket) {
+      this.replyForm.reset();
+      const type = 'OPERATOR';
+      const message: ITicketHistory = {
+        id: null,
+        id_ticket: this.ticket.id,
+        id_type: _.find(this.historyType, item => item.type === type).id,
+        // action: this.replyForm.form.value.message,
+        action: msgToSend,
+        readed: 0
+      };
 
-    this.chatService.sendMessage(message).subscribe();
+      this.spinner.show();
+      this.chatService.sendMessage(message).subscribe((data) => {
+        this.spinner.hide();
+      });
+
+    }
   }
 
   public typing(evt) {

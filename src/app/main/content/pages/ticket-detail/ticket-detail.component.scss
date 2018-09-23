@@ -4,14 +4,13 @@
     }
 
     #content-bottom {
-        height: 68vh;
         #chat {
             background:  url('/assets/images/patterns/telegram.jpg') repeat;
             overflow: auto;
             height: max-content;
         }
         #note {
-            background-color: lightgoldenrodyellow;
+            background-color: lightslategray;
             overflow: auto;
             height: max-content;
         }
@@ -35,4 +34,16 @@
     background-color: lightgreen;
     font-weight: bold;
     text-align: center;
+}
+
+.ticket_detail_service__container {
+    flex-grow: 1;
+    height: 100%;
+    overflow: hidden;
+    display: flex;
+}
+
+.ticket_note__container {
+    overflow: auto;
+    padding-left: 25px;
 }

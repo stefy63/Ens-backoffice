@@ -12,6 +12,7 @@ import { FusePerfectScrollbarDirective } from '../../../../../core/directives/fu
 import { Observable } from 'rxjs/Observable';
 import { IDefaultDialog } from '../../../../../interfaces/i-defaul-dialog';
 import { UnreadedMessageEmitterService } from '../../../../services/helper/unreaded-message-emitter.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'fuse-ticket-note',
@@ -38,9 +39,11 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
     private cd: ChangeDetectorRef,
     private chatService: ChatService,
     private storage: LocalStorageService,
-    private toast: NotificationsService
+    private toast: NotificationsService,
+    private spinner: NgxSpinnerService
   ) {
     this.defaultDialog =  _.orderBy(this.storage.getItem('default_dialog'), 'ordine');
+    this.spinner.show();
   }
 
   ngOnInit() {
@@ -51,12 +54,11 @@ export class TicketNoteComponent implements OnInit, AfterViewInit {
                             .filter((item) => item.type.type === 'NOTE')
                             .orderBy( 'date_time', 'asc')
                             .value();
-      // setTimeout(() => {
-      //   this.scrollToBottom(2000);
-      // });
+      this.spinner.hide();
     },
     (err) => {
       console.log(err);
+      this.spinner.hide();
     });
     this.historyType = this.storage.getItem('ticket_history_type');
   }
