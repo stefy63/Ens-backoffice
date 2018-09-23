@@ -28,7 +28,7 @@ export const environment = {
     // App Config
     APP_TICKET_RETENTION_DAY: 2,
 
-    HANDLE_ERROR: true,
+    HANDLE_ERROR: false,
     rollbar: {
         accessToken: '8d2f6baac31a495c98f6170bc3f9b675',
         captureUncaught: true,
