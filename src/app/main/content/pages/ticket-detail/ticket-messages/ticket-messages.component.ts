@@ -98,10 +98,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
 
     this.onWritingMsg.nativeElement.style.display = 'none';
     UnreadedMessageEmitterService.subscribe('defaul-message', (data) => {
-      this.replyForm.reset();
-      this.replyInput.value = data.description;
-      this.replyForm.form.value.message = data.description;
-      this.reply(null);
+      this.sendMessage(data.description);
     });
   }
 
