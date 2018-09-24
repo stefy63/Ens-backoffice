@@ -5,11 +5,8 @@
             <!-- MESSAGE -->
             <div fxLayout="row" class="message-row" [ngClass]="{'user': (message.type.type === 'OPERATOR'),'system': (message.type.type === 'SYSTEM')}"
                 *ngIf="message.type.type === 'USER' || message.type.type === 'OPERATOR'  || message.type.type === 'SYSTEM'">
-
                 <img class="avatar" *ngIf="message.type.type === 'USER'" src="../../../../../../assets/images/avatars/alice.jpg" />
-
                 <img class="avatar" *ngIf="message.type.type === 'OPERATOR'" src="../../../../../../assets/images/avatars/profile.jpg">
-
                 <div class="bubble">
                     <div class="message">{{message.action}}</div>
                     <div class="message__attachment__container" *ngIf="message.attachments">
@@ -19,13 +16,10 @@
                     </div>
                     <div class="time secondary-text">{{message.date_time | date:'medium':'UTC'}}</div>
                 </div>
-
             </div>
             <!-- / MESSAGE -->
-
         </div>
         <!-- CHAT MESSAGES -->
-
     </div>
     <!-- / CHAT CONTENT -->
     <div #onWritingMsg class="on-writing">L'utente sta scrivendo........</div>

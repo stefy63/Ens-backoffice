@@ -52,14 +52,14 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     this.apiTicketHistoryType = this.store.getItem('ticket_history_type');
   }
 
-   ngOnInit() {
+  ngOnInit() {
     this.newTicket.subscribe(async (data: ITicket) => {
       if (this.ticket && this.ticket.status.status === 'NEW' && data.status.status !== 'NEW' && !this.isOpen) {
         await swal({
-              title: 'ATTENZIONE! TICKET GIA ACQUISITO',
-              text: 'TICKET PRESO IN CARICO DA ALTRO OPERATORE',
-              type: 'error'
-            });
+          title: 'ATTENZIONE! TICKET GIA ACQUISITO',
+          text: 'TICKET PRESO IN CARICO DA ALTRO OPERATORE',
+          type: 'error'
+        });
         this.location.back();
       }
       this.ticket = NormalizeTicket.normalizeItem([data])[0];
@@ -74,26 +74,26 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
       }
 
       this.socketService.getMessage(WsEvents.ticket.updated)
-      .subscribe(async (ticket: ITicket) => {
-        if (this.ticket && this.ticket.id === ticket.id && ticket.id_operator !== this.user.id){
-          this.open.next(false);
-          this.isOpen = false;
-          await swal({
-            title: 'ATTENZIONE! TICKET ACQUISITO',
-            text: 'TICKET PRESO IN CARICO DA ALTRO OPERATORE',
-            type: 'error'
-          });
-          this.router.navigate(['/pages/dashboard']);
-        }
-      });
+        .subscribe(async (ticket: ITicket) => {
+          if (this.ticket && this.ticket.id === ticket.id && ticket.id_operator !== this.user.id) {
+            this.open.next(false);
+            this.isOpen = false;
+            await swal({
+              title: 'ATTENZIONE! TICKET ACQUISITO',
+              text: 'TICKET PRESO IN CARICO DA ALTRO OPERATORE',
+              type: 'error'
+            });
+            this.router.navigate(['/pages/dashboard']);
+          }
+        });
 
       this.msgAlert = (data.id_operator
         && this.user.id !== data.id_operator
         && data.status.status === 'ONLINE');
     },
-    (err) => {
-      console.log(err);
-    });
+      (err) => {
+        console.log(err);
+      });
   }
 
   ngOnDestroy() {
@@ -101,15 +101,28 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     clearInterval(this.interval);
   }
 
+  async acquireTicket() {
+    if (this.ticket.id_operator !== this.user.id) {
+      const confirm = await this.confirmAlert('Vuoi acquisire il ticket?', '', 'warning');
+      if (confirm.value) {
+        this.isOpen = this.ticket.status === 'ONLINE';
+        this.updateTicketStatus(this.ticket.id_status).subscribe(() => {
+          this.msgAlert = false;
+          this.open.next(true);
+          this.createHistoryTicketSystem('Ticket acquisito da: ' + this.user.userdata.name + ' ' + this.user.userdata.surname).subscribe();
+        });
+      }
+    }
+  }
+
   activateChat() {
     if (this.ticket.status === 'ONLINE' && this.ticket.id_operator !== this.user.id) {
       this.setUserChoise('Conferma Trasferimento Ticket?', 'Trasferito ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
     } else if (this.ticket.status === 'CLOSED') {
-      this.setUserChoise('Conferma Riapertura Ticket?', 'Riaperutra ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
+      this.setUserChoise('Conferma Riapertura Ticket?', 'Riapertura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
     } else {
-      this.setUserChoise('Conferma acquisizione Ticket?', 'Acquisito ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
+      this.setUserChoise('Conferma Presa in carico Ticket?', 'Acquisito ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
     }
-
   }
 
   private async setUserChoise(confirmMessage: string, historyMessage: string) {
@@ -117,28 +130,28 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     if (confirm.value) {
       this.isOpen = true;
       this.updateTicketStatus(find(this.ticketStatus, { status: 'ONLINE' }).id)
-      .subscribe(
-        () => {
-          this.createHistoryTicketSystem(historyMessage)
-            .subscribe(
-              (data) => {
-                console.log('TicketHistory Subscription success');
-              },
-              (err) => {
-                swal({
-                  title: 'FABRIZIO NUN CE PROVA\'',
-                  text: 'Errore nel ticket....' + this.ticket.id,
-                  type: 'error'
+        .subscribe(
+          () => {
+            this.createHistoryTicketSystem(historyMessage)
+              .subscribe(
+                (data) => {
+                  console.log('TicketHistory Subscription success');
+                },
+                (err) => {
+                  swal({
+                    title: 'ERRORE\'',
+                    text: 'Errore nel ticket....' + this.ticket.id,
+                    type: 'error'
+                  });
                 });
-              });
-        },
-        (err) => {
-          swal({
-            title: 'FABRIZIO NUN CE PROVA\'',
-            text: 'Errore nel ticket....' + this.ticket.id,
-            type: 'error'
+          },
+          (err) => {
+            swal({
+              title: 'ERRORE\'',
+              text: 'Errore nel ticket....' + this.ticket.id,
+              type: 'error'
+            });
           });
-        });
       this.msgAlert = false;
       this.open.next(true);
     }
@@ -149,11 +162,11 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   }
 
   async closeChat() {
-    const confirm = await this.confirmAlert('Conferma chiusura Ticket?', 'Chiusura tichet da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname, 'warning');
+    const confirm = await this.confirmAlert('Conferma chiusura Ticket?', 'Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname, 'warning');
     if (confirm.value) {
       this.updateTicketStatus(find(this.ticketStatus, { status: 'CLOSED' }).id)
         .subscribe(() => {
-          this.createHistoryTicketSystem('Chiusura tichet da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname)
+          this.createHistoryTicketSystem('Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname)
             .subscribe(() => {
               this.location.back();
             });
@@ -179,7 +192,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
           resolve();
         });
       },
-    }).then( async (result) => {
+    }).then(async (result) => {
       if (result.value) {
         this.isOpen = true;
         this.updateTicketStatus(find(this.ticketStatus, { status: 'REFUSED' }).id)

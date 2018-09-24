@@ -22,6 +22,7 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
   public ticket = new BehaviorSubject<ITicket>(this.ticket);
   public open = false;
   public user;
+  public status;
 
   constructor(
     private route: ActivatedRoute,
@@ -45,6 +46,7 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
               data.status.status === 'ONLINE') &&
               data.id_operator === this.user.id)) {
             this.open = true;
+            this.status = data.status.status;
           }
         },
       (err) => {
@@ -53,6 +55,7 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
 
       this.socketService.getMessage(WsEvents.ticket.updated)
       .subscribe((data: ITicket) => {
+        this.status = data.status.status;
         if (data.id === this.idTicket){
           this.ticket.next(data);
         }
