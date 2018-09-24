@@ -108,7 +108,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   readyToReply() {
     if (this.ticket.status.status !== 'REFUSED' && this.ticket.status.status !== 'CLOSED') {
       setTimeout(() => {
-        this.replyForm.reset();
+        this.resetForm();
         // this.focusReplyInput();
         this.scrollToBottom(2000);
       });
@@ -152,14 +152,19 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
       this.sendMessage(formMessage);
     } else {
       this.toast.error('Messaggio Vuoto', 'Impossibile spedire messaggi vuoti');
-      this.replyForm.reset();
+      this.resetForm();
     }
 
   }
 
+  private resetForm() {
+    if (this.replyForm) {
+      this.replyForm.reset();
+    }
+  }
+
   sendMessage(msgToSend: string) {
     if (this.ticket) {
-      this.replyForm.reset();
       const type = 'OPERATOR';
       const message: ITicketHistory = {
         id: null,
@@ -173,6 +178,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
       this.spinner.show();
       this.chatService.sendMessage(message).subscribe((data) => {
         this.spinner.hide();
+        this.resetForm();
       });
 
     }
