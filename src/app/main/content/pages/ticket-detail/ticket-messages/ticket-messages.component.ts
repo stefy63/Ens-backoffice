@@ -140,11 +140,10 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
     }
   }
 
-
-
   reply(event) {
-    this.replyForm.form.value.message = this.replyForm.form.value.message.trim();
-    if (!!this.replyForm.form.value.message) {
+    // this.replyForm.form.value.message = this.replyForm.form.value.message.trim();
+    if (!!this.replyForm.form.value.message && !!this.replyForm.form.value.message.trim()) {
+      this.replyForm.form.value.message = this.replyForm.form.value.message.trim();
       let indexSpace = this.replyForm.form.value.message.indexOf(' ');
       indexSpace = (indexSpace === -1) ? 100 : indexSpace;
       const formMessage: string = (this.replyForm.form.value.message.length > 70 && indexSpace > 70) ?
