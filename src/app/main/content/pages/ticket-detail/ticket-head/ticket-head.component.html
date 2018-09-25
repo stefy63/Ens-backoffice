@@ -41,12 +41,17 @@
           </fieldset>
     </div>
     <div class="row m-2">
-      <button *ngIf="!isOpen && ticket.status !== 'CLOSED' && ticket.status !== 'REFUSED'" class="mat-button done-button mat-accent col"
-        (click)="activateChat()">
+      <button *ngIf="!isOpen && ticket.id_operator !== user.id && ticket.status !== 'NEW'" class="mat-button done-button mat-accent col" (click)="acquireTicket()">
+        <mat-icon>assignment</mat-icon> Acquisisci
+      </button>
+      <button *ngIf="!isOpen && ticket.status === 'CLOSED'" class="mat-button done-button mat-accent col" (click)="activateChat()">
+        <mat-icon>featured_play_list</mat-icon> Riapri
+      </button>
+      <button *ngIf="!isOpen && ticket.status === 'NEW'" class="mat-button done-button mat-accent col" (click)="activateChat()">
         <mat-icon>done</mat-icon> Accetta
       </button>
       <button *ngIf="isOpen" class="mat-button delete-button mat-warn col" (click)="closeChat()">
-        <mat-icon>close</mat-icon> close
+        <mat-icon>close</mat-icon> Close
       </button>
       <button *ngIf="!isOpen && ticket.status == 'NEW'" class="mat-button delete-button mat-warn col" (click)="refuseChat()">
         <mat-icon>block</mat-icon> Rifiuta

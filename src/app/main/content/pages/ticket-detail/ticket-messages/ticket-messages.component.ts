@@ -80,8 +80,6 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
           this.onWritingMsg.nativeElement.style.display = 'block';
         }
       });
-
-
   }
 
   ngOnDestroy() {
@@ -98,18 +96,14 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
 
     this.onWritingMsg.nativeElement.style.display = 'none';
     UnreadedMessageEmitterService.subscribe('defaul-message', (data) => {
-      this.replyForm.reset();
-      this.replyInput.value = data.description;
-      this.replyForm.form.value.message = data.description;
-      this.reply(null);
+      this.sendMessage(data.description, false);
     });
   }
 
   readyToReply() {
     if (this.ticket.status.status !== 'REFUSED' && this.ticket.status.status !== 'CLOSED') {
       setTimeout(() => {
-        this.replyForm.reset();
-        // this.focusReplyInput();
+        this.resetForm();
         this.scrollToBottom(2000);
       });
     }
@@ -140,27 +134,23 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
     }
   }
 
-
-
   reply(event) {
-    this.replyForm.form.value.message = this.replyForm.form.value.message.trim();
     if (!!this.replyForm.form.value.message) {
-      let indexSpace = this.replyForm.form.value.message.indexOf(' ');
-      indexSpace = (indexSpace === -1) ? 100 : indexSpace;
-      const formMessage: string = (this.replyForm.form.value.message.length > 70 && indexSpace > 70) ?
-        this.replyForm.form.value.message.substring(0, 70) : this.replyForm.form.value.message;
-
-      this.sendMessage(formMessage);
+      this.sendMessage(this.replyForm.form.value.message.trim(), true);
     } else {
       this.toast.error('Messaggio Vuoto', 'Impossibile spedire messaggi vuoti');
-      this.replyForm.reset();
+      this.resetForm();
     }
-
   }
 
-  sendMessage(msgToSend: string) {
-    if (this.ticket) {
+  private resetForm() {
+    if (this.replyForm) {
       this.replyForm.reset();
+    }
+  }
+
+  sendMessage(msgToSend: string, resetForm: boolean) {
+    if (this.ticket) {
       const type = 'OPERATOR';
       const message: ITicketHistory = {
         id: null,
@@ -174,6 +164,9 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
       this.spinner.show();
       this.chatService.sendMessage(message).subscribe((data) => {
         this.spinner.hide();
+        if (resetForm) {
+          this.resetForm();
+        }
       });
 
     }
@@ -188,7 +181,6 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
         'send-to',
         {
           idTicket: this.ticket.id,
-          // sendTo: (token.id_user) ? 'OPERATOR' : 'USER',
           event: 'onUserWriting',
           obj: {}
         }
