@@ -50,7 +50,7 @@
       <button *ngIf="!isOpen && ticket.status === 'NEW'" class="mat-button done-button mat-accent col" (click)="activateChat()">
         <mat-icon>done</mat-icon> Accetta
       </button>
-      <button *ngIf="isOpen" class="mat-button delete-button mat-warn col" (click)="closeChat()">
+      <button *ngIf="isOpen" class="mat-button delete-button mat-warn col" (click)="openDialog()">
         <mat-icon>close</mat-icon> Close
       </button>
       <button *ngIf="!isOpen && ticket.status == 'NEW'" class="mat-button delete-button mat-warn col" (click)="refuseChat()">

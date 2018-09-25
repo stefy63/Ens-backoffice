@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, Inject } from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import { Location } from '@angular/common';
 import { find } from 'lodash';
@@ -15,6 +15,7 @@ import { WsEvents } from '../../../../../type/ws-events';
 import { Router } from '@angular/router';
 import { NormalizeTicket } from '../../../../services/helper/normalize-ticket';
 import { HistoryTypes } from '../../../../../enums/ticket-history-type.enum';
+import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 @Component({
   selector: 'fuse-ticket-head',
@@ -41,7 +42,8 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     private apiTicketService: ApiTicketService,
     private socketService: SocketService,
     private apiTicketHistoryService: ApiTicketHistoryService,
-    private router: Router
+    private router: Router,
+    public dialog: MatDialog
   ) {
     this.user = this.store.getItem('user');
   }
@@ -237,5 +239,36 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
       id_operator: this.user.id
     };
     return this.apiTicketService.update(updateTicket as ITicket);
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+      width: '80%',
+      data: {ticket_data: this.ticket.date_time, ticket_service: this.ticket.service, }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+      // this.animal = result;
+    });
+  }
+
+}
+
+
+@Component({
+  selector: 'fuse-dialog-overview-example-dialog',
+  templateUrl: './dialog-overview-example-dialog.html',
+  styleUrls: ['./ticket-head.component.scss']
+})
+// tslint:disable-next-line:component-class-suffix
+export class DialogOverviewExampleDialog {
+
+  constructor(
+    public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
+    @Inject(MAT_DIALOG_DATA) public data: any) {}
+
+  onNoClick(): void {
+    this.dialogRef.close();
   }
 }

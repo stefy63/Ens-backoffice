@@ -113,3 +113,14 @@
     max-height: 42px;
     overflow: auto;
 }
+
+.bordered {
+  border: gray solid 1px;
+  padding: 10px;
+  display: flex;
+  margin-bottom: 5px;
+}
+
+.plus-report {
+  margin-bottom: 5px;
+}
