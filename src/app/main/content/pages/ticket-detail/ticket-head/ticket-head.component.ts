@@ -1,21 +1,20 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import { Location } from '@angular/common';
-import { find, orderBy } from 'lodash';
+import { find } from 'lodash';
 import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
 import { ApiTicketService } from '../../../../services/api/api-ticket.service';
-import { ITicketStatus } from '../../../../../interfaces/i-ticket-status';
+import { Status } from '../../../../../enums/ticket-status.enum';
 import swal, { SweetAlertType, SweetAlertResult } from 'sweetalert2';
 import { ApiTicketHistoryService } from '../../../../services/api/api-ticket-history.service';
 import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
-import { ITicketHistoryType } from '../../../../../interfaces/i-ticket-history-type';
 import { SocketService } from '../../../../services/socket/socket.service';
 import { Observable } from 'rxjs/Observable';
 import * as moment from 'moment';
 import { WsEvents } from '../../../../../type/ws-events';
 import { Router } from '@angular/router';
 import { NormalizeTicket } from '../../../../services/helper/normalize-ticket';
-
+import { HistoryTypes } from '../../../../../enums/ticket-history-type.enum';
 
 @Component({
   selector: 'fuse-ticket-head',
@@ -23,9 +22,6 @@ import { NormalizeTicket } from '../../../../services/helper/normalize-ticket';
   styleUrls: ['./ticket-head.component.scss']
 })
 export class TicketHeadComponent implements OnInit, OnDestroy {
-
-  private ticketStatus: ITicketStatus;
-  private apiTicketHistoryType: ITicketHistoryType;
   private interval;
 
   @Input('ticket') newTicket: Observable<ITicket>;
@@ -48,8 +44,6 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     private router: Router
   ) {
     this.user = this.store.getItem('user');
-    this.ticketStatus = this.store.getItem('ticket_status');
-    this.apiTicketHistoryType = this.store.getItem('ticket_history_type');
   }
 
   ngOnInit() {
@@ -129,7 +123,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     const confirm = await this.confirmAlert(confirmMessage, '', 'warning');
     if (confirm.value) {
       this.isOpen = true;
-      this.updateTicketStatus(find(this.ticketStatus, { status: 'ONLINE' }).id)
+      this.updateTicketStatus(Status.ONLINE)
         .subscribe(
           () => {
             this.createHistoryTicketSystem(historyMessage)
@@ -164,7 +158,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   async closeChat() {
     const confirm = await this.confirmAlert('Conferma chiusura Ticket?', 'Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname, 'warning');
     if (confirm.value) {
-      this.updateTicketStatus(find(this.ticketStatus, { status: 'CLOSED' }).id)
+      this.updateTicketStatus(Status.CLOSED)
         .subscribe(() => {
           this.createHistoryTicketSystem('Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname)
             .subscribe(() => {
@@ -195,10 +189,10 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     }).then(async (result) => {
       if (result.value) {
         this.isOpen = true;
-        this.updateTicketStatus(find(this.ticketStatus, { status: 'REFUSED' }).id)
+        this.updateTicketStatus(Status.REFUSED)
           .subscribe(() => {
             // tslint:disable-next-line:max-line-length
-            this.createHistoryTicketSystem('Rifiutato tichet da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname + 'per il seguente motivo: ' + result.value)
+            this.createHistoryTicketSystem('Rifiutato ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname + 'per il seguente motivo: ' + result.value)
               .subscribe(() => {
                 swal({
                   type: 'success',
@@ -229,7 +223,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     const createHistory: ITicketHistory = {
       id: null,
       id_ticket: this.ticket.id,
-      id_type: find(this.apiTicketHistoryType, { type: 'SYSTEM' }).id,
+      id_type: HistoryTypes.SYSTEM,
       action: message,
       readed: 1
     };

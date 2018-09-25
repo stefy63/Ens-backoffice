@@ -1,9 +1,9 @@
-<ngx-spinner bdColor="rgba(51, 51, 51, 0.8)" size="large" color="#fff" type="ball-clip-rotate"></ngx-spinner>
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.0)" size="large" color="#039be5" type="ball-clip-rotate"></ngx-spinner>
 <div class="p-20" fxFlex fxLayout="column" *ngIf="!!service">
     <fuse-ticket-head [ticket]="ticket" (open)="setOpen($event)"></fuse-ticket-head>
     <div class="ticket_detail_service__container" *ngIf="open && ticket">
-        <fuse-ticket-messages id="chat" class="col p-0" [ticket]="ticket"></fuse-ticket-messages>
-        <fuse-ticket-note id="note" class="col-5 ticket_note__container" [ticket]="ticket" *ngIf="status !== 'CLOSED' && status !== 'REFUSED'"></fuse-ticket-note>
+        <fuse-ticket-messages id="chat" class="col p-0" [ticket]="ticket" style="overflow: hidden;"></fuse-ticket-messages>
+        <fuse-ticket-note id="note" class="col-5 ticket_note__container" *ngIf="status !== 'CLOSED' && status !== 'REFUSED'"></fuse-ticket-note>
     </div>
 </div>
 

@@ -80,8 +80,6 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
           this.onWritingMsg.nativeElement.style.display = 'block';
         }
       });
-
-
   }
 
   ngOnDestroy() {
@@ -98,7 +96,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
 
     this.onWritingMsg.nativeElement.style.display = 'none';
     UnreadedMessageEmitterService.subscribe('defaul-message', (data) => {
-      this.sendMessage(data.description);
+      this.sendMessage(data.description, false);
     });
   }
 
@@ -106,7 +104,6 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
     if (this.ticket.status.status !== 'REFUSED' && this.ticket.status.status !== 'CLOSED') {
       setTimeout(() => {
         this.resetForm();
-        // this.focusReplyInput();
         this.scrollToBottom(2000);
       });
     }
@@ -138,20 +135,12 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   reply(event) {
-    // this.replyForm.form.value.message = this.replyForm.form.value.message.trim();
-    if (!!this.replyForm.form.value.message && !!this.replyForm.form.value.message.trim()) {
-      this.replyForm.form.value.message = this.replyForm.form.value.message.trim();
-      let indexSpace = this.replyForm.form.value.message.indexOf(' ');
-      indexSpace = (indexSpace === -1) ? 100 : indexSpace;
-      const formMessage: string = (this.replyForm.form.value.message.length > 70 && indexSpace > 70) ?
-        this.replyForm.form.value.message.substring(0, 70) : this.replyForm.form.value.message;
-
-      this.sendMessage(formMessage);
+    if (!!this.replyForm.form.value.message) {
+      this.sendMessage(this.replyForm.form.value.message.trim(), true);
     } else {
       this.toast.error('Messaggio Vuoto', 'Impossibile spedire messaggi vuoti');
       this.resetForm();
     }
-
   }
 
   private resetForm() {
@@ -160,7 +149,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
     }
   }
 
-  sendMessage(msgToSend: string) {
+  sendMessage(msgToSend: string, resetForm: boolean) {
     if (this.ticket) {
       const type = 'OPERATOR';
       const message: ITicketHistory = {
@@ -175,7 +164,9 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
       this.spinner.show();
       this.chatService.sendMessage(message).subscribe((data) => {
         this.spinner.hide();
-        this.resetForm();
+        if (resetForm) {
+          this.resetForm();
+        }
       });
 
     }
@@ -190,7 +181,6 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
         'send-to',
         {
           idTicket: this.ticket.id,
-          // sendTo: (token.id_user) ? 'OPERATOR' : 'USER',
           event: 'onUserWriting',
           obj: {}
         }

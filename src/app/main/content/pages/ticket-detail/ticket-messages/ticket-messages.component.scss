@@ -2,16 +2,18 @@
   .chat {
     background:  url('/assets/images/patterns/telegram.jpg') repeat;
 
+    .chat-messages {
+      padding: 5px 8px;
+    }
+
     #chat-content {
       background: transparent;
       overflow: auto;
-      flex-grow: 1;
+      height: 100%;
 
       .message-row {
-        padding-bottom: 5px;
-        padding-top: 5px;
-
         .bubble {
+          overflow: hidden;
           position: relative;
           padding: 6px 7px 8px 9px;
           background-color: white;
@@ -68,6 +70,7 @@
             order: 1;
             font-size: 18px;
             font-weight: bold;
+            overflow: hidden;
             &:before {
               right: -11px;
               left: auto;
@@ -83,6 +86,7 @@
           }
 
           .bubble {
+            overflow: hidden;
             margin-left: auto;
             width: 100%;
             background-color: lightcyan;
