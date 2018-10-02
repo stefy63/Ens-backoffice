@@ -12,7 +12,8 @@
       <mat-cell *matCellDef="let element" class="col-1" [ngClass]="{
         table__service__chat: element.id_service == 1,
         table__service__sms: element.id_service == 2,
-        table__service__mail: element.id_service == 3
+        table__service__mail: element.id_service == 3,
+        table__service__telegram: element.id_service == 6
         }">
         {{element.service }} </mat-cell>
     </ng-container>
