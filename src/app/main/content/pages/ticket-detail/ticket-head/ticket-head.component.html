@@ -23,7 +23,8 @@
                   <td class="table__ticket__detail" [ngClass]="{
                         table__service__chat: ticket.id_service == 1,
                         table__service__sms: ticket.id_service == 2,
-                        table__service__mail: ticket.id_service == 3
+                        table__service__mail: ticket.id_service == 3,
+                        table__service__telegram: ticket.id_service == 6
                         }">{{ticket.service}}</td>
                   <td class="table__ticket__detail" [ngClass]="{'warn-900-fg blink': timeout }">{{ticket.date_time |
                     date:'dd/MM/yyyy HH:mm':'UTC'}}</td>
