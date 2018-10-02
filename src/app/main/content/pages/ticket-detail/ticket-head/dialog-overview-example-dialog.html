@@ -1,22 +1,45 @@
-<h1>RAPPORTINO CHIUSURA TICKET</h1>
+<h1>RAPPORTINO CHIUSURA TICKET N° {{data.ticket_id}} DEL {{data.ticket_data | date:'dd/MM/yyyy HH:mm':'UTC'}} SERVIZIO [{{data.ticket_service}}]</h1>
 <mat-dialog-content>
   <div class="text-right plus-report">
-    <button mat-mini-fab >
+    <button mat-mini-fab (click)="onAddItem()">
       <mat-icon>add</mat-icon>
     </button>
   </div>
   <div #report_container>
-    <ng-template #clone>
-      <div class="bordered">
-        <input type="text" class="col-4" placeholder="Tipo chiamata" >
-        <input type="text" class="col-4" placeholder="N° Chiamato">
-        <input type="text" class="col-4" placeholder="Risultato">
+    <!-- <ng-template #clone> -->
+      <div class="bordered" *ngFor="let item of ticket_report; let i = index">
+          <mat-form-field  class="col-4">
+            <mat-select placeholder="Tipo chiamata..." [(ngModel)]="item.id_call_type">
+              <mat-option *ngFor="let ct of call_type" [value]="ct.id" [attr.selected]="item.id_call_type==ct.id ? true : null">
+                {{ ct.type }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field  class="col-3">
+            <input matInput type="text" class="col-4" placeholder="N° Chiamato" [(ngModel)]="item.number">
+          </mat-form-field>
+          <mat-form-field class="col-4">
+            <mat-select placeholder="Risultato chiamata..." [(ngModel)]="item.id_call_result">
+              <mat-option *ngFor="let cr of call_result" [value]="cr.id" [attr.selected]="item.id_call_result==cr.id ? true : null">
+                {{ cr.type }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="text-center remove-report" class="col-1">
+            <button mat-mini-fab color="warn" (click)="onRemoveItem(i)">
+              <mat-icon>remove</mat-icon>
+            </button>
+          </div>
       </div>
-    </ng-template>
+    <!-- </ng-template> -->
   </div>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close>No</button>
+  <button mat-button  [mat-dialog-close]="false" color="warn">
+      <mat-icon>close</mat-icon> Annulla
+  </button>
   <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
-  <button mat-button [mat-dialog-close]="true">Yes</button>
+  <button mat-button (click)="onYesClick()" color="accent">
+    <mat-icon>done</mat-icon> Accetta
+  </button>
 </mat-dialog-actions>

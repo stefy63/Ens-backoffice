@@ -16,6 +16,10 @@ import { Router } from '@angular/router';
 import { NormalizeTicket } from '../../../../services/helper/normalize-ticket';
 import { HistoryTypes } from '../../../../../enums/ticket-history-type.enum';
 import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { ICallType } from '../../../../../interfaces/i-call-type';
+import { ICallResult } from '../../../../../interfaces/i-call-result';
+import { ITicketReport } from '../../../../../interfaces/i-ticket-report';
+import { IUser } from '../../../../../interfaces/i-user';
 
 @Component({
   selector: 'fuse-ticket-head',
@@ -158,8 +162,8 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   }
 
   async closeChat() {
-    const confirm = await this.confirmAlert('Conferma chiusura Ticket?', 'Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname, 'warning');
-    if (confirm.value) {
+    // const confirm = await this.confirmAlert('Conferma chiusura Ticket?', 'Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname, 'warning');
+    // if (confirm.value) {
       this.updateTicketStatus(Status.CLOSED)
         .subscribe(() => {
           this.createHistoryTicketSystem('Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname)
@@ -167,7 +171,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
               this.location.back();
             });
         });
-    }
+    // }
   }
 
   private async refuseChat() {
@@ -244,12 +248,14 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
       width: '80%',
-      data: {ticket_data: this.ticket.date_time, ticket_service: this.ticket.service, }
+      data: {ticket_id: this.ticket.id, ticket_data: this.ticket.date_time, ticket_service: this.ticket.service, }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed', result);
-      // this.animal = result;
+      if (!!result) {
+        this.closeChat();
+      }
     });
   }
 
@@ -264,11 +270,67 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
 // tslint:disable-next-line:component-class-suffix
 export class DialogOverviewExampleDialog {
 
+  public call_type: ICallType[];
+  public call_result: ICallResult[];
+  public ticket_report: ITicketReport[] = [
+    {
+      id_ticket: this.data.ticket_id,
+      number: '',
+      id_call_type: 0,
+      id_call_result: 0
+    }
+  ];
+
+  private user;
+
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
-    @Inject(MAT_DIALOG_DATA) public data: any) {}
+    private storage: LocalStorageService,
+    @Inject(MAT_DIALOG_DATA) public data: any
+    ) {
+      console.log(data);
+      this.call_type = this.storage.getItem('call_type');
+      this.call_result = this.storage.getItem('call_result');
+      this.user = this.storage.getItem('user');
+    }
 
-  onNoClick(): void {
-    this.dialogRef.close();
+  async onYesClick() {
+    // this.dialogRef.close();
+    console.log(this.ticket_report);
+
+    const confirm = await this.confirmAlert('Conferma chiusura Ticket?', 'Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname, 'warning');
+    if (confirm.value) {
+      this.dialogRef.close('true');
+    }
   }
+
+  onAddItem() {
+    this.ticket_report.push({
+      id_ticket: this.data.ticket_id,
+      number: '',
+      id_call_type: 0,
+      id_call_result: 0
+    });
+  }
+
+  onRemoveItem(index: number) {
+    this.ticket_report.splice(index, 1);
+  }
+
+
+  private confirmAlert(title: string, text: string, type: SweetAlertType): Promise<SweetAlertResult> {
+    return swal({
+      title: title,
+      text: text,
+      type: type,
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Conferma',
+      cancelButtonText: 'Annulla'
+    });
+  }
+
+
+
 }
