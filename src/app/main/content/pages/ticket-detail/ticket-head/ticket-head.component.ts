@@ -19,7 +19,8 @@ import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { ICallType } from '../../../../../interfaces/i-call-type';
 import { ICallResult } from '../../../../../interfaces/i-call-result';
 import { ITicketReport } from '../../../../../interfaces/i-ticket-report';
-import { IUser } from '../../../../../interfaces/i-user';
+import { ApiTicketReportService } from '../../../../services/api/api-ticket-report.service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'fuse-ticket-head',
@@ -286,21 +287,28 @@ export class DialogOverviewExampleDialog {
   constructor(
     public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
     private storage: LocalStorageService,
+    private apiTicketReportService: ApiTicketReportService,
     @Inject(MAT_DIALOG_DATA) public data: any
     ) {
-      console.log(data);
       this.call_type = this.storage.getItem('call_type');
       this.call_result = this.storage.getItem('call_result');
       this.user = this.storage.getItem('user');
     }
 
   async onYesClick() {
-    // this.dialogRef.close();
-    console.log(this.ticket_report);
-
     const confirm = await this.confirmAlert('Conferma chiusura Ticket?', 'Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname, 'warning');
     if (confirm.value) {
-      this.dialogRef.close('true');
+      if (this.ticket_report[0].id_call_result !== 0 && this.ticket_report[0].id_call_type !== 0 && this.ticket_report[0].number !== '') {
+        const reports = _.filter(this.ticket_report, (item: ITicketReport) => {
+          return (!!item.id_call_result && !!item.id_call_type && !!item.number);
+        });
+        if (reports.length === this.ticket_report.length) {
+          this.apiTicketReportService.create(reports)
+            .subscribe(() => {
+              this.dialogRef.close('true');
+            });
+        }
+      }
     }
   }
 

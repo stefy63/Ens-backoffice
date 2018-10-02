@@ -25,7 +25,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <div class="text-center remove-report" class="col-1">
+          <div class="text-center remove-report" class="col-1" *ngIf="i != 0">
             <button mat-mini-fab color="warn" (click)="onRemoveItem(i)">
               <mat-icon>remove</mat-icon>
             </button>
