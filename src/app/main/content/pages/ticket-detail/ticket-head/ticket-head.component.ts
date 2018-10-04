@@ -55,6 +55,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.newTicket.subscribe(async (data: ITicket) => {
+      console.log(data);
       if (this.ticket && this.ticket.status.status === 'NEW' && data.status.status !== 'NEW' && !this.isOpen) {
         await swal({
           title: 'ATTENZIONE! TICKET GIA ACQUISITO',
