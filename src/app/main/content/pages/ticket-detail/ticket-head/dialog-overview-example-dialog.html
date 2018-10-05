@@ -1,4 +1,4 @@
-<h1>RAPPORTINO CHIUSURA TICKET N° {{data.ticket_id}} DEL {{data.ticket_data | date:'dd/MM/yyyy HH:mm':'UTC'}} SERVIZIO [{{data.ticket_service}}]</h1>
+<h1>RAPPORTINO CHIUSURA TICKET N° {{data.ticket.id}} DEL {{data.ticket.dat_time | date:'dd/MM/yyyy HH:mm':'UTC'}} SERVIZIO [{{data.ticket.service}}]</h1>
 <mat-dialog-content>
   <div class="text-right plus-report">
     <button mat-mini-fab (click)="onAddItem()">

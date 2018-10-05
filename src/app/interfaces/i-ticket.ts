@@ -18,4 +18,5 @@ export interface ITicket {
     operator: any;
     user: any;
     historys: any[];
+    reports: any[];
 }

@@ -30,6 +30,7 @@ export class NormalizeTicket {
               phone: item.phone,
               date_time: item.date_time, // moment(item.date_time).format('DD/MM/YYYY HH:mm'),
               historys: item.historys,
+              reports: item.reports,
               closed_at: (closed_at) ? moment.utc(closed_at.date_time).format('DD/MM/YYYY HH:mm') : undefined
           };
       });

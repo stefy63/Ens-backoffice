@@ -27,7 +27,7 @@
                         }">{{ticket.service}}</td>
                   <td class="table__ticket__detail" [ngClass]="{'warn-900-fg blink': timeout }">{{ticket.date_time |
                     date:'dd/MM/yyyy HH:mm':'UTC'}}</td>
-                  <td class="table__ticket__detail">{{ticket.phone}}</td>
+                  <td class="table__ticket__detail" [innerHTML]="phone"></td>
                 </tr>
               </tbody>
             </table>
