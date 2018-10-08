@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { TicketDetailComponent } from './ticket-detail.component';
 import { AuthGuard } from '../../../../guard/auth.guard';
 import { IsOperatorGuard } from '../../../../guard/is-operator.guard';
-import { TicketHeadComponent, DialogOverviewExampleDialog } from './ticket-head/ticket-head.component';
+import { TicketHeadComponent, DialogCloseTicket, DialogDetail } from './ticket-head/ticket-head.component';
 import { TicketMessagesComponent } from './ticket-messages/ticket-messages.component';
 import { ChatService } from '../../../services/ticket-messages/ticket-messages.service';
 import { TicketNoteComponent } from './ticket-note/ticket-note.component';
@@ -28,10 +28,12 @@ const routes: Routes = [
     TicketMessagesComponent,
     TicketNoteComponent,
     TicketVideoChatComponent,
-    DialogOverviewExampleDialog,
+    DialogCloseTicket,
+    DialogDetail
   ],
   entryComponents: [
-    DialogOverviewExampleDialog
+    DialogCloseTicket,
+    DialogDetail
   ],
   imports: [
     SharedModule,

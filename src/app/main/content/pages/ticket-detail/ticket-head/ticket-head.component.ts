@@ -21,7 +21,6 @@ import { ICallResult } from '../../../../../interfaces/i-call-result';
 import { ITicketReport } from '../../../../../interfaces/i-ticket-report';
 import { ApiTicketReportService } from '../../../../services/api/api-ticket-report.service';
 import * as _ from 'lodash';
-import { tick } from '@angular/core/testing';
 
 @Component({
   selector: 'fuse-ticket-head',
@@ -259,7 +258,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   }
 
   openDialog(): void {
-    const dialogRef = this.dialog.open(DialogOverviewExampleDialog, {
+    const dialogRef = this.dialog.open(DialogCloseTicket, {
       width: '80%',
       data: {ticket: this.ticket }
     });
@@ -272,16 +271,36 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     });
   }
 
+
+  openDialogDetail(): void {
+
+    /* CARICARE DATI UTENTE DA MANDARE AL DIALOG */
+    /*
+    /*
+    /*
+    /*                                           */
+   const dialogRef = this.dialog.open(DialogDetail, {
+      width: '80%',
+      data: {ticket: this.ticket }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+      if (!!result) {
+        this.closeChat();
+      }
+    });
+  }
 }
 
 
 @Component({
-  selector: 'fuse-dialog-overview-example-dialog',
-  templateUrl: './dialog-overview-example-dialog.html',
+  selector: 'fuse-dialog-close-ticket',
+  templateUrl: './dialog-close-ticket.html',
   styleUrls: ['./ticket-head.component.scss']
 })
 // tslint:disable-next-line:component-class-suffix
-export class DialogOverviewExampleDialog {
+export class DialogCloseTicket {
 
   public call_type: ICallType[];
   public call_result: ICallResult[];
@@ -297,7 +316,88 @@ export class DialogOverviewExampleDialog {
   private user;
 
   constructor(
-    public dialogRef: MatDialogRef<DialogOverviewExampleDialog>,
+    public dialogRef: MatDialogRef<DialogCloseTicket>,
+    private storage: LocalStorageService,
+    private apiTicketReportService: ApiTicketReportService,
+    @Inject(MAT_DIALOG_DATA) public data: any
+    ) {
+      this.call_type = this.storage.getItem('call_type');
+      this.call_result = this.storage.getItem('call_result');
+      this.user = this.storage.getItem('user');
+    }
+
+  async onYesClick() {
+    const confirm = await this.confirmAlert('Conferma chiusura Ticket?', 'Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname, 'warning');
+    if (confirm.value) {
+      if (this.ticket_report[0].id_call_result !== 0 && this.ticket_report[0].id_call_type !== 0 && this.ticket_report[0].number !== '') {
+        const reports = _.filter(this.ticket_report, (item: ITicketReport) => {
+          return (!!item.id_call_result && !!item.id_call_type && !!item.number);
+        });
+        if (reports.length === this.ticket_report.length) {
+          this.apiTicketReportService.create(reports)
+            .subscribe(() => {
+              this.dialogRef.close('true');
+            });
+        }
+      }
+    }
+  }
+
+  onAddItem() {
+    this.ticket_report.push({
+      id_ticket: this.data.ticket.id,
+      number: '',
+      id_call_type: 0,
+      id_call_result: 0
+    });
+  }
+
+  onRemoveItem(index: number) {
+    this.ticket_report.splice(index, 1);
+  }
+
+
+  private confirmAlert(title: string, text: string, type: SweetAlertType): Promise<SweetAlertResult> {
+    return swal({
+      title: title,
+      text: text,
+      type: type,
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Conferma',
+      cancelButtonText: 'Annulla'
+    });
+  }
+
+
+
+}
+
+
+@Component({
+  selector: 'fuse-dialog-detail',
+  templateUrl: './dialog-detail.html',
+  styleUrls: ['./ticket-head.component.scss']
+})
+// tslint:disable-next-line:component-class-suffix
+export class DialogDetail {
+
+  public call_type: ICallType[];
+  public call_result: ICallResult[];
+  public ticket_report: ITicketReport[] = this.data.ticket.reports.length > 0 ? this.data.ticket.reports : [
+    {
+      id_ticket: this.data.ticket.id,
+      number: '',
+      id_call_type: 0,
+      id_call_result: 0
+    }
+  ];
+
+  private user;
+
+  constructor(
+    public dialogRef: MatDialogRef<DialogCloseTicket>,
     private storage: LocalStorageService,
     private apiTicketReportService: ApiTicketReportService,
     @Inject(MAT_DIALOG_DATA) public data: any

@@ -1,0 +1,45 @@
+<h1>RAPPORTINO CHIUSURA TICKET N° {{data.ticket.id}} DEL {{data.ticket.dat_time | date:'dd/MM/yyyy HH:mm':'UTC'}} SERVIZIO [{{data.ticket.service}}]</h1>
+<mat-dialog-content>
+  <div class="text-right plus-report">
+    <button mat-mini-fab (click)="onAddItem()">
+      <mat-icon>add</mat-icon>
+    </button>
+  </div>
+  <div #report_container>
+    <!-- <ng-template #clone> -->
+      <div class="bordered" *ngFor="let item of ticket_report; let i = index">
+          <mat-form-field  class="col-4" [ngClass]="{empty_report: item.id_call_type === 0}">
+            <mat-select placeholder="Tipo chiamata..." [(ngModel)]="item.id_call_type">
+              <mat-option *ngFor="let ct of call_type" [value]="ct.id" [attr.selected]="item.id_call_type==ct.id ? true : null">
+                {{ ct.type }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field  class="col-4" [ngClass]="{empty_report: item.number === ''}">
+            <input matInput type="text" class="col-4" placeholder="N° Chiamato" [(ngModel)]="item.number">
+          </mat-form-field>
+          <mat-form-field class="col-4" [ngClass]="{empty_report: item.id_call_result === 0}">
+            <mat-select placeholder="Risultato chiamata..." [(ngModel)]="item.id_call_result">
+              <mat-option *ngFor="let cr of call_result" [value]="cr.id" [attr.selected]="item.id_call_result==cr.id ? true : null">
+                {{ cr.type }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="remove-report col-1" *ngIf="i != 0">
+            <button mat-mini-fab color="warn" (click)="onRemoveItem(i)">
+              <mat-icon>remove</mat-icon>
+            </button>
+          </div>
+      </div>
+    <!-- </ng-template> -->
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button  [mat-dialog-close]="false" color="warn">
+      <mat-icon>close</mat-icon> Annulla
+  </button>
+  <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
+  <button mat-button (click)="onYesClick()" color="accent">
+    <mat-icon>done</mat-icon> Accetta
+  </button>
+</mat-dialog-actions>
