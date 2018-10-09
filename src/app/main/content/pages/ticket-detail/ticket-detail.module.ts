@@ -33,7 +33,7 @@ const routes: Routes = [
   ],
   entryComponents: [
     DialogCloseTicket,
-    DialogDetail
+    // DialogDetail
   ],
   imports: [
     SharedModule,
