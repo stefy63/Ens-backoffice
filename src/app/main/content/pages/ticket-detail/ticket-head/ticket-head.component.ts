@@ -265,7 +265,7 @@ export class DialogCloseTicket {
     public dialogRef: MatDialogRef<DialogCloseTicket>,
     private storage: LocalStorageService,
     private apiTicketReportService: ApiTicketReportService,
-    private toastMessage: ToastMessage
+    private toastMessage: ToastMessage,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.call_type = this.storage.getItem('call_type');
@@ -333,7 +333,7 @@ export class DialogDetail {
     public dialogRef: MatDialogRef<DialogCloseTicket>,
     private storage: LocalStorageService,
     private apiTicketReportService: ApiTicketReportService,
-    private toastMessage: ToastMessage
+    private toastMessage: ToastMessage,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.call_type = this.storage.getItem('call_type');

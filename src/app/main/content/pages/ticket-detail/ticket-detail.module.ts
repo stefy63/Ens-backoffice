@@ -31,7 +31,6 @@ const routes: Routes = [
     TicketVideoChatComponent,
     DialogCloseTicket,
     DialogDetail,
-    ToastMessage
   ],
   entryComponents: [
     DialogCloseTicket,
@@ -48,7 +47,7 @@ const routes: Routes = [
   ],
   providers: [
     ChatService,
-    ToastMessage
+    ToastMessage,
   ]
 })
 
