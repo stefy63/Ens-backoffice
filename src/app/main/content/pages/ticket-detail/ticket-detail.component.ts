@@ -55,9 +55,9 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
 
       this.socketService.getMessage(WsEvents.ticket.updated)
       .subscribe((data: ITicket) => {
-        this.status = data.status.status;
         if (data.id === this.idTicket){
           this.ticket.next(data);
+          this.status = data.status.status;
         }
       },
       (err) => {

@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../../../../core/modules/shared.module';
 import { RouterModule, Routes } from '@angular/router';
-import { TicketDetailComponent } from './ticket-detail.component';
-import { AuthGuard } from '../../../../guard/auth.guard';
+import {TicketDetailComponent} from './ticket-detail.component';
+import {AuthGuard} from '../../../../guard/auth.guard';
 import { IsOperatorGuard } from '../../../../guard/is-operator.guard';
 import { TicketHeadComponent, DialogCloseTicket, DialogDetail } from './ticket-head/ticket-head.component';
 import { TicketMessagesComponent } from './ticket-messages/ticket-messages.component';
@@ -14,11 +14,11 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastMessage } from '../../../services/toastMessage.service';
 
 const routes: Routes = [
-  {
-    path: 'pages/ticket-detail/:id',
-    canActivate: [AuthGuard, IsOperatorGuard],
-    component: TicketDetailComponent
-  }
+    {
+        path     : 'pages/ticket-detail/:id',
+        canActivate: [AuthGuard, IsOperatorGuard],
+        component: TicketDetailComponent
+    }
 ];
 
 

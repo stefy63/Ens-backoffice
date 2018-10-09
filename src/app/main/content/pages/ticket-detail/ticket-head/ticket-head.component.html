@@ -27,7 +27,8 @@
                   <td class="table__ticket__detail" [ngClass]="{
                         table__service__chat: ticket.id_service == 1,
                         table__service__sms: ticket.id_service == 2,
-                        table__service__mail: ticket.id_service == 3
+                        table__service__mail: ticket.id_service == 3,
+                        table__service__telegram: ticket.id_service == 6
                         }">{{ticket.service}}</td>
                   <td class="table__ticket__detail" [ngClass]="{'warn-900-fg blink': timeout }">{{ticket.date_time |
                     date:'dd/MM/yyyy HH:mm':'UTC'}}</td>
@@ -57,7 +58,7 @@
       <button *ngIf="!isOpen && ticket.status === 'NEW'" class="mat-button done-button mat-accent col" (click)="activateChat()">
         <mat-icon>done</mat-icon> Accetta
       </button>
-      <button *ngIf="isOpen" class="mat-button delete-button mat-warn col" (click)="openDialog()">
+      <button *ngIf="isOpen" class="mat-button delete-button mat-warn col" (click)="closeChat()">
         <mat-icon>close</mat-icon> Close
       </button>
       <button *ngIf="!isOpen && ticket.status == 'NEW'" class="mat-button delete-button mat-warn col" (click)="refuseChat()">
