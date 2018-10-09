@@ -5,7 +5,7 @@ import { find } from 'lodash';
 import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
 import { ApiTicketService } from '../../../../services/api/api-ticket.service';
 import { Status } from '../../../../../enums/ticket-status.enum';
-import swal, { SweetAlertType, SweetAlertResult } from 'sweetalert2';
+import swal from 'sweetalert2';
 import { ApiTicketHistoryService } from '../../../../services/api/api-ticket-history.service';
 import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
 import { SocketService } from '../../../../services/socket/socket.service';
@@ -21,6 +21,7 @@ import { ICallResult } from '../../../../../interfaces/i-call-result';
 import { ITicketReport } from '../../../../../interfaces/i-ticket-report';
 import { ApiTicketReportService } from '../../../../services/api/api-ticket-report.service';
 import * as _ from 'lodash';
+import { ToastMessage } from '../../../../services/toastMessage.service';
 
 @Component({
   selector: 'fuse-ticket-head',
@@ -49,20 +50,16 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     private socketService: SocketService,
     private apiTicketHistoryService: ApiTicketHistoryService,
     private router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private toastMessage: ToastMessage
   ) {
     this.user = this.store.getItem('user');
   }
 
   ngOnInit() {
     this.newTicket.subscribe(async (data: ITicket) => {
-      console.log(data);
       if (this.ticket && this.ticket.status.status === 'NEW' && data.status.status !== 'NEW' && !this.isOpen) {
-        await swal({
-          title: 'ATTENZIONE! TICKET GIA ACQUISITO',
-          text: 'TICKET PRESO IN CARICO DA ALTRO OPERATORE',
-          type: 'error'
-        });
+        this.toastMessage.error('ATTENZIONE! TICKET GIA ACQUISITO', 'TICKET PRESO IN CARICO DA ALTRO OPERATORE');
         this.location.back();
       }
       this.ticket = NormalizeTicket.normalizeItem([data])[0];
@@ -90,11 +87,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
           if (this.ticket && this.ticket.id === ticket.id && ticket.id_operator !== this.user.id) {
             this.open.next(false);
             this.isOpen = false;
-            await swal({
-              title: 'ATTENZIONE! TICKET ACQUISITO',
-              text: 'TICKET PRESO IN CARICO DA ALTRO OPERATORE',
-              type: 'error'
-            });
+            this.toastMessage.error('ATTENZIONE! TICKET GIA ACQUISITO', 'TICKET PRESO IN CARICO DA ALTRO OPERATORE');
             this.router.navigate(['/pages/dashboard']);
           }
         });
@@ -115,7 +108,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
 
   async acquireTicket() {
     if (this.ticket.id_operator !== this.user.id) {
-      const confirm = await this.confirmAlert('Vuoi acquisire il ticket?', '', 'warning');
+      const confirm = await this.toastMessage.warning('Vuoi acquisire il ticket?', '');
       if (confirm.value) {
         this.isOpen = this.ticket.status === 'ONLINE';
         this.updateTicketStatus(this.ticket.id_status).subscribe(() => {
@@ -138,31 +131,17 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   }
 
   private async setUserChoise(confirmMessage: string, historyMessage: string) {
-    const confirm = await this.confirmAlert(confirmMessage, '', 'warning');
+    const confirm = await this.toastMessage.warning(confirmMessage, '');
     if (confirm.value) {
       this.isOpen = true;
       this.updateTicketStatus(Status.ONLINE)
+        .flatMap(() => this.createHistoryTicketSystem(historyMessage))
         .subscribe(
           () => {
-            this.createHistoryTicketSystem(historyMessage)
-              .subscribe(
-                (data) => {
-                  console.log('TicketHistory Subscription success');
-                },
-                (err) => {
-                  swal({
-                    title: 'ERRORE\'',
-                    text: 'Errore nel ticket....' + this.ticket.id,
-                    type: 'error'
-                  });
-                });
+            console.log('TicketHistory Subscription success');
           },
           (err) => {
-            swal({
-              title: 'ERRORE\'',
-              text: 'Errore nel ticket....' + this.ticket.id,
-              type: 'error'
-            });
+            this.toastMessage.error('ERRORE', 'Errore nel ticket....' + this.ticket.id);
           });
       this.msgAlert = false;
       this.open.next(true);
@@ -174,15 +153,13 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   }
 
   async closeChat() {
-    // const confirm = await this.confirmAlert('Conferma chiusura Ticket?', 'Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname, 'warning');
-    // if (confirm.value) {
-      this.updateTicketStatus(Status.CLOSED)
-        .subscribe(() => {
-          this.createHistoryTicketSystem('Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname)
-            .subscribe(() => {
-              this.location.back();
-            });
-        });
+    this.updateTicketStatus(Status.CLOSED)
+      .subscribe(() => {
+        this.createHistoryTicketSystem('Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname)
+          .subscribe(() => {
+            this.location.back();
+          });
+      });
     // }
   }
 
@@ -212,28 +189,11 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
             // tslint:disable-next-line:max-line-length
             this.createHistoryTicketSystem('Rifiutato ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname + 'per il seguente motivo: ' + result.value)
               .subscribe(() => {
-                swal({
-                  type: 'success',
-                  title: 'La Chat è stata rifiutata!',
-                  html: 'Rifiutata per: ' + result.value
-                });
+                this.toastMessage.success('La Chat è stata rifiutata!', 'Rifiutata per: ' + result.value);
                 this.location.back();
               });
           });
       }
-    });
-  }
-
-  private confirmAlert(title: string, text: string, type: SweetAlertType): Promise<SweetAlertResult> {
-    return swal({
-      title: title,
-      text: text,
-      type: type,
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Conferma',
-      cancelButtonText: 'Annulla'
     });
   }
 
@@ -260,7 +220,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogCloseTicket, {
       width: '80%',
-      data: {ticket: this.ticket }
+      data: { ticket: this.ticket }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -271,17 +231,10 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     });
   }
 
-
   openDialogDetail(): void {
-
-    /* CARICARE DATI UTENTE DA MANDARE AL DIALOG */
-    /*
-    /*
-    /*
-    /*                                           */
-   const dialogRef = this.dialog.open(DialogDetail, {
+    const dialogRef = this.dialog.open(DialogDetail, {
       width: '80%',
-      data: {ticket: this.ticket }
+      data: { ticket: this.ticket }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -319,15 +272,16 @@ export class DialogCloseTicket {
     public dialogRef: MatDialogRef<DialogCloseTicket>,
     private storage: LocalStorageService,
     private apiTicketReportService: ApiTicketReportService,
+    private toastMessage: ToastMessage
     @Inject(MAT_DIALOG_DATA) public data: any
-    ) {
-      this.call_type = this.storage.getItem('call_type');
-      this.call_result = this.storage.getItem('call_result');
-      this.user = this.storage.getItem('user');
-    }
+  ) {
+    this.call_type = this.storage.getItem('call_type');
+    this.call_result = this.storage.getItem('call_result');
+    this.user = this.storage.getItem('user');
+  }
 
   async onYesClick() {
-    const confirm = await this.confirmAlert('Conferma chiusura Ticket?', 'Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname, 'warning');
+    const confirm = await this.toastMessage.warning('Conferma chiusura Ticket?', 'Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
     if (confirm.value) {
       if (this.ticket_report[0].id_call_result !== 0 && this.ticket_report[0].id_call_type !== 0 && this.ticket_report[0].number !== '') {
         const reports = _.filter(this.ticket_report, (item: ITicketReport) => {
@@ -355,23 +309,6 @@ export class DialogCloseTicket {
   onRemoveItem(index: number) {
     this.ticket_report.splice(index, 1);
   }
-
-
-  private confirmAlert(title: string, text: string, type: SweetAlertType): Promise<SweetAlertResult> {
-    return swal({
-      title: title,
-      text: text,
-      type: type,
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Conferma',
-      cancelButtonText: 'Annulla'
-    });
-  }
-
-
-
 }
 
 
@@ -382,7 +319,6 @@ export class DialogCloseTicket {
 })
 // tslint:disable-next-line:component-class-suffix
 export class DialogDetail {
-
   public call_type: ICallType[];
   public call_result: ICallResult[];
   public ticket_report: ITicketReport[] = this.data.ticket.reports.length > 0 ? this.data.ticket.reports : [
@@ -400,15 +336,16 @@ export class DialogDetail {
     public dialogRef: MatDialogRef<DialogCloseTicket>,
     private storage: LocalStorageService,
     private apiTicketReportService: ApiTicketReportService,
+    private toastMessage: ToastMessage
     @Inject(MAT_DIALOG_DATA) public data: any
-    ) {
-      this.call_type = this.storage.getItem('call_type');
-      this.call_result = this.storage.getItem('call_result');
-      this.user = this.storage.getItem('user');
-    }
+  ) {
+    this.call_type = this.storage.getItem('call_type');
+    this.call_result = this.storage.getItem('call_result');
+    this.user = this.storage.getItem('user');
+  }
 
   async onYesClick() {
-    const confirm = await this.confirmAlert('Conferma chiusura Ticket?', 'Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname, 'warning');
+    const confirm = await this.toastMessage.warning('Conferma chiusura Ticket?', 'Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
     if (confirm.value) {
       if (this.ticket_report[0].id_call_result !== 0 && this.ticket_report[0].id_call_type !== 0 && this.ticket_report[0].number !== '') {
         const reports = _.filter(this.ticket_report, (item: ITicketReport) => {
@@ -436,21 +373,4 @@ export class DialogDetail {
   onRemoveItem(index: number) {
     this.ticket_report.splice(index, 1);
   }
-
-
-  private confirmAlert(title: string, text: string, type: SweetAlertType): Promise<SweetAlertResult> {
-    return swal({
-      title: title,
-      text: text,
-      type: type,
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Conferma',
-      cancelButtonText: 'Annulla'
-    });
-  }
-
-
-
 }
