@@ -21,6 +21,7 @@ import { ICallResult } from '../../../../../interfaces/i-call-result';
 import { ITicketReport } from '../../../../../interfaces/i-ticket-report';
 import { ApiTicketReportService } from '../../../../services/api/api-ticket-report.service';
 import * as _ from 'lodash';
+import { FormControl, Validators, RequiredValidator } from '@angular/forms';
 
 @Component({
   selector: 'fuse-ticket-head',
@@ -66,15 +67,6 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
         this.location.back();
       }
       this.ticket = NormalizeTicket.normalizeItem([data])[0];
-      if (!!this.ticket.reports.length) {
-        this.ticket.reports.forEach(item => {
-          if (!!this.phone) {
-            this.phone += item.number + '<br>';
-          } else {
-            this.phone = item.number + '<br> ';
-          }
-        });
-      }
       const initMessage = find(data.historys, item => item.type.type === 'INITIAL');
       this.ticketReason = (initMessage) ? initMessage.action : '';
       if (data.status.status === 'ONLINE' && data.id_operator === this.user.id) {
@@ -302,6 +294,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
 // tslint:disable-next-line:component-class-suffix
 export class DialogCloseTicket {
 
+  public _myReactiveSelect: FormControl = new FormControl(null, Validators.required);
   public call_type: ICallType[];
   public call_result: ICallResult[];
   public ticket_report: ITicketReport[] = this.data.ticket.reports.length > 0 ? this.data.ticket.reports : [
@@ -324,6 +317,10 @@ export class DialogCloseTicket {
       this.call_type = this.storage.getItem('call_type');
       this.call_result = this.storage.getItem('call_result');
       this.user = this.storage.getItem('user');
+    }
+
+    getErrorMessage() {
+      return this._myReactiveSelect.hasError('required') ? 'Il campo non può essere vuoto' : '';
     }
 
   async onYesClick() {

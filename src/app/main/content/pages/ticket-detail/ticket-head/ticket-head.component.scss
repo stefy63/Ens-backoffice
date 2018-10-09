@@ -107,6 +107,9 @@
 .table__ticket__detail {
     font-size: 15px !important;
     vertical-align: middle;
+    & p {
+      margin-bottom: 0;
+    }
 }
 
 .table__ticket__detail__description {
@@ -131,7 +134,8 @@
 }
 
 .empty_report {
-  background-color: lightcoral;
+  // background-color: lightcoral;
+  color: red;
 }
 
 .info-button {

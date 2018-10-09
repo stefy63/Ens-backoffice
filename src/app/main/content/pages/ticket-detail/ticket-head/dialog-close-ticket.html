@@ -8,18 +8,19 @@
   <div #report_container>
     <!-- <ng-template #clone> -->
       <div class="bordered" *ngFor="let item of ticket_report; let i = index">
-          <mat-form-field  class="col-4" [ngClass]="{empty_report: item.id_call_type === 0}">
-            <mat-select placeholder="Tipo chiamata..." [(ngModel)]="item.id_call_type">
+          <mat-form-field  class="col-4">
+            <mat-select placeholder="Tipo chiamata..." [(ngModel)]="item.id_call_type" [formControl]="_myReactiveSelect" required>
               <mat-option *ngFor="let ct of call_type" [value]="ct.id" [attr.selected]="item.id_call_type==ct.id ? true : null">
                 {{ ct.type }}
               </mat-option>
             </mat-select>
+            <mat-error *ngIf="_myReactiveSelect.invalid">{{getErrorMessage()}}</mat-error>
           </mat-form-field>
-          <mat-form-field  class="col-4" [ngClass]="{empty_report: item.number === ''}">
-            <input matInput type="text" class="col-4" placeholder="N° Chiamato" [(ngModel)]="item.number">
+          <mat-form-field  class="col-4" >
+            <input matInput type="text" class="col-4" placeholder="N° Chiamato" [(ngModel)]="item.number" required>
           </mat-form-field>
-          <mat-form-field class="col-4" [ngClass]="{empty_report: item.id_call_result === 0}">
-            <mat-select placeholder="Risultato chiamata..." [(ngModel)]="item.id_call_result">
+          <mat-form-field class="col-4" >
+            <mat-select placeholder="Risultato chiamata..." [(ngModel)]="item.id_call_result" required>
               <mat-option *ngFor="let cr of call_result" [value]="cr.id" [attr.selected]="item.id_call_result==cr.id ? true : null">
                 {{ cr.type }}
               </mat-option>
