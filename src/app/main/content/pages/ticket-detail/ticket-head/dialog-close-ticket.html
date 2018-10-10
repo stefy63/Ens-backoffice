@@ -7,31 +7,36 @@
   </div>
   <div #report_container>
     <!-- <ng-template #clone> -->
-      <div class="bordered" *ngFor="let item of ticket_report; let i = index">
-          <mat-form-field  class="col-4">
-            <mat-select placeholder="Tipo chiamata..." [(ngModel)]="item.id_call_type" [formControl]="_myReactiveSelect" required>
-              <mat-option *ngFor="let ct of call_type" [value]="ct.id" [attr.selected]="item.id_call_type==ct.id ? true : null">
-                {{ ct.type }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="_myReactiveSelect.invalid">{{getErrorMessage()}}</mat-error>
-          </mat-form-field>
-          <mat-form-field  class="col-4" >
-            <input matInput type="text" class="col-4" placeholder="N° Chiamato" [(ngModel)]="item.number" required>
-          </mat-form-field>
-          <mat-form-field class="col-4" >
-            <mat-select placeholder="Risultato chiamata..." [(ngModel)]="item.id_call_result" required>
-              <mat-option *ngFor="let cr of call_result" [value]="cr.id" [attr.selected]="item.id_call_result==cr.id ? true : null">
-                {{ cr.type }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div class="remove-report col-1" *ngIf="i != 0">
-            <button mat-mini-fab color="warn" (click)="onRemoveItem(i)">
-              <mat-icon>remove</mat-icon>
-            </button>
-          </div>
-      </div>
+      Ticket Report: {{ ticket_report | json }}
+      <form [formGroup]="formGroup" novalidate>
+        <div class="bordered" *ngFor="let item of ticket_report; let i = index;">
+            <mat-form-field  class="col-4">
+              <mat-select placeholder="Tipo chiamata..." [(ngModel)]="item.id_call_type" formControlName="'callType'+i">
+                <mat-option *ngFor="let ct of call_type" [value]="ct.id" [attr.selected]="item.id_call_type==ct.id ? true : null">
+                  {{ ct.type }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="formControlSelect1.hasError('required')">Selezionare il Tipo Di Chiamata</mat-error>
+            </mat-form-field>
+            <mat-form-field  class="col-3" >
+              <input matInput type="text" class="col-4" placeholder="N° Chiamato" [(ngModel)]="item.number" formControlName="'number'+i" >
+              <mat-error *ngIf="formControlInput.hasError('required')">Inserire un numero di telefono</mat-error>
+            </mat-form-field>
+            <mat-form-field class="col-4" >
+              <mat-select placeholder="Risultato chiamata..." [(ngModel)]="item.id_call_result" formControlName="'callResult'+i" >
+                <mat-option *ngFor="let cr of call_result" [value]="cr.id" [attr.selected]="item.id_call_result==cr.id ? true : null">
+                  {{ cr.type }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="formControlSelect2.hasError('required')">Selezionare l'esito della chiamata</mat-error>
+            </mat-form-field>
+            <div class="remove-report col-1" *ngIf="i != 0">
+              <button mat-mini-fab color="warn" (click)="onRemoveItem(i)">
+                <mat-icon>remove</mat-icon>
+              </button>
+            </div>
+        </div>
+      </form>
     <!-- </ng-template> -->
   </div>
 </mat-dialog-content>

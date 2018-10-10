@@ -10,7 +10,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field  class="col-3" [ngClass]="{empty_report: item.number === ''}">
+          <mat-form-field  class="col-4" [ngClass]="{empty_report: item.number === ''}">
             <input matInput type="text" class="col-4" placeholder="N° Chiamato" [(ngModel)]="item.number" disabled>
           </mat-form-field>
           <mat-form-field class="col-4" [ngClass]="{empty_report: item.id_call_result === 0}">

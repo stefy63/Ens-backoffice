@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, Inject } from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import { Location } from '@angular/common';
 import { find } from 'lodash';
@@ -21,8 +21,9 @@ import { ICallResult } from '../../../../../interfaces/i-call-result';
 import { ITicketReport } from '../../../../../interfaces/i-ticket-report';
 import { ApiTicketReportService } from '../../../../services/api/api-ticket-report.service';
 import * as _ from 'lodash';
-import { FormControl, Validators, RequiredValidator } from '@angular/forms';
+import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { ToastMessage } from '../../../../services/toastMessage.service';
+import 'rxjs/add/operator/mergeMap';
 
 @Component({
   selector: 'fuse-ticket-head',
@@ -125,9 +126,8 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   private async setUserChoise(confirmMessage: string, historyMessage: string) {
     const confirm = await this.toastMessage.warning(confirmMessage, '');
     if (confirm.value) {
-      this.isOpen = true;
       this.updateTicketStatus(Status.ONLINE)
-        .flatMap(() => this.createHistoryTicketSystem(historyMessage))
+        .mergeMap((data) => this.createHistoryTicketSystem(historyMessage))
         .subscribe(
           () => {
             console.log('TicketHistory Subscription success');
@@ -135,6 +135,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
           (err) => {
             this.toastMessage.error('ERRORE', 'Errore nel ticket....' + this.ticket.id);
           });
+      this.isOpen = true;
       this.msgAlert = false;
       this.open.next(true);
     }
@@ -201,7 +202,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   }
 
   private updateTicketStatus(id_status: number): Observable<ITicket> {
-    const updateTicket = {
+    const updateTicket: ITicket = {
       id: this.ticket.id,
       id_status: id_status,
       id_operator: this.user.id
@@ -246,61 +247,74 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
 })
 // tslint:disable-next-line:component-class-suffix
 export class DialogCloseTicket {
-
-  public _myReactiveSelect: FormControl = new FormControl(null, Validators.required);
   public call_type: ICallType[];
   public call_result: ICallResult[];
-  public ticket_report: ITicketReport[] = this.data.ticket.reports.length > 0 ? this.data.ticket.reports : [
-    {
-      id_ticket: this.data.ticket.id,
-      number: '',
-      id_call_type: 0,
-      id_call_result: 0
-    }
-  ];
+  public ticket_report: ITicketReport[];
 
   private user;
+  private formGroup: FormGroup;
 
   constructor(
     public dialogRef: MatDialogRef<DialogCloseTicket>,
     private storage: LocalStorageService,
     private apiTicketReportService: ApiTicketReportService,
     private toastMessage: ToastMessage,
+    private _formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.call_type = this.storage.getItem('call_type');
     this.call_result = this.storage.getItem('call_result');
     this.user = this.storage.getItem('user');
+    this.ticket_report = this.data.ticket.reports.length > 0 ? _.clone(this.data.ticket.reports) : [
+      {
+        id_ticket: this.data.ticket.id,
+        number: '',
+        id_call_type: 0,
+        id_call_result: 0
+      }
+    ];
+    this.buildFormControl();
   }
 
-    getErrorMessage() {
-      return this._myReactiveSelect.hasError('required') ? 'Il campo non può essere vuoto' : '';
-    }
+  private buildFormControl(){
+    const ctrls = {};
+    this.ticket_report.forEach(((report: any, index: number) => {
+      ctrls[`callType${index}`] = new FormControl('', [Validators.required]);
+      ctrls[`number${index}`] = new FormControl('', [Validators.required]);
+      ctrls[`callResult${index}`] = new FormControl('', [Validators.required]);
+    }).bind(this));
+    this.formGroup = this._formBuilder.group(ctrls);
+  }
 
   async onYesClick() {
-    const confirm = await this.toastMessage.warning('Conferma chiusura Ticket?', 'Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
-    if (confirm.value) {
-      if (this.ticket_report[0].id_call_result !== 0 && this.ticket_report[0].id_call_type !== 0 && this.ticket_report[0].number !== '') {
-        const reports = _.filter(this.ticket_report, (item: ITicketReport) => {
-          return (!!item.id_call_result && !!item.id_call_type && !!item.number);
-        });
-        if (reports.length === this.ticket_report.length) {
-          this.apiTicketReportService.create(reports)
-            .subscribe(() => {
-              this.dialogRef.close('true');
-            });
-        }
-      }
-    }
+    console.log(this.ticket_report);
+    // const confirm = await this.toastMessage.warning('Conferma chiusura Ticket?', 'Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
+    // this.formControlSelect1.markAsTouched();
+    // this.formControlInput.markAsTouched();
+    // this.formControlSelect2.markAsTouched();
+    // if (confirm.value) {
+    //   if (this.ticket_report[0].id_call_result !== 0 && this.ticket_report[0].id_call_type !== 0 && this.ticket_report[0].number !== '') {
+    //     const reports = _.filter(this.ticket_report, (item: ITicketReport) => {
+    //       return (!!item.id_call_result && !!item.id_call_type && !!item.number);
+    //     });
+    //     if (reports.length === this.ticket_report.length) {
+    //       this.apiTicketReportService.create(reports)
+    //         .subscribe(() => {
+    //           this.dialogRef.close('true');
+    //         });
+    //     }
+    //   }
+    // }
   }
 
   onAddItem() {
-    this.ticket_report.push({
+    this.ticket_report = _.concat(this.ticket_report, [{
       id_ticket: this.data.ticket.id,
       number: '',
       id_call_type: 0,
       id_call_result: 0
-    });
+    }]);
+    this.buildFormControl();
   }
 
   onRemoveItem(index: number) {
