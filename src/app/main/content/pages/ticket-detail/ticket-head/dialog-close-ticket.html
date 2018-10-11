@@ -7,28 +7,28 @@
   </div>
   <div #report_container>
     <!-- <ng-template #clone> -->
-      Ticket Report: {{ ticket_report | json }}
-      <form [formGroup]="formGroup" novalidate>
+      <form (ngSubmit)="onYesClick()" [formGroup]="formGroup">
         <div class="bordered" *ngFor="let item of ticket_report; let i = index;">
             <mat-form-field  class="col-4">
-              <mat-select placeholder="Tipo chiamata..." [(ngModel)]="item.id_call_type" formControlName="'callType'+i">
+              <mat-select placeholder="Tipo chiamata..." [(ngModel)]="item.id_call_type" [formControlName]=" 'callType' +i" required>
+                <mat-option></mat-option>
                 <mat-option *ngFor="let ct of call_type" [value]="ct.id" [attr.selected]="item.id_call_type==ct.id ? true : null">
                   {{ ct.type }}
                 </mat-option>
               </mat-select>
-              <mat-error *ngIf="formControlSelect1.hasError('required')">Selezionare il Tipo Di Chiamata</mat-error>
+              <mat-error *ngIf="formGroup.controls['callType' + i].hasError('required')">Selezionare il Tipo Di Chiamata</mat-error>
             </mat-form-field>
             <mat-form-field  class="col-3" >
-              <input matInput type="text" class="col-4" placeholder="N° Chiamato" [(ngModel)]="item.number" formControlName="'number'+i" >
-              <mat-error *ngIf="formControlInput.hasError('required')">Inserire un numero di telefono</mat-error>
+              <input matInput type="text" class="col-4" placeholder="N° Chiamato" [value]="item.number" [(ngModel)]="item.number" [formControlName]=" 'number' +i" required>
+              <mat-error *ngIf="formGroup.controls['number' + i].hasError('required')">Inserire un numero di telefono</mat-error>
             </mat-form-field>
             <mat-form-field class="col-4" >
-              <mat-select placeholder="Risultato chiamata..." [(ngModel)]="item.id_call_result" formControlName="'callResult'+i" >
-                <mat-option *ngFor="let cr of call_result" [value]="cr.id" [attr.selected]="item.id_call_result==cr.id ? true : null">
+              <mat-select placeholder="Risultato chiamata..." [(ngModel)]="item.id_call_result" [formControlName]=" 'callResult' +i" required>
+                <mat-option *ngFor="let cr of call_result" [value]="cr.id">
                   {{ cr.type }}
                 </mat-option>
               </mat-select>
-              <mat-error *ngIf="formControlSelect2.hasError('required')">Selezionare l'esito della chiamata</mat-error>
+              <mat-error *ngIf="formGroup.controls['callResult' + i].hasError('required')">Selezionare l'esito della chiamata</mat-error>
             </mat-form-field>
             <div class="remove-report col-1" *ngIf="i != 0">
               <button mat-mini-fab color="warn" (click)="onRemoveItem(i)">
@@ -36,16 +36,17 @@
               </button>
             </div>
         </div>
+        <div>
+          <button mat-button  [mat-dialog-close]="false" color="warn">
+              <mat-icon>close</mat-icon> Annulla
+          </button>
+          <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
+          <!-- <button mat-button (click)="onYesClick()" color="accent"> -->
+          <button mat-button  type="submit" color="accent">
+              <mat-icon>done</mat-icon> Accetta
+          </button>
+        </div>
       </form>
     <!-- </ng-template> -->
   </div>
 </mat-dialog-content>
-<mat-dialog-actions>
-  <button mat-button  [mat-dialog-close]="false" color="warn">
-      <mat-icon>close</mat-icon> Annulla
-  </button>
-  <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
-  <button mat-button (click)="onYesClick()" color="accent">
-    <mat-icon>done</mat-icon> Accetta
-  </button>
-</mat-dialog-actions>

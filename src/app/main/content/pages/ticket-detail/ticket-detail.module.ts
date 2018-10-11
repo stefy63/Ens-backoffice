@@ -12,6 +12,7 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 import { TicketVideoChatComponent } from './ticket-video-chat/ticket-video-chat.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastMessage } from '../../../services/toastMessage.service';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const routes: Routes = [
     {
@@ -41,6 +42,7 @@ const routes: Routes = [
     NgxSpinnerModule,
     RouterModule.forChild(routes),
     SimpleNotificationsModule,
+    ReactiveFormsModule
   ],
   exports: [
     TicketDetailComponent,

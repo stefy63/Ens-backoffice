@@ -252,74 +252,75 @@ export class DialogCloseTicket {
   public ticket_report: ITicketReport[];
 
   private user;
-  private formGroup: FormGroup;
+  public formGroup: FormGroup;
 
   constructor(
     public dialogRef: MatDialogRef<DialogCloseTicket>,
     private storage: LocalStorageService,
     private apiTicketReportService: ApiTicketReportService,
     private toastMessage: ToastMessage,
-    private _formBuilder: FormBuilder,
+    // private _formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.call_type = this.storage.getItem('call_type');
     this.call_result = this.storage.getItem('call_result');
     this.user = this.storage.getItem('user');
-    this.ticket_report = this.data.ticket.reports.length > 0 ? _.clone(this.data.ticket.reports) : [
+    this.ticket_report = this.data.ticket.reports.length > 0 ? _.cloneDeep(this.data.ticket.reports) : [
       {
         id_ticket: this.data.ticket.id,
         number: '',
-        id_call_type: 0,
-        id_call_result: 0
+        id_call_type: null,
+        id_call_result: null
       }
     ];
     this.buildFormControl();
   }
 
   private buildFormControl(){
-    const ctrls = {};
-    this.ticket_report.forEach(((report: any, index: number) => {
-      ctrls[`callType${index}`] = new FormControl('', [Validators.required]);
-      ctrls[`number${index}`] = new FormControl('', [Validators.required]);
-      ctrls[`callResult${index}`] = new FormControl('', [Validators.required]);
-    }).bind(this));
-    this.formGroup = this._formBuilder.group(ctrls);
+    const ctrls: any = {};
+    this.ticket_report.forEach((report: ITicketReport, index: number) => {
+      ctrls[`callType${index}`] = new FormControl('', Validators.required);
+      ctrls[`number${index}`] = new FormControl('', Validators.required);
+      ctrls[`callResult${index}`] = new FormControl('', Validators.required);
+    });
+    this.formGroup = new FormGroup(ctrls);
   }
 
   async onYesClick() {
-    console.log(this.ticket_report);
-    // const confirm = await this.toastMessage.warning('Conferma chiusura Ticket?', 'Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
-    // this.formControlSelect1.markAsTouched();
-    // this.formControlInput.markAsTouched();
-    // this.formControlSelect2.markAsTouched();
-    // if (confirm.value) {
-    //   if (this.ticket_report[0].id_call_result !== 0 && this.ticket_report[0].id_call_type !== 0 && this.ticket_report[0].number !== '') {
-    //     const reports = _.filter(this.ticket_report, (item: ITicketReport) => {
-    //       return (!!item.id_call_result && !!item.id_call_type && !!item.number);
-    //     });
-    //     if (reports.length === this.ticket_report.length) {
-    //       this.apiTicketReportService.create(reports)
-    //         .subscribe(() => {
-    //           this.dialogRef.close('true');
-    //         });
-    //     }
-    //   }
-    // }
+    if (this.formGroup.invalid) {
+      return;
+    }
+
+    const confirm = await this.toastMessage.warning('Conferma chiusura Ticket?', 'Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
+
+    if (confirm.value) {
+      this.apiTicketReportService.create(this.ticket_report)
+        .subscribe(() => {
+          this.dialogRef.close('true');
+        });
+    }
   }
 
   onAddItem() {
-    this.ticket_report = _.concat(this.ticket_report, [{
+    const index = this.ticket_report.length;
+    this.ticket_report.push({
       id_ticket: this.data.ticket.id,
       number: '',
-      id_call_type: 0,
-      id_call_result: 0
-    }]);
-    this.buildFormControl();
+      id_call_type: null,
+      id_call_result: null
+    });
+    this.formGroup.addControl(`callType${index}`, new FormControl('', Validators.required));
+    this.formGroup.addControl(`number${index}`, new FormControl('', Validators.required));
+    this.formGroup.addControl(`callResult${index}`, new FormControl('', Validators.required));
   }
 
   onRemoveItem(index: number) {
     this.ticket_report.splice(index, 1);
+    // this.formGroup.removeControl(`callType${index}`);
+    // this.formGroup.removeControl(`number${index}`);
+    // this.formGroup.removeControl(`callResult${index}`);
   }
+
 }
 
 
