@@ -19,7 +19,7 @@
               <mat-error *ngIf="formGroup.controls['callType' + i].hasError('required')">Selezionare il Tipo Di Chiamata</mat-error>
             </mat-form-field>
             <mat-form-field  class="col-3" >
-              <input matInput type="text" class="col-4" placeholder="N° Chiamato" [value]="item.number" [(ngModel)]="item.number" [formControlName]=" 'number' +i" required>
+              <input matInput type="text" class="col-4  dialog-input" placeholder="N° Chiamato" [value]="item.number" [(ngModel)]="item.number" [formControlName]=" 'number' +i" required>
               <mat-error *ngIf="formGroup.controls['number' + i].hasError('required')">Inserire un numero di telefono</mat-error>
             </mat-form-field>
             <mat-form-field class="col-4" >
