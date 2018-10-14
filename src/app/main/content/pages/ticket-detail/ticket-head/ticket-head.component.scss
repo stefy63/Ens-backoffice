@@ -125,9 +125,9 @@
 
 .bordered {
   border: gray solid 1px;
-  padding: 10px;
   display: flex;
   margin-bottom: 5px;
+  padding: 1.25em;
 }
 
 .plus-report {
@@ -152,4 +152,8 @@
   & mat-icon:hover {
     cursor: pointer;
   }
+}
+
+.icon--white {
+    color: white !important;
 }

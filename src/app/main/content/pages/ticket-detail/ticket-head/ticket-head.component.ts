@@ -315,10 +315,10 @@ export class DialogCloseTicket {
   }
 
   onRemoveItem(index: number) {
+    this.formGroup.removeControl(`callType${index}`);
+    this.formGroup.removeControl(`number${index}`);
+    this.formGroup.removeControl(`callResult${index}`);
     this.ticket_report.splice(index, 1);
-    // this.formGroup.removeControl(`callType${index}`);
-    // this.formGroup.removeControl(`number${index}`);
-    // this.formGroup.removeControl(`callResult${index}`);
   }
 
 }

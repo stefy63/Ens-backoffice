@@ -2,27 +2,25 @@
 <mat-dialog-content>
   <div class="text-right plus-report">
     <button mat-mini-fab (click)="onAddItem()">
-      <mat-icon>add</mat-icon>
+      <mat-icon class="icon--white">add</mat-icon>
     </button>
   </div>
   <div #report_container>
-    <!-- <ng-template #clone> -->
       <form (ngSubmit)="onYesClick()" [formGroup]="formGroup">
         <div class="bordered" *ngFor="let item of ticket_report; let i = index;">
-            <mat-form-field  class="col-4">
+            <mat-form-field  class="col">
               <mat-select placeholder="Tipo chiamata..." [(ngModel)]="item.id_call_type" [formControlName]=" 'callType' +i" required>
-                <mat-option></mat-option>
                 <mat-option *ngFor="let ct of call_type" [value]="ct.id" [attr.selected]="item.id_call_type==ct.id ? true : null">
                   {{ ct.type }}
                 </mat-option>
               </mat-select>
               <mat-error *ngIf="formGroup.controls['callType' + i].hasError('required')">Selezionare il Tipo Di Chiamata</mat-error>
             </mat-form-field>
-            <mat-form-field  class="col-3" >
-              <input matInput type="text" class="col-4  dialog-input" placeholder="N° Chiamato" [value]="item.number" [(ngModel)]="item.number" [formControlName]=" 'number' +i" required>
+            <mat-form-field  class="col" >
+              <input matInput type="text" class="dialog-input" placeholder="N° Chiamato" [value]="item.number" [(ngModel)]="item.number" [formControlName]=" 'number' +i" required>
               <mat-error *ngIf="formGroup.controls['number' + i].hasError('required')">Inserire un numero di telefono</mat-error>
             </mat-form-field>
-            <mat-form-field class="col-4" >
+            <mat-form-field class="col" >
               <mat-select placeholder="Risultato chiamata..." [(ngModel)]="item.id_call_result" [formControlName]=" 'callResult' +i" required>
                 <mat-option *ngFor="let cr of call_result" [value]="cr.id">
                   {{ cr.type }}
@@ -32,21 +30,18 @@
             </mat-form-field>
             <div class="remove-report col-1" *ngIf="i != 0">
               <button mat-mini-fab color="warn" (click)="onRemoveItem(i)">
-                <mat-icon>remove</mat-icon>
+                <mat-icon class="icon--white">remove</mat-icon>
               </button>
             </div>
         </div>
-        <div>
+        <div class="pull-right">
           <button mat-button  [mat-dialog-close]="false" color="warn">
               <mat-icon>close</mat-icon> Annulla
           </button>
-          <!-- The mat-dialog-close directive optionally accepts a value as a result for the dialog. -->
-          <!-- <button mat-button (click)="onYesClick()" color="accent"> -->
           <button mat-button  type="submit" color="accent">
               <mat-icon>done</mat-icon> Accetta
           </button>
         </div>
       </form>
-    <!-- </ng-template> -->
   </div>
 </mat-dialog-content>
