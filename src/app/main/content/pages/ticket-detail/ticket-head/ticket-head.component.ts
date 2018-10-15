@@ -280,7 +280,7 @@ export class DialogCloseTicket {
     const ctrls: any = {};
     this.ticket_report.forEach((report: ITicketReport, index: number) => {
       ctrls[`callType${index}`] = new FormControl('', Validators.required);
-      ctrls[`number${index}`] = new FormControl('', Validators.required);
+      ctrls[`number${index}`] = new FormControl('', Validators.compose([Validators.required, PhoneValidator.validPhone]));
       ctrls[`callResult${index}`] = new FormControl('', Validators.required);
     });
     this.formGroup = new FormGroup(ctrls);
@@ -384,5 +384,15 @@ export class DialogDetail {
 
   onRemoveItem(index: number) {
     this.ticket_report.splice(index, 1);
+  }
+}
+
+export class PhoneValidator {
+  static validPhone(fc: FormControl){
+    if(!isNaN(fc.value)) {
+      return ({PhoneValidator: true});
+    } else {
+      return (null);
+    }
   }
 }
