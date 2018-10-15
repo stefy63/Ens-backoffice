@@ -4,7 +4,7 @@ import { RouterModule, Routes } from '@angular/router';
 import {TicketDetailComponent} from './ticket-detail.component';
 import {AuthGuard} from '../../../../guard/auth.guard';
 import { IsOperatorGuard } from '../../../../guard/is-operator.guard';
-import { TicketHeadComponent, DialogCloseTicket, DialogDetail } from './ticket-head/ticket-head.component';
+import { TicketHeadComponent} from './ticket-head/ticket-head.component';
 import { TicketMessagesComponent } from './ticket-messages/ticket-messages.component';
 import { ChatService } from '../../../services/ticket-messages/ticket-messages.service';
 import { TicketNoteComponent } from './ticket-note/ticket-note.component';
@@ -13,6 +13,8 @@ import { TicketVideoChatComponent } from './ticket-video-chat/ticket-video-chat.
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { ToastMessage } from '../../../services/toastMessage.service';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DialogCloseTicket } from './ticket-head/dialog-component/dialog-close.component';
+import { DialogDetail } from './ticket-head/dialog-component/dialog-detail.component';
 
 const routes: Routes = [
     {

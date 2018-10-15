@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy, Inject } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import { Location } from '@angular/common';
 import { find } from 'lodash';
@@ -15,15 +15,12 @@ import { WsEvents } from '../../../../../type/ws-events';
 import { Router } from '@angular/router';
 import { NormalizeTicket } from '../../../../services/helper/normalize-ticket';
 import { HistoryTypes } from '../../../../../enums/ticket-history-type.enum';
-import { MatDialog, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { ICallType } from '../../../../../interfaces/i-call-type';
-import { ICallResult } from '../../../../../interfaces/i-call-result';
-import { ITicketReport } from '../../../../../interfaces/i-ticket-report';
-import { ApiTicketReportService } from '../../../../services/api/api-ticket-report.service';
+import { MatDialog} from '@angular/material';
 import * as _ from 'lodash';
-import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { ToastMessage } from '../../../../services/toastMessage.service';
 import 'rxjs/add/operator/mergeMap';
+import { DialogCloseTicket } from './dialog-component/dialog-close.component';
+import { DialogDetail } from './dialog-component/dialog-detail.component';
 
 @Component({
   selector: 'fuse-ticket-head',
@@ -236,163 +233,5 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
         this.closeChat();
       }
     });
-  }
-}
-
-
-@Component({
-  selector: 'fuse-dialog-close-ticket',
-  templateUrl: './dialog-close-ticket.html',
-  styleUrls: ['./ticket-head.component.scss']
-})
-// tslint:disable-next-line:component-class-suffix
-export class DialogCloseTicket {
-  public call_type: ICallType[];
-  public call_result: ICallResult[];
-  public ticket_report: ITicketReport[];
-
-  private user;
-  public formGroup: FormGroup;
-
-  constructor(
-    public dialogRef: MatDialogRef<DialogCloseTicket>,
-    private storage: LocalStorageService,
-    private apiTicketReportService: ApiTicketReportService,
-    private toastMessage: ToastMessage,
-    // private _formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
-    this.call_type = this.storage.getItem('call_type');
-    this.call_result = this.storage.getItem('call_result');
-    this.user = this.storage.getItem('user');
-    this.ticket_report = this.data.ticket.reports.length > 0 ? _.cloneDeep(this.data.ticket.reports) : [
-      {
-        id_ticket: this.data.ticket.id,
-        number: '',
-        id_call_type: null,
-        id_call_result: null
-      }
-    ];
-    this.buildFormControl();
-  }
-
-  private buildFormControl(){
-    const ctrls: any = {};
-    this.ticket_report.forEach((report: ITicketReport, index: number) => {
-      ctrls[`callType${index}`] = new FormControl('', Validators.required);
-      ctrls[`number${index}`] = new FormControl('', Validators.compose([Validators.required, PhoneValidator.validPhone]));
-      ctrls[`callResult${index}`] = new FormControl('', Validators.required);
-    });
-    this.formGroup = new FormGroup(ctrls);
-  }
-
-  async onYesClick() {
-    if (this.formGroup.invalid) {
-      return;
-    }
-
-    const confirm = await this.toastMessage.warning('Conferma chiusura Ticket?', 'Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
-
-    if (confirm.value) {
-      this.apiTicketReportService.create(this.ticket_report)
-        .subscribe(() => {
-          this.dialogRef.close('true');
-        });
-    }
-  }
-
-  onAddItem() {
-    const index = this.ticket_report.length;
-    this.ticket_report.push({
-      id_ticket: this.data.ticket.id,
-      number: '',
-      id_call_type: null,
-      id_call_result: null
-    });
-    this.formGroup.addControl(`callType${index}`, new FormControl('', Validators.required));
-    this.formGroup.addControl(`number${index}`, new FormControl('', Validators.required));
-    this.formGroup.addControl(`callResult${index}`, new FormControl('', Validators.required));
-  }
-
-  onRemoveItem(index: number) {
-    this.formGroup.removeControl(`callType${index}`);
-    this.formGroup.removeControl(`number${index}`);
-    this.formGroup.removeControl(`callResult${index}`);
-    this.ticket_report.splice(index, 1);
-  }
-
-}
-
-
-@Component({
-  selector: 'fuse-dialog-detail',
-  templateUrl: './dialog-detail.html',
-  styleUrls: ['./ticket-head.component.scss']
-})
-// tslint:disable-next-line:component-class-suffix
-export class DialogDetail {
-  public call_type: ICallType[];
-  public call_result: ICallResult[];
-  public ticket_report: ITicketReport[] = this.data.ticket.reports.length > 0 ? this.data.ticket.reports : [
-    {
-      id_ticket: this.data.ticket.id,
-      number: '',
-      id_call_type: 0,
-      id_call_result: 0
-    }
-  ];
-
-  private user;
-
-  constructor(
-    public dialogRef: MatDialogRef<DialogCloseTicket>,
-    private storage: LocalStorageService,
-    private apiTicketReportService: ApiTicketReportService,
-    private toastMessage: ToastMessage,
-    @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
-    this.call_type = this.storage.getItem('call_type');
-    this.call_result = this.storage.getItem('call_result');
-    this.user = this.storage.getItem('user');
-  }
-
-  async onYesClick() {
-    const confirm = await this.toastMessage.warning('Conferma chiusura Ticket?', 'Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
-    if (confirm.value) {
-      if (this.ticket_report[0].id_call_result !== 0 && this.ticket_report[0].id_call_type !== 0 && this.ticket_report[0].number !== '') {
-        const reports = _.filter(this.ticket_report, (item: ITicketReport) => {
-          return (!!item.id_call_result && !!item.id_call_type && !!item.number);
-        });
-        if (reports.length === this.ticket_report.length) {
-          this.apiTicketReportService.create(reports)
-            .subscribe(() => {
-              this.dialogRef.close('true');
-            });
-        }
-      }
-    }
-  }
-
-  onAddItem() {
-    this.ticket_report.push({
-      id_ticket: this.data.ticket.id,
-      number: '',
-      id_call_type: 0,
-      id_call_result: 0
-    });
-  }
-
-  onRemoveItem(index: number) {
-    this.ticket_report.splice(index, 1);
-  }
-}
-
-export class PhoneValidator {
-  static validPhone(fc: FormControl){
-    if(!isNaN(fc.value)) {
-      return ({PhoneValidator: true});
-    } else {
-      return (null);
-    }
   }
 }
