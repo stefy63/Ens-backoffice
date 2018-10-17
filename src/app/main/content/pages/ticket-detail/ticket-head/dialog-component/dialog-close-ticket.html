@@ -6,7 +6,7 @@
     </button>
   </div>
   <div #report_container>
-      <form [formGroup]="formGroup">
+      <form (ngSubmit)="onYesClick()" [formGroup]="formGroup">
         <div class="bordered" *ngFor="let item of ticket_report; let i = index;">
             <mat-form-field  class="col">
               <mat-select placeholder="Tipo chiamata..." [(ngModel)]="item.id_call_type" [formControlName]=" 'callType' +i" required>
@@ -30,16 +30,16 @@
               <mat-error *ngIf="formGroup.controls['callResult' + i].hasError('required')">Selezionare l'esito della chiamata</mat-error>
             </mat-form-field>
             <div class="remove-report col-1" *ngIf="i != 0">
-              <button mat-mini-fab type="button" color="warn" (click)="onRemoveItem(i)">
+              <button mat-mini-fab color="warn" (click)="onRemoveItem(i)">
                 <mat-icon class="icon--white">remove</mat-icon>
               </button>
             </div>
         </div>
         <div class="pull-right">
-          <button mat-button type="button" [mat-dialog-close]="false" color="warn">
+          <button mat-button  [mat-dialog-close]="false" color="warn">
               <mat-icon>close</mat-icon> Annulla
           </button>
-          <button mat-button type="submit" color="accent" (click)="onYesClick()">
+          <button mat-button  type="submit" color="accent">
               <mat-icon>done</mat-icon> Accetta
           </button>
         </div>
