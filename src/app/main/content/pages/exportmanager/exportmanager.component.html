@@ -1,0 +1,40 @@
+<div class="col-md-12 p-24" #queryReportForm>
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+        <div class="bordered" >
+
+            <mat-form-field  class="col">
+              <mat-select placeholder="Categoria..." [(ngModel)]="category" [formControlName]="category">
+                <mat-option *ngFor="let ct of category" [value]="ct.id" [attr.selected]="item.id_call_type==ct.id ? true : null">
+                  {{ ct.category }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+
+            <!-- <mat-form-field  class="col" >
+              <input hintLabel="Inserire solo numeri" matInput type="text" class="dialog-input" placeholder="N° Chiamato" [value]="item.number" [(ngModel)]="item.number" [formControlName]=" 'number' +i" required phone>
+              <mat-error *ngIf="formGroup.controls['number' + i].hasError('required')">Inserire un numero di telefono</mat-error>
+              <mat-error *ngIf="formGroup.controls['number' + i].hasError('PhoneValidator')">Inserire solo numeri</mat-error>
+            </mat-form-field>
+
+            <mat-form-field class="col" >
+              <mat-select placeholder="Risultato chiamata..." [(ngModel)]="item.id_call_result" [formControlName]=" 'callResult' +i" required>
+                <mat-option *ngFor="let cr of call_result" [value]="cr.id">
+                  {{ cr.type }}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="formGroup.controls['callResult' + i].hasError('required')">Selezionare l'esito della chiamata</mat-error>
+            </mat-form-field> -->
+
+        </div>
+
+        <div class="pull-left">
+          <button mat-button type="button" color="warn">
+              <mat-icon>close</mat-icon> Annulla
+          </button>
+          <button mat-button type="submit" color="accent" >
+              <mat-icon>done</mat-icon> Accetta
+          </button>
+        </div>
+      </form>
+</div>
