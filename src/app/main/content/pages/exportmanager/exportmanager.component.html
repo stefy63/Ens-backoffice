@@ -1,40 +1,61 @@
 <div class="col-md-12 p-24" #queryReportForm>
-    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-        <div class="bordered" >
+  <div class="col-6 offset-md-3 header">
+      <span class="mat-display-1 font-weight-900">Modulo filtro reports</span>>
+  </div>
+  <mat-divider></mat-divider>
+  <div class="bordered col-12" >
 
-            <mat-form-field  class="col">
-              <mat-select placeholder="Categoria..." [(ngModel)]="category" [formControlName]="category">
-                <mat-option *ngFor="let ct of category" [value]="ct.id" [attr.selected]="item.id_call_type==ct.id ? true : null">
-                  {{ ct.category }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-
-
-            <!-- <mat-form-field  class="col" >
-              <input hintLabel="Inserire solo numeri" matInput type="text" class="dialog-input" placeholder="N° Chiamato" [value]="item.number" [(ngModel)]="item.number" [formControlName]=" 'number' +i" required phone>
-              <mat-error *ngIf="formGroup.controls['number' + i].hasError('required')">Inserire un numero di telefono</mat-error>
-              <mat-error *ngIf="formGroup.controls['number' + i].hasError('PhoneValidator')">Inserire solo numeri</mat-error>
-            </mat-form-field>
-
-            <mat-form-field class="col" >
-              <mat-select placeholder="Risultato chiamata..." [(ngModel)]="item.id_call_result" [formControlName]=" 'callResult' +i" required>
-                <mat-option *ngFor="let cr of call_result" [value]="cr.id">
-                  {{ cr.type }}
-                </mat-option>
-              </mat-select>
-              <mat-error *ngIf="formGroup.controls['callResult' + i].hasError('required')">Selezionare l'esito della chiamata</mat-error>
-            </mat-form-field> -->
-
-        </div>
-
-        <div class="pull-left">
-          <button mat-button type="button" color="warn">
-              <mat-icon>close</mat-icon> Annulla
+      <mat-form-field class="col-6 offset-md-3">
+          <mat-select placeholder="Categoria..." [(ngModel)]="id_category">
+            <mat-option>---</mat-option>
+            <mat-option *ngFor="let ct of category" [value]="ct.id" >
+              {{ ct.category }}
+            </mat-option>
+          </mat-select>
+      </mat-form-field>
+      <mat-form-field class="col-6 offset-md-3">
+          <input matInput type="text" placeholder="N° Chiamato" [(ngModel)]="phone_number" [formControl]="numberFormControl"/>
+          <mat-error *ngIf="numberFormControl.hasError('PhoneValidator')">Inserire solo numeri</mat-error>
+          <button mat-button *ngIf="phone_number" matSuffix mat-icon-button aria-label="Clear" (click)="phone_number=''">
+              <mat-icon>close</mat-icon>
           </button>
-          <button mat-button type="submit" color="accent" >
-              <mat-icon>done</mat-icon> Accetta
-          </button>
-        </div>
-      </form>
+      </mat-form-field>
+      <div class="col-6 offset-md-3">
+        <mat-form-field class="col-5">
+            <input #start_dateFormControl="ngModel" matInput [min]="startAt" [max]="endAt" [matDatepicker]="picker" placeholder="Date di inizio ricerca." [(ngModel)]="start_date">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker class="pull-right" #picker [startAt]="startAt"></mat-datepicker>
+            <mat-error *ngIf="start_dateFormControl.hasError('matDatepickerParse')">Data con formato non valido.</mat-error>
+            <mat-error *ngIf="start_dateFormControl.hasError('matDatepickerMin')">Data inferiore ai 180 giorni non valida.</mat-error>
+            <mat-error *ngIf="start_dateFormControl.hasError('matDatepickerMax')">Data superiore ad oggi non valida.</mat-error>
+        </mat-form-field>
+        <mat-form-field class="col-5">
+            <input #end_dateFormControl="ngModel" matInput [min]="startAt" [max]="endAt" [matDatepicker]="picker-end" placeholder="Date di fine ricerca." [(ngModel)]="end_date">
+            <mat-datepicker-toggle matSuffix [for]="picker-end"></mat-datepicker-toggle>
+            <mat-datepicker class="pull-right" #picker [startAt]="startAt"></mat-datepicker>
+            <mat-error *ngIf="end_dateFormControl.hasError('matDatepickerParse')">Data con formato non valido.</mat-error>
+            <mat-error *ngIf="end_dateFormControl.hasError('matDatepickerMin')">Data inferiore ai 180 giorni non valida.</mat-error>
+            <mat-error *ngIf="end_dateFormControl.hasError('matDatepickerMax')">Data superiore ad oggi non valida.</mat-error>
+        </mat-form-field>
+      </div>
+
+      <mat-form-field class="col-6 offset-md-3">
+          <mat-select placeholder="Stato..."  [(ngModel)]="id_state">
+            <mat-option>---</mat-option>
+            <mat-option *ngFor="let st of state" [value]="st.id" >
+              {{ st.status }}
+            </mat-option>
+          </mat-select>
+      </mat-form-field>
+      <mat-divider></mat-divider>
+  </div>
+  <p></p>
+  <div class="pull-left col-6 offset-md-3">
+    <button mat-button type="button" color="warn">
+        <mat-icon>close</mat-icon> Annulla
+    </button>
+    <button mat-button (click)="onSubmit()" color="accent" >
+        <mat-icon>done</mat-icon> Accetta
+    </button>
+  </div>
 </div>
