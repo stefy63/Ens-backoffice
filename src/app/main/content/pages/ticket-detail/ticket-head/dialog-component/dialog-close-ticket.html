@@ -6,7 +6,6 @@
     </button>
   </div>
   <div #report_container>
-      {{ ticket_report | json }}
       <form (ngSubmit)="onYesClick()" [formGroup]="formGroup">
         <div class="bordered" *ngFor="let item of ticket_report; let i = index;">
             <mat-form-field  class="col">
