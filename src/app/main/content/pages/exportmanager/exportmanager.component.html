@@ -5,7 +5,7 @@
     <div class="row">
         <mat-form-field class="col-12">
             <mat-select placeholder="Categoria..." [(ngModel)]="id_category">
-                <mat-option value="all">Tutte le categorie</mat-option>
+                <mat-option></mat-option>
                 <mat-option *ngFor="let ct of category" [value]="ct.id">
                     {{ ct.category }}
                 </mat-option>
@@ -22,7 +22,7 @@
             <div class="row">
                 <mat-form-field class="col-6">
                     <input #start_dateFormControl="ngModel" matInput [min]="startAt" [max]="endAt" [matDatepicker]="picker"
-                        placeholder="Date di inizio ricerca." [(ngModel)]="start_date">
+                        placeholder="Date di inizio ricerca." [(ngModel)]="start_date" required>
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker class="pull-right" #picker [startAt]="startAt"></mat-datepicker>
                     <mat-error *ngIf="start_dateFormControl.hasError('matDatepickerParse')">Data con formato non
@@ -34,7 +34,7 @@
                 </mat-form-field>
                 <mat-form-field class="col-6">
                     <input #end_dateFormControl="ngModel" matInput [min]="startAt" [max]="endAt" [matDatepicker]="pickerEnd"
-                        placeholder="Date di fine ricerca." [(ngModel)]="end_date">
+                        placeholder="Date di fine ricerca." [(ngModel)]="end_date" required>
                     <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
                     <mat-datepicker class="pull-right" #pickerEnd [startAt]="startAt"></mat-datepicker>
                     <mat-error *ngIf="end_dateFormControl.hasError('matDatepickerParse')">Data con formato non valido.</mat-error>
@@ -47,7 +47,7 @@
         </div>
         <mat-form-field class="col-12">
             <mat-select placeholder="Stato..." [(ngModel)]="id_state">
-                <mat-option value="all">Tutti gli stati</mat-option>
+                <mat-option></mat-option>
                 <mat-option *ngFor="let st of state" [value]="st.id">
                     {{ st.status }}
                 </mat-option>

@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { LocalStorageService } from '../../../services/local-storage/local-storage.service';
 import { ITicketCategory } from '../../../../interfaces/i-ticket-category';
 import { PhoneValidator } from '../../../services/MaterialValidator/CustomNumericValidator.service';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import * as moment from 'moment';
 import { ITicketStatus } from '../../../../interfaces/i-ticket-status';
+import { ITicketExportRequest } from '../../../../interfaces/i-ticket-export-request';
 
 @Component({
   selector: 'fuse-exportmanager',
@@ -18,7 +19,7 @@ export class ExportmanagerComponent implements OnInit {
   public id_category: number;
   public id_state: number;
   public phone_number: string;
-  public startAt = moment(new Date()).subtract(180, 'day').toDate();
+  public startAt = moment(new Date()).subtract(90, 'day').toDate();
   public endAt = new Date();
   public start_date = moment().subtract(90, 'day').toDate();
   public end_date = new Date();
@@ -37,7 +38,19 @@ export class ExportmanagerComponent implements OnInit {
 
 
   onSubmit(){
-    console.log(this.id_category, this.phone_number, this.start_date.toLocaleDateString('it-IT'), this.end_date.toLocaleDateString('it-IT'), this.id_state);
+
+    let filter: ITicketExportRequest;
+    console.log('FILTRO 1 ---> ', filter);
+    // if (this.id_category) {filter.category = this.id_category}
+    // if (this.phone_number) {filter.phone = this.phone_number}
+    // if (this.start_date) {filter.date_start = this.start_date}
+    // if (this.end_date) {filter.date_end = this.end_date}
+    // if (this.id_state) {filter.status = this.id_state}
+
+    console.log('FILTRO 2 ---> ', filter);
+    
+    // this.ticketExportService.get(filter);
     return false;
   }
+
 }

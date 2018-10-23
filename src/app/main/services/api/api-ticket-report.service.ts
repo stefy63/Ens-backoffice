@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { ITicketReport } from '../../../interfaces/i-ticket-report';
 import { Observable } from 'rxjs/Observable';
+import { ITicketExportRequest } from '../../../interfaces/i-ticket-export-request';
 
 
 const httpOptions = {
@@ -22,4 +23,14 @@ export class ApiTicketReportService {
     return this.http.post(this.baseUrl + '/ticketreport/' + report[0].id_ticket, report).map(data => data as ITicketReport);
   }
 
+  public get(request: ITicketExportRequest): any {
+    const index = Object.getOwnPropertyNames(request);
+    console.log(index);
+    const params = new HttpParams();
+    index.forEach((val) => {
+      console.log(val);
+    })
+    // return this.http.get(this.baseUrl + '/ticketreport' , request).map(data => data as ITicketReport);
+    return undefined;
+  }
 }
