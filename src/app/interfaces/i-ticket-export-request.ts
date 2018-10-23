@@ -2,7 +2,7 @@
 export interface ITicketExportRequest {
     category?: number;
     phone?: string;
-    date_start?: Date;
-    date_end?: Date;
+    date_start?: string;
+    date_end?: string;
     status?: number;
 }

@@ -6,6 +6,8 @@ import { FormControl } from '@angular/forms';
 import * as moment from 'moment';
 import { ITicketStatus } from '../../../../interfaces/i-ticket-status';
 import { ITicketExportRequest } from '../../../../interfaces/i-ticket-export-request';
+import { ApiTicketReportService } from '../../../services/api/api-ticket-report.service';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'fuse-exportmanager',
@@ -23,11 +25,14 @@ export class ExportmanagerComponent implements OnInit {
   public endAt = new Date();
   public start_date = moment().subtract(90, 'day').toDate();
   public end_date = new Date();
+  public activeSpinner = false;
 
   public numberFormControl = new FormControl('', PhoneValidator.validPhone);
 
   constructor(
     private storage: LocalStorageService,
+    private ticketExportService: ApiTicketReportService,
+    private spinner: NgxSpinnerService
     ) {
       this.category = this.storage.getItem('ticket_category');
       this.state = this.storage.getItem('ticket_status');
@@ -38,19 +43,24 @@ export class ExportmanagerComponent implements OnInit {
 
 
   onSubmit(){
+    const filter: ITicketExportRequest = {};
+    this.spinner.show();
 
-    let filter: ITicketExportRequest;
-    console.log('FILTRO 1 ---> ', filter);
-    // if (this.id_category) {filter.category = this.id_category}
-    // if (this.phone_number) {filter.phone = this.phone_number}
-    // if (this.start_date) {filter.date_start = this.start_date}
-    // if (this.end_date) {filter.date_end = this.end_date}
-    // if (this.id_state) {filter.status = this.id_state}
+    if (!!this.id_category) {filter.category = this.id_category; }
+    if (!!this.phone_number) {filter.phone = this.phone_number; }
+    if (!!this.start_date) {filter.date_start = moment(this.start_date).format('YYYY-MM-DD'); }
+    if (!!this.end_date) {filter.date_end = moment(this.end_date).format('YYYY-MM-DD'); }
+    if (!!this.id_state) {filter.status = this.id_state; }
 
-    console.log('FILTRO 2 ---> ', filter);
-    
-    // this.ticketExportService.get(filter);
-    return false;
+    this.ticketExportService.get(filter).subscribe(data => {
+      this.spinner.hide();
+      const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+      a.href = window.URL.createObjectURL(data.file);
+      a.download = data.filename;
+      document.body.appendChild(a);
+      a.click();
+    });
+    return;
   }
 
 }
