@@ -222,16 +222,9 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   }
 
   openDialogDetail(): void {
-    const dialogRef = this.dialog.open(DialogDetail, {
+    this.dialog.open(DialogDetail, {
       width: '80%',
       data: { ticket: this.ticket }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
-      if (!!result) {
-        this.closeChat();
-      }
     });
   }
 }
