@@ -8,6 +8,7 @@ import { ITicketStatus } from '../../../../interfaces/i-ticket-status';
 import { ITicketExportRequest } from '../../../../interfaces/i-ticket-export-request';
 import { ApiTicketReportService } from '../../../services/api/api-ticket-report.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { MatDatepickerInputEvent } from '@angular/material';
 
 @Component({
   selector: 'fuse-exportmanager',
@@ -26,8 +27,8 @@ export class ExportmanagerComponent implements OnInit {
   public start_date = moment().subtract(90, 'day').toDate();
   public end_date = new Date();
   public activeSpinner = false;
-
   public numberFormControl = new FormControl('', PhoneValidator.validPhone);
+  public isValidForm = true;
 
   constructor(
     private storage: LocalStorageService,
@@ -43,6 +44,10 @@ export class ExportmanagerComponent implements OnInit {
 
 
   onSubmit(){
+    if (!this.start_date || !this.end_date) {
+      console.log('data errata');
+      return;
+    }
     const filter: ITicketExportRequest = {};
     this.spinner.show();
 
@@ -61,6 +66,10 @@ export class ExportmanagerComponent implements OnInit {
       a.click();
     });
     return;
+  }
+
+  addEvent(event: MatDatepickerInputEvent<Date>) {
+    this.isValidForm = (event.value) ?  true : false;
   }
 
 }

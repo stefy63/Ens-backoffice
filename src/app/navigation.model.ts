@@ -7,7 +7,7 @@ export class NavigationModel
         this.model = [
             {
                 'id'      : 'pages',
-                'title'   : 'Funzioni',
+                'title'   : 'Overview',
                 'type'    : 'group',
                 'icon'    : 'pages',
                 'children': [
@@ -52,15 +52,15 @@ export class NavigationModel
                 ]
             },
             {
-              'id'      : 'applications',
-              'title'   : 'Applications',
+              'id'      : 'analytics',
+              'title'   : 'Analytics',
               'type'    : 'group',
               'children': [
                   {
                       'id'   : 'export',
                       'title': 'Report',
                       'type' : 'item',
-                      'icon' : 'email',
+                      'icon' : 'trending_up',
                       'url'  : '/pages/export-report',
                       // 'badge': {
                       //     'title': 25,
