@@ -36,7 +36,7 @@ export class ApiTicketReportService {
               .map((data) => {
                 const blob = {
                   file: new Blob([data.body], { type: data.headers.get('Content-Type') }),
-                  filename: 'reports.csv'
+                  filename: data.headers.get('File-Name')
                 };
 
                 return blob ;
