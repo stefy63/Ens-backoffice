@@ -18,7 +18,7 @@ import { NotificationsService } from 'angular2-notifications';
   templateUrl: './exportmanager.component.html',
   styleUrls: ['./exportmanager.component.scss'],
   providers: [
-    {provide: MAT_DATE_LOCALE, useValue: 'it-IT'}
+    { provide: MAT_DATE_LOCALE, useValue: 'it-IT' }
   ]
 })
 export class ExportmanagerComponent implements OnInit {
@@ -42,28 +42,28 @@ export class ExportmanagerComponent implements OnInit {
     private ticketExportService: ApiTicketReportService,
     private spinner: NgxSpinnerService,
     private toast: NotificationsService
-    ) {
-      this.category = this.storage.getItem('ticket_category');
-      this.state = this.storage.getItem('ticket_status');
-     }
+  ) {
+    this.category = this.storage.getItem('ticket_category');
+    this.state = this.storage.getItem('ticket_status');
+  }
 
   ngOnInit() {
   }
 
 
-  onSubmit(){
+  onSubmit() {
     if (!this.start_date.valid || !this.end_date.valid) {
-      this.toast.error('Errore Date', 'Data non valida!' );
+      this.toast.error('Errore Date', 'Data non valida!');
       return;
     }
     const filter: ITicketExportRequest = {};
     this.spinner.show();
 
-    if (!!this.id_category) {filter.category = this.id_category; }
-    if (!!this.phone_number) {filter.phone = this.phone_number.trim(); }
-    if (!!this.start_date) {filter.date_start = moment(this.start_date.value).format('YYYY-MM-DD'); }
-    if (!!this.end_date) {filter.date_end = moment(this.end_date.value).format('YYYY-MM-DD'); }
-    if (!!this.id_state) {filter.status = this.id_state; }
+    if (!!this.id_category) { filter.category = this.id_category; }
+    if (!!this.phone_number) { filter.phone = this.phone_number.trim(); }
+    if (!!this.start_date) { filter.date_start = moment(this.start_date.value).format('YYYY-MM-DD'); }
+    if (!!this.end_date) { filter.date_end = moment(this.end_date.value).format('YYYY-MM-DD'); }
+    if (!!this.id_state) { filter.status = this.id_state; }
 
     this.ticketExportService.get(filter).subscribe(data => {
       const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
@@ -72,7 +72,7 @@ export class ExportmanagerComponent implements OnInit {
       document.body.appendChild(a);
       a.click();
       this.spinner.hide();
-      this.toast.success('Download File!', 'Operazione conclusa!' );
+      this.toast.success('Download File!', 'Operazione conclusa!');
     });
     return;
   }
