@@ -28,9 +28,9 @@ export class ExportmanagerComponent implements OnInit {
   public id_category: number;
   public id_state: number;
   public phone_number: string;
-  public startAt = moment(new Date()).subtract(90, 'day').toDate();
+  public startAt = moment(new Date()).subtract(31, 'day').toDate();
   public endAt = new Date();
-  public start_date = new FormControl(moment().subtract(90, 'day').toDate());
+  public start_date = new FormControl(moment().subtract(31, 'day').toDate());
   public end_date = new FormControl(new Date());
   public activeSpinner = false;
   public numberFormControl = new FormControl('', PhoneValidator.validPhone);
