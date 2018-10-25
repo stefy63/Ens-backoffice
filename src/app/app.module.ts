@@ -29,13 +29,18 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { UnreadedMessageEmitterService } from './main/services/helper/unreaded-message-emitter.service';
 import { RollbarErrorHandler } from './main/services/errors/RollbarErrorHandler.service';
 import { ApiTicketReportService } from './main/services/api/api-ticket-report.service';
-
+import { ExportmanagerComponent } from '../app/main/content/pages/exportmanager/exportmanager.component';
 
 const appRoutes: Routes = [
-    {
-        path: '**',
-        redirectTo: 'pages/authentication/login-2'
-    }
+  {
+    path     : 'pages/export-report',
+    canActivate: [AuthGuard, IsOperatorGuard],
+    component: ExportmanagerComponent
+  },
+  {
+      path: '**',
+      redirectTo: 'pages/authentication/login-2'
+  }
 ];
 
 const options = {
@@ -52,7 +57,8 @@ const config: SocketIoConfig = { url: environment.ws_url + wssPort, options: opt
 
 @NgModule({
     declarations: [
-        AppComponent
+        AppComponent,
+        ExportmanagerComponent
     ],
     imports: [
         BrowserModule,
