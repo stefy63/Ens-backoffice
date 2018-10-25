@@ -30,7 +30,6 @@ import { UnreadedMessageEmitterService } from './main/services/helper/unreaded-m
 import { RollbarErrorHandler } from './main/services/errors/RollbarErrorHandler.service';
 import { ApiTicketReportService } from './main/services/api/api-ticket-report.service';
 import { ExportmanagerComponent } from '../app/main/content/pages/exportmanager/exportmanager.component';
-import { MAT_DATE_LOCALE } from '@angular/material';
 
 const appRoutes: Routes = [
   {
@@ -94,8 +93,7 @@ const config: SocketIoConfig = { url: environment.ws_url + wssPort, options: opt
         ApiTicketHistoryService,
         UnreadedMessageEmitterService,
         {provide: ErrorHandler, useClass: RollbarErrorHandler},
-        ApiTicketReportService,
-        {provide: MAT_DATE_LOCALE, useValue: 'it-IT'}
+        ApiTicketReportService
     ],
     bootstrap: [
         AppComponent
