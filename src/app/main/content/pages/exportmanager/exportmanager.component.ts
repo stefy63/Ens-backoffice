@@ -24,6 +24,7 @@ import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-mo
 
   ]
 })
+
 export class ExportmanagerComponent implements OnInit {
 
   public category: ITicketCategory[];
@@ -31,8 +32,8 @@ export class ExportmanagerComponent implements OnInit {
   public id_category: number;
   public id_state: number;
   public phone_number: string;
-  public startAt = moment(new Date()).subtract(31, 'day').toDate();
-  public endAt = new Date();
+  public MINstartAt = moment(new Date()).subtract(60, 'day').toDate();
+  public MAXendAt = new Date();
   public start_date = new FormControl(moment().subtract(31, 'day').toDate());
   public end_date = new FormControl(new Date());
   public activeSpinner = false;
