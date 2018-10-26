@@ -8,17 +8,20 @@ import { ITicketStatus } from '../../../../interfaces/i-ticket-status';
 import { ITicketExportRequest } from '../../../../interfaces/i-ticket-export-request';
 import { ApiTicketReportService } from '../../../services/api/api-ticket-report.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { MatDatepickerInputEvent, MAT_DATE_LOCALE } from '@angular/material';
+import { MatDatepickerInputEvent, MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS } from '@angular/material';
 import { ToastOptions } from '../../../../type/toast-options';
 import { NotificationsService } from 'angular2-notifications';
-
+import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
 
 @Component({
   selector: 'fuse-exportmanager',
   templateUrl: './exportmanager.component.html',
   styleUrls: ['./exportmanager.component.scss'],
   providers: [
-    { provide: MAT_DATE_LOCALE, useValue: 'it-IT' }
+    { provide: MAT_DATE_LOCALE, useValue: 'it-IT' },
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MAT_MOMENT_DATE_FORMATS },
+
   ]
 })
 export class ExportmanagerComponent implements OnInit {
@@ -41,10 +44,12 @@ export class ExportmanagerComponent implements OnInit {
     private storage: LocalStorageService,
     private ticketExportService: ApiTicketReportService,
     private spinner: NgxSpinnerService,
-    private toast: NotificationsService
+    private toast: NotificationsService,
+    private adapter: DateAdapter<any>
   ) {
     this.category = this.storage.getItem('ticket_category');
     this.state = this.storage.getItem('ticket_status');
+    this.adapter.setLocale('it');
   }
 
   ngOnInit() {
