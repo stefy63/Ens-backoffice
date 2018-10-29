@@ -1,0 +1,69 @@
+<ngx-spinner bdColor="rgba(51, 51, 51, 0.0)" size="large" color="#039be5" type="ball-clip-rotate"></ngx-spinner>
+<div class="col-12 p-24">
+    <div class="header text-center">
+        <span class="mat-display-1 font-weight-900">Modulo Reports</span>
+    </div>
+    <div class="row">
+        <mat-form-field class="col-12">
+            <mat-select placeholder="Categoria..." [(ngModel)]="id_category">
+                <mat-option></mat-option>
+                <mat-option *ngFor="let ct of category" [value]="ct.id">
+                    {{ ct.category }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-form-field class="col-12">
+            <input matInput type="text" placeholder="N° Chiamato" [(ngModel)]="phone_number" [formControl]="numberFormControl" />
+            <mat-error *ngIf="numberFormControl.hasError('PhoneValidator')">Inserire solo numeri</mat-error>
+            <button mat-button *ngIf="phone_number" matSuffix mat-icon-button aria-label="Clear" (click)="phone_number=''">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+        <div class="col-12">
+            <div class="row">
+                <mat-form-field class="col-6">
+                    <input [formControl]="start_date" matInput [min]="MINstartAt" [max]="MAXendAt" [matDatepicker]="pickerStart"
+                        (dateChange)="addEvent($event)" placeholder="Date di inizio ricerca." required>
+                    <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
+                    <mat-datepicker class="pull-right" #pickerStart [startAt]="MINstartAt" [endAt]="MAXendAt"></mat-datepicker>
+                    <mat-error *ngIf="start_date.hasError('required')">Campo obbligatorio</mat-error>
+                    <mat-error *ngIf="start_date.hasError('matDatepickerParse')">Data con formato non
+                        valido.</mat-error>
+                    <mat-error *ngIf="start_date.hasError('matDatepickerMin')">Data inferiore ai 60 giorni
+                        non valida.</mat-error>
+                    <mat-error *ngIf="start_date.hasError('matDatepickerMax')">Data superiore ad oggi non
+                        valida.</mat-error>
+                </mat-form-field>
+                <mat-form-field class="col-6">
+                    <input [formControl]="end_date" matInput [min]="MINstartAt" [max]="MAXendAt" [matDatepicker]="pickerEnd"
+                        (dateChange)="addEvent($event)" placeholder="Date di fine ricerca." required>
+                    <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
+                    <mat-datepicker class="pull-right" #pickerEnd [startAt]="end_date" [endAt]="MAXendAt"></mat-datepicker>
+                    <mat-error *ngIf="end_date.hasError('required')">Campo obbligatorio</mat-error>
+                    <mat-error *ngIf="end_date.hasError('matDatepickerParse')">Data con formato non valido.</mat-error>
+                    <mat-error *ngIf="end_date.hasError('matDatepickerMin')">Data inferiore ai 180 giorni
+                        non valida.</mat-error>
+                    <mat-error *ngIf="end_date.hasError('matDatepickerMax')">Data superiore ad oggi non
+                        valida.</mat-error>
+                </mat-form-field>
+            </div>
+        </div>
+        <mat-form-field class="col-12">
+            <mat-select placeholder="Stato..." [(ngModel)]="id_state">
+                <mat-option></mat-option>
+                <mat-option *ngFor="let st of state" [value]="st.id">
+                    {{ st.status }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-divider></mat-divider>
+    </div>
+    <div class="col-12 text-center">
+        <button mat-button (click)="onSubmit()" color="accent" [disabled]="!isValidForm">
+            <mat-icon>done</mat-icon> Esporta
+        </button>
+    </div>
+</div>
+
+
+<simple-notifications [options]="options"></simple-notifications>

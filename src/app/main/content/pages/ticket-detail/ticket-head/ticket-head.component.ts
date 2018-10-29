@@ -5,7 +5,7 @@ import { find } from 'lodash';
 import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
 import { ApiTicketService } from '../../../../services/api/api-ticket.service';
 import { Status } from '../../../../../enums/ticket-status.enum';
-import swal, { SweetAlertType, SweetAlertResult } from 'sweetalert2';
+import swal from 'sweetalert2';
 import { ApiTicketHistoryService } from '../../../../services/api/api-ticket-history.service';
 import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
 import { SocketService } from '../../../../services/socket/socket.service';
@@ -15,6 +15,12 @@ import { WsEvents } from '../../../../../type/ws-events';
 import { Router } from '@angular/router';
 import { NormalizeTicket } from '../../../../services/helper/normalize-ticket';
 import { HistoryTypes } from '../../../../../enums/ticket-history-type.enum';
+import { MatDialog} from '@angular/material';
+import * as _ from 'lodash';
+import { ToastMessage } from '../../../../services/toastMessage.service';
+import 'rxjs/add/operator/mergeMap';
+import { DialogCloseTicket } from './dialog-component/dialog-close.component';
+import { DialogDetail } from './dialog-component/dialog-detail.component';
 
 @Component({
   selector: 'fuse-ticket-head',
@@ -33,6 +39,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   public msgAlert: boolean;
   public isOpen = false;
   public timeout = false;
+  public phone: string;
 
 
   constructor(
@@ -41,7 +48,9 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     private apiTicketService: ApiTicketService,
     private socketService: SocketService,
     private apiTicketHistoryService: ApiTicketHistoryService,
-    private router: Router
+    private router: Router,
+    public dialog: MatDialog,
+    private toastMessage: ToastMessage
   ) {
     this.user = this.store.getItem('user');
   }
@@ -49,11 +58,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.newTicket.subscribe(async (data: ITicket) => {
       if (this.ticket && this.ticket.status.status === 'NEW' && data.status.status !== 'NEW' && !this.isOpen) {
-        await swal({
-          title: 'ATTENZIONE! TICKET GIA ACQUISITO',
-          text: 'TICKET PRESO IN CARICO DA ALTRO OPERATORE',
-          type: 'error'
-        });
+        this.toastMessage.error('ATTENZIONE! TICKET GIA ACQUISITO', 'TICKET PRESO IN CARICO DA ALTRO OPERATORE');
         this.location.back();
       }
       this.ticket = NormalizeTicket.normalizeItem([data])[0];
@@ -72,11 +77,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
           if (this.ticket && this.ticket.id === ticket.id && ticket.id_operator !== this.user.id) {
             this.open.next(false);
             this.isOpen = false;
-            await swal({
-              title: 'ATTENZIONE! TICKET ACQUISITO',
-              text: 'TICKET PRESO IN CARICO DA ALTRO OPERATORE',
-              type: 'error'
-            });
+            this.toastMessage.error('ATTENZIONE! TICKET GIA ACQUISITO', 'TICKET PRESO IN CARICO DA ALTRO OPERATORE');
             this.router.navigate(['/pages/dashboard']);
           }
         });
@@ -97,7 +98,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
 
   async acquireTicket() {
     if (this.ticket.id_operator !== this.user.id) {
-      const confirm = await this.confirmAlert('Vuoi acquisire il ticket?', '', 'warning');
+      const confirm = await this.toastMessage.warning('Vuoi acquisire il ticket?', '');
       if (confirm.value) {
         this.isOpen = this.ticket.status === 'ONLINE';
         this.updateTicketStatus(this.ticket.id_status).subscribe(() => {
@@ -120,32 +121,18 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   }
 
   private async setUserChoise(confirmMessage: string, historyMessage: string) {
-    const confirm = await this.confirmAlert(confirmMessage, '', 'warning');
+    const confirm = await this.toastMessage.warning(confirmMessage, '');
     if (confirm.value) {
-      this.isOpen = true;
       this.updateTicketStatus(Status.ONLINE)
+        .mergeMap((data) => this.createHistoryTicketSystem(historyMessage))
         .subscribe(
           () => {
-            this.createHistoryTicketSystem(historyMessage)
-              .subscribe(
-                (data) => {
-                  console.log('TicketHistory Subscription success');
-                },
-                (err) => {
-                  swal({
-                    title: 'ERRORE\'',
-                    text: 'Errore nel ticket....' + this.ticket.id,
-                    type: 'error'
-                  });
-                });
+            console.log('TicketHistory Subscription success');
           },
           (err) => {
-            swal({
-              title: 'ERRORE\'',
-              text: 'Errore nel ticket....' + this.ticket.id,
-              type: 'error'
-            });
+            this.toastMessage.error('ERRORE', 'Errore nel ticket....' + this.ticket.id);
           });
+      this.isOpen = true;
       this.msgAlert = false;
       this.open.next(true);
     }
@@ -156,16 +143,14 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   }
 
   async closeChat() {
-    const confirm = await this.confirmAlert('Conferma chiusura Ticket?', 'Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname, 'warning');
-    if (confirm.value) {
-      this.updateTicketStatus(Status.CLOSED)
-        .subscribe(() => {
-          this.createHistoryTicketSystem('Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname)
-            .subscribe(() => {
-              this.location.back();
-            });
-        });
-    }
+    this.updateTicketStatus(Status.CLOSED)
+      .subscribe(() => {
+        this.createHistoryTicketSystem('Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname)
+          .subscribe(() => {
+            this.location.back();
+          });
+      });
+    // }
   }
 
   private async refuseChat() {
@@ -194,28 +179,11 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
             // tslint:disable-next-line:max-line-length
             this.createHistoryTicketSystem('Rifiutato ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname + 'per il seguente motivo: ' + result.value)
               .subscribe(() => {
-                swal({
-                  type: 'success',
-                  title: 'La Chat è stata rifiutata!',
-                  html: 'Rifiutata per: ' + result.value
-                });
+                this.toastMessage.success('La Chat è stata rifiutata!', 'Rifiutata per: ' + result.value);
                 this.location.back();
               });
           });
       }
-    });
-  }
-
-  private confirmAlert(title: string, text: string, type: SweetAlertType): Promise<SweetAlertResult> {
-    return swal({
-      title: title,
-      text: text,
-      type: type,
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Conferma',
-      cancelButtonText: 'Annulla'
     });
   }
 
@@ -231,11 +199,32 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   }
 
   private updateTicketStatus(id_status: number): Observable<ITicket> {
-    const updateTicket = {
+    const updateTicket: ITicket = {
       id: this.ticket.id,
       id_status: id_status,
       id_operator: this.user.id
     };
     return this.apiTicketService.update(updateTicket as ITicket);
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(DialogCloseTicket, {
+      width: '80%',
+      data: { ticket: this.ticket }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed', result);
+      if (!!result) {
+        this.closeChat();
+      }
+    });
+  }
+
+  openDialogDetail(): void {
+    this.dialog.open(DialogDetail, {
+      width: '80%',
+      data: { ticket: this.ticket }
+    });
   }
 }

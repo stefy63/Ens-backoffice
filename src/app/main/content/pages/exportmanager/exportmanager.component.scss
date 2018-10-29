@@ -1,0 +1,13 @@
+:host {
+  .header {
+    text-align: center;
+    padding-bottom: 20px;
+  }
+  .content {
+    padding-top: 30px;
+    padding-bottom: 20px;
+    & mat-form-field {
+      padding-bottom: 10px;
+    }
+  }
+}

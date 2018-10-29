@@ -45,7 +45,9 @@
     <!-- phone Column -->
     <ng-container matColumnDef="phone">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="col-2 text-center"><span class="col-12 text-center">Telefono</span></mat-header-cell>
-      <mat-cell *matCellDef="let element" class="col-2 text-right"> {{element.phone}} </mat-cell>
+      <mat-cell *matCellDef="let element" class="col-2 text-right">
+          <p *ngFor="let item of element.reports">{{item.number}}</p>
+      </mat-cell>
     </ng-container>
 
     <!-- date_time Column -->
@@ -58,7 +60,7 @@
     <!-- id Column -->
     <ng-container matColumnDef="id">
       <mat-header-cell *matHeaderCellDef class="text-right col-1 "> Azioni</mat-header-cell>
-      <mat-cell *matCellDef="let element" class="text-right col-1" mdTooltipPosition="'left'" matTooltip="{{element.closed_at}}">
+      <mat-cell *matCellDef="let element" class="text-right col-1" >
         <div class="action">
 
           <button class="mat-icon-button mat-warn" (click)="showTicketDetail(element)">

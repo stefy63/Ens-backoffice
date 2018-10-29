@@ -7,7 +7,7 @@ export class NavigationModel
         this.model = [
             {
                 'id'      : 'pages',
-                'title'   : 'Funzioni',
+                'title'   : 'Overview',
                 'type'    : 'group',
                 'icon'    : 'pages',
                 'children': [
@@ -51,25 +51,25 @@ export class NavigationModel
                     // }
                 ]
             },
-            // {
-            //     'id'      : 'applications',
-            //     'title'   : 'Applications',
-            //     'type'    : 'group',
-            //     'children': [
-            //         {
-            //             'id'   : 'sample',
-            //             'title': 'Sample',
-            //             'type' : 'item',
-            //             'icon' : 'email',
-            //             'url'  : '/sample',
-            //             // 'badge': {
-            //             //     'title': 25,
-            //             //     'bg'   : '#F44336',
-            //             //     'fg'   : '#FFFFFF'
-            //             // }
-            //         }
-            //     ]
-            // }
+            {
+              'id'      : 'analytics',
+              'title'   : 'Analytics',
+              'type'    : 'group',
+              'children': [
+                  {
+                      'id'   : 'export',
+                      'title': 'Report',
+                      'type' : 'item',
+                      'icon' : 'trending_up',
+                      'url'  : '/pages/export-report',
+                      // 'badge': {
+                      //     'title': 25,
+                      //     'bg'   : '#F44336',
+                      //     'fg'   : '#FFFFFF'
+                      // }
+                  }
+              ]
+            }
 
         ];
     }
