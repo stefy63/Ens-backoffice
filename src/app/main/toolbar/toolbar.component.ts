@@ -93,8 +93,9 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     ngOnInit() {
         const user = this.storage.getItem('user');
         const token = this.storage.getItem('token');
+        const fakeOperatorNumber = this.elaborateFakeOperatorId(user.id);
         if (user) {
-            this.profile = user.userdata.name + ' ' + user.userdata.surname;
+            this.profile = user.userdata.name + ' ' + user.userdata.surname + ' [' + fakeOperatorNumber + ']';
         }
 
         if (token && token.id_user) {
@@ -135,4 +136,10 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
         // Use the selected language for translations
         this.translate.use(lang.id);
     }
+
+    elaborateFakeOperatorId(id_operator) {
+      const date = new Date();
+      // tslint:disable-next-line:radix
+      return Math.ceil(parseInt('' + date.getDate() + date.getMonth() + '' + date.getFullYear()) / parseInt(id_operator)) + date.getUTCFullYear();
+  }
 }
