@@ -100,11 +100,11 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
 
         if (token && token.id_user) {
             UnreadedMessageEmitterService.subscribe('sum_badge', (data) => {
-              if (this.totalBadge < data && this.totalBadge !== 0) {
-                this.beep.load();
-                this.beep.play();
-              }
-              this.totalBadge = data;
+                if (this.totalBadge < data && this.totalBadge !== 0) {
+                    this.beep.load();
+                    this.beep.play();
+                }
+                this.totalBadge = data;
             });
         }
 
@@ -121,7 +121,7 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     }
 
     edit_profile() {
-      this.router.navigate(['/pages/profile']);
+        this.router.navigate(['/pages/profile']);
     }
 
     search(value) {
@@ -138,8 +138,8 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     }
 
     elaborateFakeOperatorId(id_operator) {
-      const date = new Date();
-      // tslint:disable-next-line:radix
-      return Math.ceil(parseInt('' + date.getDate() + date.getMonth() + '' + date.getFullYear()) / parseInt(id_operator)) + date.getMonth() * 10000;
+        const date = new Date();
+        // tslint:disable-next-line:radix
+        return Math.ceil(parseInt('' + date.getDate() + date.getMonth() + '' + date.getFullYear()) * 100 / parseInt(id_operator)) + date.getMonth() * 10000;
     }
 }
