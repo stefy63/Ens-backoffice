@@ -140,6 +140,6 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     elaborateFakeOperatorId(id_operator) {
         const date = new Date();
         // tslint:disable-next-line:radix
-        return Math.ceil(parseInt('' + date.getDate() + date.getMonth() + '' + date.getFullYear()) * 100 / parseInt(id_operator)) + date.getMonth() * 10000;
+        return Math.ceil(parseInt('' + date.getDate() + date.getMonth() + '' + date.getFullYear()) * 1000 / parseInt(id_operator)) + date.getMonth() * 10000;
     }
 }
