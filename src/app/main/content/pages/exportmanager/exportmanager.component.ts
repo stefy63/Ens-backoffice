@@ -32,7 +32,7 @@ export class ExportmanagerComponent implements OnInit {
   public id_category: number;
   public id_state: number;
   public phone_number: string;
-  public MINstartAt = moment(new Date()).subtract(60, 'day').toDate();
+  public MINstartAt = moment(new Date()).subtract(180, 'day').toDate();
   public MAXendAt = new Date();
   public start_date = new FormControl(moment().subtract(31, 'day').toDate());
   public end_date = new FormControl(new Date());
