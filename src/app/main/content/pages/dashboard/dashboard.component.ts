@@ -12,9 +12,8 @@ import { MatTabChangeEvent } from '@angular/material';
 import * as moment from 'moment';
 import { environment } from '../../../../../environments/environment';
 import { NormalizeTicket } from '../../../services/helper/normalize-ticket';
-import 'rxjs/add/operator/mergeMap';
-import 'rxjs/add/operator/do';
-import 'rxjs/add/observable/of';
+import { mergeMap, tap, map, merge, switchMap } from 'rxjs/operators';
+import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
@@ -27,11 +26,11 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('tabGroup') tabGroup: any;
   private ticket: ITicket[];
   private idOperator: number;
-  public newTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
-  public openTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
-  public closedTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
-  public refusedTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
-  public myOpenTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
+  // public newTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
+  // public openTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
+  // public closedTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
+  // public refusedTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
+  // public myOpenTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
   public totalBadge = 0;
   public options = ToastOptions;
   public beep;
@@ -45,6 +44,8 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     private storage: LocalStorageService,
     private socketService: SocketService,
     private toast: NotificationsService,
+    private spinner: NgxSpinnerService,
+
   ) {
     this.idOperator = this.storage.getItem('user').id;
     this.beep = new Audio();
@@ -52,22 +53,26 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    Observable.of(1).do((id) => console.log('arrived', id));
+    this.tableTickets.pipe(
+      switchMap((tickets) => Observable.interval(60000)),
+      tap(() => this.tabChangedSubject.next(this.currentTabIndex))
+    ).subscribe();
 
-    this.tabChangedSubject
-    .do((index: number) => console.log('SPINNER LOAD', index))
-    .mergeMap((status: number) => this.apiTicket.getFromDate(environment.APP_TICKET_RETENTION_DAY))
-    .map((tickets: ITicket[]) => NormalizeTicket.normalizeItem(tickets))
-    .do((tickets) => {
-      console.log('spinner hide', tickets);
+    this.tabChangedSubject.pipe(
+    tap((index: number) => this.spinner.show()),
+    mergeMap((status: number) => this._setDataOutput(status)),
+    map((tickets: ITicket[]) => NormalizeTicket.normalizeItem(tickets)),
+    tap((tickets) => {
       this.tableTickets.next(tickets);
-    });
+      this.spinner.hide();
+    })).subscribe();
 
-    this.apiTicket.getFromDate(environment.APP_TICKET_RETENTION_DAY)
-        .subscribe(data => {
-          this.ticket = NormalizeTicket.normalizeItem(data);
-          this._setDataOutput(this.ticket);
-        });
+    // this.apiTicket.getFromDate(environment.APP_TICKET_RETENTION_DAY)
+    //     .subscribe(data => {
+    //       this.ticket = NormalizeTicket.normalizeItem(data);
+    //       this._setDataOutput(this.ticket);
+    //     });
+
     this.socketService.getMessage(WsEvents.ticket.create)
       .subscribe((data: ITicket) => {
         this.tabChangedSubject.next(this.currentTabIndex);
@@ -82,14 +87,17 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
           this.tabGroup.selectedIndex = 0;
         });
       });
+
     this.socketService.getMessage(WsEvents.ticket.updated)
       .subscribe((data: ITicket) => {
-        const index = _.findIndex(this.ticket, item => item.id === data.id);
-        if (index >= 0) {
-          this.ticket.splice(index, 1, NormalizeTicket.normalizeItem([data])[0]);
-        }
-        this._setDataOutput(this.ticket);
-        // this.toast.info('Ticket Modificato', 'Il ticket ' + data.id + ' è stato modificato!');
+        this.tabChangedSubject.next(this.currentTabIndex);
+
+        // const index = _.findIndex(this.ticket, item => item.id === data.id);
+        // if (index >= 0) {
+        //   this.ticket.splice(index, 1, NormalizeTicket.normalizeItem([data])[0]);
+        // }
+        // this._setDataOutput(this.ticket);
+        // // this.toast.info('Ticket Modificato', 'Il ticket ' + data.id + ' è stato modificato!');
       });
   }
 
@@ -107,21 +115,48 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
     this.storage.setItem('dashboard_selected_tabindex', tabChangeEvent.index.toString());
-    console.log('tab changed');
     this.tabChangedSubject.next(tabChangeEvent.index);
   }
 
-  private _setDataOutput(data: ITicket[]) {
-    // const returnTickets = this.apiTicket.normalizeTickets(this.ticket);
-    const returnTickets: ITicket[] = _.map(data, item => {
-            item.closed_at = (item.closed_at) ? moment.utc(item.closed_at.date_time).format('DD/MM/YYYY HH:mm') : undefined;
-            return item;
-          });
-    this.newTicket.next( _.filter(returnTickets, item => item.status === 'NEW'));
-    this.openTicket.next(_.filter(returnTickets, item => item.status === 'ONLINE' && item.id_operator !== this.idOperator));
-    this.closedTicket.next(_.filter(returnTickets, item => item.status === 'CLOSED'));
-    this.refusedTicket.next(_.filter(returnTickets, item => item.status === 'REFUSED'));
-    this.myOpenTicket.next(_.filter(returnTickets, item => item.status === 'ONLINE' && item.id_operator === this.idOperator));
+  // private _setDataOutput(data: ITicket[]) {
+  //   // const returnTickets = this.apiTicket.normalizeTickets(this.ticket);
+  //   const returnTickets: ITicket[] = _.map(data, item => {
+  //           item.closed_at = (item.closed_at) ? moment.utc(item.closed_at.date_time).format('DD/MM/YYYY HH:mm') : undefined;
+  //           return item;
+  //         });
+  //   this.newTicket.next( _.filter(returnTickets, item => item.status === 'NEW'));
+  //   this.openTicket.next(_.filter(returnTickets, item => item.status === 'ONLINE' && item.id_operator !== this.idOperator));
+  //   this.closedTicket.next(_.filter(returnTickets, item => item.status === 'CLOSED'));
+  //   this.refusedTicket.next(_.filter(returnTickets, item => item.status === 'REFUSED'));
+  //   this.myOpenTicket.next(_.filter(returnTickets, item => item.status === 'ONLINE' && item.id_operator === this.idOperator));
+  // }
+
+  private _setDataOutput(index: number): Observable<ITicket[]> {
+    let status = '';
+    switch (index) {
+      case 0: {
+        status = 'NEW';
+        break;
+      }
+      case 1: {
+        status = 'ONLINE';
+        break;
+      }
+      case 2: {
+        status = 'CLOSED';
+        break;
+      }
+      case 3: {
+        status = 'REFUSED';
+        break;
+      }
+      case 4: {
+        status = 'ONLINE';
+        break;
+      }
+    }
+
+    return this.apiTicket.getFromDate(environment.APP_TICKET_RETENTION_DAY, status);
   }
 
 }
