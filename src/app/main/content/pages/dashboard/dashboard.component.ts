@@ -12,6 +12,10 @@ import { MatTabChangeEvent } from '@angular/material';
 import * as moment from 'moment';
 import { environment } from '../../../../../environments/environment';
 import { NormalizeTicket } from '../../../services/helper/normalize-ticket';
+import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/do';
+import 'rxjs/add/observable/of';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'fuse-dashboard',
@@ -31,6 +35,9 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   public totalBadge = 0;
   public options = ToastOptions;
   public beep;
+  public currentTabIndex: number =  this.storage.getItem('dashboard_selected_tabindex') || 0;
+  public tabChangedSubject: BehaviorSubject<number> =  new BehaviorSubject<number>(this.currentTabIndex);
+  public tableTickets: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>([]);
 
 
   constructor(
@@ -45,6 +52,17 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
+    Observable.of(1).do((id) => console.log('arrived', id));
+
+    this.tabChangedSubject
+    .do((index: number) => console.log('SPINNER LOAD', index))
+    .mergeMap((status: number) => this.apiTicket.getFromDate(environment.APP_TICKET_RETENTION_DAY))
+    .map((tickets: ITicket[]) => NormalizeTicket.normalizeItem(tickets))
+    .do((tickets) => {
+      console.log('spinner hide', tickets);
+      this.tableTickets.next(tickets);
+    });
+
     this.apiTicket.getFromDate(environment.APP_TICKET_RETENTION_DAY)
         .subscribe(data => {
           this.ticket = NormalizeTicket.normalizeItem(data);
@@ -52,8 +70,10 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
         });
     this.socketService.getMessage(WsEvents.ticket.create)
       .subscribe((data: ITicket) => {
-        this.ticket.push(NormalizeTicket.normalizeItem([data])[0]);
-        this._setDataOutput(this.ticket);
+        this.tabChangedSubject.next(this.currentTabIndex);
+
+        // this.ticket.push(NormalizeTicket.normalizeItem([data])[0]);
+        // this._setDataOutput(this.ticket);
         const newUserSurname = (data.id_user != null) ? data.user.userdata.surname : 'Unknown';
         const message = this.toast.info('Nuovo Ticket!', 'Nuovo ticket da ' + newUserSurname);
         this.beep.load();
@@ -87,6 +107,8 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
     this.storage.setItem('dashboard_selected_tabindex', tabChangeEvent.index.toString());
+    console.log('tab changed');
+    this.tabChangedSubject.next(tabChangeEvent.index);
   }
 
   private _setDataOutput(data: ITicket[]) {
