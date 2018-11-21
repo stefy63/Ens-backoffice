@@ -15,7 +15,7 @@ export class ApiTicketService {
 
   private  apiPort = (environment.api_port) ?  ':' + environment.api_port : '';
   private baseUrl: string = environment.api_url + this.apiPort + environment.api_suffix;
-  
+
   constructor(
     private http: HttpClient,
   ) {  }
@@ -32,8 +32,11 @@ export class ApiTicketService {
     return this.http.get<ITicket[]>(this.baseUrl + '/ticket?id_category=' + id).map((data) => data as ITicket[]);
   }
 
-  public getFromDate(limit: number): Observable<ITicket[]> {
-    return this.http.get<ITicket[]>(this.baseUrl + '/ticket?mapped=' + limit).map((data) => data as ITicket[]);
+  public getFromDate(limit: number, id_status?: number, id_user?: number): Observable<ITicket[]> {
+    let option: string = '?mapped=' + limit;
+    if (!!id_status) {option += '&id_status=' + id_status; }
+    if (id_user !== undefined) {option += '&id_user=' + id_user; }
+    return this.http.get<ITicket[]>(this.baseUrl + '/ticket' + option).map((data) => data as ITicket[]);
   }
 
   public update(ticket: ITicket): Observable<ITicket> {

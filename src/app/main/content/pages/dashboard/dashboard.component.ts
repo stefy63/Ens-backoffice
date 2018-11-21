@@ -15,6 +15,7 @@ import { NormalizeTicket } from '../../../services/helper/normalize-ticket';
 import { mergeMap, tap, map, merge, switchMap } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable } from 'rxjs/Observable';
+import { ITicketStatus } from '../../../../interfaces/i-ticket-status';
 
 @Component({
   selector: 'fuse-dashboard',
@@ -53,10 +54,10 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    this.tableTickets.pipe(
-      switchMap((tickets) => Observable.interval(60000)),
-      tap(() => this.tabChangedSubject.next(this.currentTabIndex))
-    ).subscribe();
+    // this.tableTickets.pipe(
+    //   switchMap((tickets) => Observable.interval(60000)),
+    //   tap(() => this.tabChangedSubject.next(this.currentTabIndex))
+    // ).subscribe();
 
     this.tabChangedSubject.pipe(
     tap((index: number) => this.spinner.show()),
@@ -132,31 +133,37 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   // }
 
   private _setDataOutput(index: number): Observable<ITicket[]> {
-    let status = '';
+    let status: ITicketStatus;
+    const ticketStatus: ITicketStatus[] = this.storage.getItem('ticket_status');
     switch (index) {
       case 0: {
-        status = 'NEW';
+        status = _.find(ticketStatus, {'status': 'NEW'});
         break;
       }
       case 1: {
-        status = 'ONLINE';
+        status = _.find(ticketStatus, {'status': 'ONLINE'});
         break;
       }
       case 2: {
-        status = 'CLOSED';
+        status = _.find(ticketStatus, {'status': 'CLOSED'});
         break;
       }
       case 3: {
-        status = 'REFUSED';
+        status = _.find(ticketStatus, {'status': 'REFUSED'});
         break;
       }
       case 4: {
-        status = 'ONLINE';
+        status = _.find(ticketStatus, {'status': 'ONLINE'});
+        return this.apiTicket.getFromDate(environment.APP_TICKET_RETENTION_DAY, status.id, this.idOperator);
+      }
+      default: {
+        status = _.find(ticketStatus, {'status': 'NEW'});
         break;
       }
     }
 
-    return this.apiTicket.getFromDate(environment.APP_TICKET_RETENTION_DAY, status);
+    return this.apiTicket.getFromDate(environment.APP_TICKET_RETENTION_DAY, status.id);
+
   }
 
 }

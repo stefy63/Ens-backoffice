@@ -48,7 +48,6 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {  }
 
   ngOnInit() {
-    console.log('_-----------------_>');
 
     this.user = this.storage.getItem('user');
     this.allTicket
