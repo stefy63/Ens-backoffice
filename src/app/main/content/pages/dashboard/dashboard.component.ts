@@ -1,21 +1,19 @@
+import * as _ from 'lodash';
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { ApiTicketService } from '../../../services/api/api-ticket.service';
 import { ITicket } from '../../../../interfaces/i-ticket';
 import { LocalStorageService } from '../../../services/local-storage/local-storage.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import * as _ from 'lodash';
 import { SocketService } from '../../../services/socket/socket.service';
 import { WsEvents } from '../../../../type/ws-events';
 import { NotificationsService } from 'angular2-notifications';
-import { ToastOptions } from '../../../../type/toast-options';
 import { MatTabChangeEvent } from '@angular/material';
-import * as moment from 'moment';
 import { environment } from '../../../../../environments/environment';
 import { NormalizeTicket } from '../../../services/helper/normalize-ticket';
-import { mergeMap, tap, map, merge, switchMap } from 'rxjs/operators';
+import { mergeMap, tap, map } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable } from 'rxjs/Observable';
-import { ITicketStatus } from '../../../../interfaces/i-ticket-status';
+import { Status } from '../../../../enums/ticket-status.enum';
 
 @Component({
   selector: 'fuse-dashboard',
@@ -25,20 +23,14 @@ import { ITicketStatus } from '../../../../interfaces/i-ticket-status';
 export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('tabGroup') tabGroup: any;
-  private ticket: ITicket[];
   private idOperator: number;
-  // public newTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
-  // public openTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
-  // public closedTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
-  // public refusedTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
-  // public myOpenTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
   public totalBadge = 0;
-  public options = ToastOptions;
   public beep;
-  public currentTabIndex: number =  this.storage.getItem('dashboard_selected_tabindex') || 0;
-  public tabChangedSubject: BehaviorSubject<number> =  new BehaviorSubject<number>(this.currentTabIndex);
+  public currentTabIndex: number = this.storage.getItem('dashboard_selected_tabindex') || 0;
+  public tabChangedSubject: BehaviorSubject<number> = new BehaviorSubject<number>(this.currentTabIndex);
   public tableTickets: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>([]);
-
+  public currentStatus: Status = Status.NEW;
+  private MINE_TICKETS_TAB = 4;
 
   constructor(
     private apiTicket: ApiTicketService,
@@ -49,57 +41,39 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ) {
     this.idOperator = this.storage.getItem('user').id;
-    this.beep = new Audio();
-    this.beep.src = '../../../../assets/audio/beep.wav';
+    this.beep = new Audio('../../../../assets/audio/beep.wav');
   }
 
   ngOnInit() {
-    // this.tableTickets.pipe(
-    //   switchMap((tickets) => Observable.interval(60000)),
-    //   tap(() => this.tabChangedSubject.next(this.currentTabIndex))
-    // ).subscribe();
-
     this.tabChangedSubject.pipe(
-    tap((index: number) => this.spinner.show()),
-    mergeMap((status: number) => this._setDataOutput(status)),
-    map((tickets: ITicket[]) => NormalizeTicket.normalizeItem(tickets)),
-    tap((tickets) => {
-      this.tableTickets.next(tickets);
-      this.spinner.hide();
-    })).subscribe();
-
-    // this.apiTicket.getFromDate(environment.APP_TICKET_RETENTION_DAY)
-    //     .subscribe(data => {
-    //       this.ticket = NormalizeTicket.normalizeItem(data);
-    //       this._setDataOutput(this.ticket);
-    //     });
+      tap((index: number) => this.spinner.show()),
+      mergeMap((status: number) => this.loadTicketsWith(status)),
+      map((tickets: ITicket[]) => NormalizeTicket.normalizeItem(tickets)),
+      tap((tickets) => {
+        this.tableTickets.next(tickets);
+        this.spinner.hide();
+      })
+    ).subscribe();
 
     this.socketService.getMessage(WsEvents.ticket.create)
       .subscribe((data: ITicket) => {
-        this.tabChangedSubject.next(this.currentTabIndex);
+        if (this.currentStatus === Status.NEW) {
+          this.tabChangedSubject.next(this.currentTabIndex);
+        }
 
-        // this.ticket.push(NormalizeTicket.normalizeItem([data])[0]);
-        // this._setDataOutput(this.ticket);
         const newUserSurname = (data.id_user != null) ? data.user.userdata.surname : 'Unknown';
         const message = this.toast.info('Nuovo Ticket!', 'Nuovo ticket da ' + newUserSurname);
-        this.beep.load();
-        this.beep.play();
-        message.click.subscribe((e) => {
+        message.click.subscribe((event) => {
           this.tabGroup.selectedIndex = 0;
         });
+
+        this.beep.load();
+        this.beep.play();
       });
 
-    this.socketService.getMessage(WsEvents.ticket.updated)
-      .subscribe((data: ITicket) => {
+    this.socketService.getMessage(WsEvents.ticket.updated).subscribe(() => {
         this.tabChangedSubject.next(this.currentTabIndex);
-
-        // const index = _.findIndex(this.ticket, item => item.id === data.id);
-        // if (index >= 0) {
-        //   this.ticket.splice(index, 1, NormalizeTicket.normalizeItem([data])[0]);
-        // }
-        // this._setDataOutput(this.ticket);
-        // // this.toast.info('Ticket Modificato', 'Il ticket ' + data.id + ' è stato modificato!');
-      });
+    });
   }
 
   ngOnDestroy(): void {
@@ -119,51 +93,14 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.tabChangedSubject.next(tabChangeEvent.index);
   }
 
-  // private _setDataOutput(data: ITicket[]) {
-  //   // const returnTickets = this.apiTicket.normalizeTickets(this.ticket);
-  //   const returnTickets: ITicket[] = _.map(data, item => {
-  //           item.closed_at = (item.closed_at) ? moment.utc(item.closed_at.date_time).format('DD/MM/YYYY HH:mm') : undefined;
-  //           return item;
-  //         });
-  //   this.newTicket.next( _.filter(returnTickets, item => item.status === 'NEW'));
-  //   this.openTicket.next(_.filter(returnTickets, item => item.status === 'ONLINE' && item.id_operator !== this.idOperator));
-  //   this.closedTicket.next(_.filter(returnTickets, item => item.status === 'CLOSED'));
-  //   this.refusedTicket.next(_.filter(returnTickets, item => item.status === 'REFUSED'));
-  //   this.myOpenTicket.next(_.filter(returnTickets, item => item.status === 'ONLINE' && item.id_operator === this.idOperator));
-  // }
-
-  private _setDataOutput(index: number): Observable<ITicket[]> {
-    let status: ITicketStatus;
-    const ticketStatus: ITicketStatus[] = this.storage.getItem('ticket_status');
-    switch (index) {
-      case 0: {
-        status = _.find(ticketStatus, {'status': 'NEW'});
-        break;
-      }
-      case 1: {
-        status = _.find(ticketStatus, {'status': 'ONLINE'});
-        break;
-      }
-      case 2: {
-        status = _.find(ticketStatus, {'status': 'CLOSED'});
-        break;
-      }
-      case 3: {
-        status = _.find(ticketStatus, {'status': 'REFUSED'});
-        break;
-      }
-      case 4: {
-        status = _.find(ticketStatus, {'status': 'ONLINE'});
-        return this.apiTicket.getFromDate(environment.APP_TICKET_RETENTION_DAY, status.id, this.idOperator);
-      }
-      default: {
-        status = _.find(ticketStatus, {'status': 'NEW'});
-        break;
-      }
+  private loadTicketsWith(statusId: number): Observable<ITicket[]> {
+    const tabsToStatus: Status[] = [Status.NEW, Status.ONLINE, Status.CLOSED, Status.REFUSED, Status.ONLINE];
+    this.currentStatus = tabsToStatus[statusId];
+    if (statusId === this.MINE_TICKETS_TAB) {
+      return this.apiTicket.getWithCriterias(environment.APP_TICKET_RETENTION_DAY, this.currentStatus, this.idOperator);
     }
 
-    return this.apiTicket.getFromDate(environment.APP_TICKET_RETENTION_DAY, status.id);
-
+    return this.apiTicket.getWithCriterias(environment.APP_TICKET_RETENTION_DAY, this.currentStatus);
   }
 
 }
