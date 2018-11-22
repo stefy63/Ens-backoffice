@@ -4,7 +4,13 @@ import { FuseConfigService } from '../../core/services/config.service';
 import { TranslateService } from '@ngx-translate/core';
 import { LocalStorageService } from '../services/local-storage/local-storage.service';
 import { ApiLoginService } from '../services/api/api-login.service';
-import { UnreadedMessageEmitterService } from '../services/helper/unreaded-message-emitter.service';
+import { ApiTicketHistoryService } from '../services/api/api-ticket-history.service';
+import { SocketService } from '../services/socket/socket.service';
+import { WsEvents } from '../../type/ws-events';
+import 'rxjs/add/operator/startWith';
+import 'rxjs/add/operator/mergeMap';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/observable/merge';
 
 @Component({
     selector: 'fuse-toolbar',
@@ -28,6 +34,8 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
         private translate: TranslateService,
         private storage: LocalStorageService,
         private apiLoginService: ApiLoginService,
+        private ticketHistoryService: ApiTicketHistoryService,
+        private socketService: SocketService,
     ) {
         this.beep = new Audio();
         this.beep.src = '../../../../assets/audio/beep.wav';
@@ -99,18 +107,22 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
         }
 
         if (token && token.id_user) {
-            UnreadedMessageEmitterService.subscribe('sum_badge', (data) => {
-                if (this.totalBadge < data && this.totalBadge !== 0) {
-                    this.beep.load();
-                    this.beep.play();
-                }
-                this.totalBadge = data;
-            });
+          Observable.merge(this.socketService.getMessage(WsEvents.ticketHistory.create),
+            this.socketService.getMessage(WsEvents.ticketHistory.updated),
+            Observable.of(null))
+          .mergeMap(() => this.ticketHistoryService.getUnreadedMessages())
+          .subscribe((total: number) => {
+            this.totalBadge = total;
+            if (total > 0 && this.totalBadge !== total) {
+              this.beep.load();
+              this.beep.play();
+            }
+          });
         }
-
     }
 
     ngOnDestroy() {
+      this.socketService.removeListener(WsEvents.ticketHistory.create);
     }
 
     logout() {

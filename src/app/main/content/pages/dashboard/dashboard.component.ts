@@ -14,6 +14,7 @@ import { mergeMap, tap, map } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable } from 'rxjs/Observable';
 import { Status } from '../../../../enums/ticket-status.enum';
+import { ToastOptions } from '../../../../type/toast-options';
 
 @Component({
   selector: 'fuse-dashboard',
@@ -31,6 +32,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   public tableTickets: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>([]);
   public currentStatus: Status = Status.NEW;
   private MINE_TICKETS_TAB = 4;
+  public options = ToastOptions;
 
   constructor(
     private apiTicket: ApiTicketService,
@@ -71,6 +73,12 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
         this.beep.play();
       });
 
+    this.socketService.getMessage(WsEvents.ticketHistory.create).subscribe((ticket: ITicket) => {
+        if (ticket.operator.id === this.idOperator && this.currentTabIndex === this.MINE_TICKETS_TAB) {
+          this.tabChangedSubject.next(this.currentTabIndex);
+        }
+    });
+
     this.socketService.getMessage(WsEvents.ticket.updated).subscribe(() => {
         this.tabChangedSubject.next(this.currentTabIndex);
     });
@@ -79,6 +87,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.socketService.removeListener(WsEvents.ticket.create);
     this.socketService.removeListener(WsEvents.ticket.updated);
+    this.socketService.removeListener(WsEvents.ticketHistory.create);
   }
 
   ngAfterViewInit() {
@@ -90,6 +99,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
     this.storage.setItem('dashboard_selected_tabindex', tabChangeEvent.index.toString());
+    this.currentTabIndex = tabChangeEvent.index;
     this.tabChangedSubject.next(tabChangeEvent.index);
   }
 

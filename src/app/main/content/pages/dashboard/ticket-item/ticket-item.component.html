@@ -62,15 +62,11 @@
       <mat-header-cell *matHeaderCellDef class="text-right col-1 "> Azioni</mat-header-cell>
       <mat-cell *matCellDef="let element" class="text-right col-1" >
         <div class="action">
-
           <button class="mat-icon-button mat-warn" (click)="showTicketDetail(element)">
             <mat-icon class="">visibility</mat-icon>
           </button>
 
-
-          <span *ngIf="dataBadge[element.id] > 0" class="badge badge-pill badge-danger mat-elevation-z8" [innerHTML]="dataBadge[element.id]"></span>
-
-
+          <span *ngIf="element.unreaded_messages" class="badge badge-pill badge-danger mat-elevation-z8" [innerHTML]="element.unreaded_messages"></span>
         </div>
 
       </mat-cell>
