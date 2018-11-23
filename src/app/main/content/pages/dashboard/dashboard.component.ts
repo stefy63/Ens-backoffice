@@ -15,6 +15,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Observable } from 'rxjs/Observable';
 import { Status } from '../../../../enums/ticket-status.enum';
 import { ToastOptions } from '../../../../type/toast-options';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'fuse-dashboard',
@@ -33,6 +34,10 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   public currentStatus: Status = Status.NEW;
   private MINE_TICKETS_TAB = 4;
   public options = ToastOptions;
+  private newTicketSubscription: Subscription;
+  private tabChangedSubscription: Subscription;
+  private newHistoryTicketSubscription: Subscription;
+  private updatingTicketSubscription: Subscription;
 
   constructor(
     private apiTicket: ApiTicketService,
@@ -47,17 +52,17 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    this.tabChangedSubject.pipe(
-      tap((index: number) => this.spinner.show()),
+    this.tabChangedSubscription = this.tabChangedSubject.pipe(
+      tap(() => this.spinner.show()),
       mergeMap((status: number) => this.loadTicketsWith(status)),
-      map((tickets: ITicket[]) => NormalizeTicket.normalizeItem(tickets)),
+      map((tickets: ITicket[]) => NormalizeTicket.normalizeItems(tickets)),
       tap((tickets) => {
         this.tableTickets.next(tickets);
         this.spinner.hide();
       })
     ).subscribe();
 
-    this.socketService.getMessage(WsEvents.ticket.create)
+    this.newTicketSubscription = this.socketService.getMessage(WsEvents.ticket.create)
       .subscribe((data: ITicket) => {
         if (this.currentStatus === Status.NEW) {
           this.tabChangedSubject.next(this.currentTabIndex);
@@ -73,21 +78,33 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
         this.beep.play();
       });
 
-    this.socketService.getMessage(WsEvents.ticketHistory.create).subscribe((ticket: ITicket) => {
-        if (ticket.operator.id === this.idOperator && this.currentTabIndex === this.MINE_TICKETS_TAB) {
-          this.tabChangedSubject.next(this.currentTabIndex);
-        }
+    this.newHistoryTicketSubscription = this.socketService.getMessage(WsEvents.ticketHistory.create).subscribe((ticket: ITicket) => {
+      if (ticket.operator.id === this.idOperator && this.currentTabIndex === this.MINE_TICKETS_TAB) {
+        this.tabChangedSubject.next(this.currentTabIndex);
+      }
     });
 
-    this.socketService.getMessage(WsEvents.ticket.updated).subscribe(() => {
-        this.tabChangedSubject.next(this.currentTabIndex);
+    this.updatingTicketSubscription = this.socketService.getMessage(WsEvents.ticket.updated).subscribe((ticket: ITicket) => {
+      if (ticket.operator.id !== this.idOperator && this.currentTabIndex === this.MINE_TICKETS_TAB) {
+        return;
+      }
+      this.tabChangedSubject.next(this.currentTabIndex);
     });
   }
 
   ngOnDestroy(): void {
-    this.socketService.removeListener(WsEvents.ticket.create);
-    this.socketService.removeListener(WsEvents.ticket.updated);
-    this.socketService.removeListener(WsEvents.ticketHistory.create);
+    if (this.newTicketSubscription) {
+      this.newTicketSubscription.unsubscribe();
+    }
+    if (this.tabChangedSubscription) {
+      this.tabChangedSubscription.unsubscribe();
+    }
+    if (this.newHistoryTicketSubscription){
+      this.newHistoryTicketSubscription.unsubscribe();
+    }
+    if (this.updatingTicketSubscription){
+      this.updatingTicketSubscription.unsubscribe();
+    }
   }
 
   ngAfterViewInit() {

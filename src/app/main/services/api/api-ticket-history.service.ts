@@ -30,7 +30,7 @@ export class ApiTicketHistoryService {
   }
 
   public getUnreadedMessages(): Observable<number> {
-    return this.http.get<number>(this.baseUrl + '/tickethistory/unreaded/').map(data => data as number);
+    return this.http.get<number>(this.baseUrl + '/tickethistory/unreaded/').map(data => data || 0);
   }
 
 }

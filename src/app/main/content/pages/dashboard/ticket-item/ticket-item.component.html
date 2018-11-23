@@ -5,7 +5,6 @@
     </mat-form-field>
   </div>
   <mat-table #table [dataSource]="dataSource" matSort class="col-12">
-
     <!-- service Column -->
     <ng-container matColumnDef="service">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="col-1">Servizio</mat-header-cell>
@@ -59,14 +58,11 @@
 
     <!-- id Column -->
     <ng-container matColumnDef="id">
-      <mat-header-cell *matHeaderCellDef class="text-right col-1 "> Azioni</mat-header-cell>
-      <mat-cell *matCellDef="let element" class="text-right col-1" >
+      <mat-header-cell *matHeaderCellDef class="col-1 text-center"> Azioni</mat-header-cell>
+      <mat-cell *matCellDef="let element" class="col-1 text-center" >
         <div class="action">
-          <button class="mat-icon-button mat-warn" (click)="showTicketDetail(element)">
-            <mat-icon class="">visibility</mat-icon>
-          </button>
-
-          <span *ngIf="element.unreaded_messages" class="badge badge-pill badge-danger mat-elevation-z8" [innerHTML]="element.unreaded_messages"></span>
+          <mat-icon class="icon--clickable" (click)="showTicketDetail(element)">visibility</mat-icon>
+          <span *ngIf="element.unreaded_messages" class="badge badge-pill badge-danger" [innerHTML]="element.unreaded_messages"></span>
         </div>
 
       </mat-cell>

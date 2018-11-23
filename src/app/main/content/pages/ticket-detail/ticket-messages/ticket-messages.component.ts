@@ -14,6 +14,7 @@ import { SocketService } from '../../../../services/socket/socket.service';
 import { UnreadedMessageEmitterService } from '../../../../services/helper/unreaded-message-emitter.service';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { HistoryTypes } from '../../../../../enums/ticket-history-type.enum';
 
 @Component({
   selector: 'fuse-ticket-messages',
@@ -55,19 +56,20 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
 
   ngOnInit() {
     this.spinner.show();
-    this.data.subscribe(item => {
+    this.data.subscribe((item: ITicket) => {
       this.ticket = item;
-      this.chatService.markMessagesReaded(item.id).subscribe();
+      if (_.find(item.historys, (history) => history.readed === 0)) {
+        this.chatService.markMessagesReaded(item.id).subscribe();
+      }
       this.ticketHistorys = _.orderBy(this.ticket.historys, 'date_time', 'asc');
       this.spinner.hide();
       setTimeout(() => {
         this.scrollToBottom(2000);
-      });
+      }, 500);
       this.cd.markForCheck();
-    },
-      (err) => {
-        console.log(err);
-      });
+    }, (err) => {
+      console.log(err);
+    });
 
     this.socketService.getMessage('onUserWriting')
       .subscribe((data: any) => {
@@ -95,7 +97,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
     }
 
     this.onWritingMsg.nativeElement.style.display = 'none';
-    UnreadedMessageEmitterService.subscribe('defaul-message', (data) => {
+    UnreadedMessageEmitterService.subscribe('fast-reply-message', (data) => {
       this.sendMessage(data.description, false);
     });
   }
@@ -118,7 +120,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
 
   scrollToBottom(speed?: number) {
     speed = speed || 400;
-    if (this.directiveScroll && this.pause2scroll) {
+    if (this.directiveScroll && this.directiveScroll.isInitialized && this.pause2scroll) {
       this.directiveScroll.update();
 
       setTimeout(() => {
@@ -151,12 +153,10 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
 
   sendMessage(msgToSend: string, resetForm: boolean) {
     if (this.ticket) {
-      const type = 'OPERATOR';
       const message: ITicketHistory = {
         id: null,
         id_ticket: this.ticket.id,
-        id_type: _.find(this.historyType, item => item.type === type).id,
-        // action: this.replyForm.form.value.message,
+        id_type: HistoryTypes.OPERATOR,
         action: msgToSend,
         readed: 0
       };
@@ -176,15 +176,11 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
     if (!this.isTyping) {
       setTimeout(() => this.isTyping = false, 3000);
       this.isTyping = true;
-      const token = this.storage.getItem('token');
-      this.socketService.sendMessage(
-        'send-to',
-        {
-          idTicket: this.ticket.id,
-          event: 'onUserWriting',
-          obj: {}
-        }
-      );
+      this.socketService.sendMessage('send-to', {
+        idTicket: this.ticket.id,
+        event: 'onUserWriting',
+        obj: {}
+      });
     }
   }
 

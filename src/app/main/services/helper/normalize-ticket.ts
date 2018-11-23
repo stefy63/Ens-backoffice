@@ -6,13 +6,14 @@ import * as _ from 'lodash';
 @Injectable()
 export class NormalizeTicket {
 
-    public static normalizeItem(ticket: ITicket[]): any {
+    public static normalizeItems(ticket: ITicket[]): any {
         return _.map(ticket, (item) => {
             const closed_at = (item.status.status === 'CLOSED' || item.status.status === 'REFUSED') ? _.chain(item.historys)
                 .filter(elem => elem.type.type === 'SYSTEM')
                 .orderBy(['date_time'], ['ASC'])
                 .findLast()
                 .value() : '';
+
             return {
                 id: item.id,
                 id_service: item.id_service,
