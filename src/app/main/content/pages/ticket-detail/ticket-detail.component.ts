@@ -6,10 +6,10 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { SocketService } from '../../../services/socket/socket.service';
 import { WsEvents } from '../../../../type/ws-events';
 import { LocalStorageService } from '../../../services/local-storage/local-storage.service';
-import { ITicketHistory } from '../../../../interfaces/i-ticket-history';
 import * as _ from 'lodash';
-import { UnreadedMessageEmitterService } from '../../../services/helper/unreaded-message-emitter.service';
-
+import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/merge';
 @Component({
   selector: 'fuse-ticket-detail',
   templateUrl: './ticket-detail.component.html',
@@ -23,6 +23,7 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
   public open = false;
   public user;
   public status;
+  private updatingTicketSubscription: Subscription;
 
   constructor(
     private route: ActivatedRoute,
@@ -38,59 +39,40 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.apiTicket.getFromId(this.idTicket)
       .subscribe((data: ITicket) => {
-          this.ticket.next(data);
-          this.service = data.service.service;
-          if (data.service.service !== 'VIDEOCHAT' && (
-              (data.status.status === 'REFUSED' ||
-              data.status.status === 'CLOSED'  ||
-              data.status.status === 'ONLINE') &&
-              data.id_operator === this.user.id)) {
-            this.open = true;
-            this.status = data.status.status;
-          }
-        },
-      (err) => {
-        console.log(err);
-      });
-
-      this.socketService.getMessage(WsEvents.ticket.updated)
-      .subscribe((data: ITicket) => {
-        if (data.id === this.idTicket){
-          this.ticket.next(data);
+        this.ticket.next(data);
+        this.service = data.service.service;
+        if (data.service.service !== 'VIDEOCHAT' && (
+          (data.status.status === 'REFUSED' ||
+            data.status.status === 'CLOSED' ||
+            data.status.status === 'ONLINE') &&
+          data.id_operator === this.user.id)) { // FIXME: this predicate must be semplify, in particolar open is meaningless
+          this.open = true;
           this.status = data.status.status;
         }
-      },
-      (err) => {
+      }, (err) => {
         console.log(err);
       });
 
-    this.socketService.getMessage(WsEvents.ticketHistory.create)
-      .subscribe((data: ITicket) => {
-        if (data.id === this.idTicket) {
-          this.ticket.next(data);
-        } else if (data.id_operator === this.user.id) {
-          const status = data.status.status || data.status;
-          if (status === 'ONLINE') {
-            const unreaded: ITicketHistory[] = _.filter(data.historys, history => {
-              return (!history.readed && history.id_type === 2);
-              });
-            UnreadedMessageEmitterService.next('sum_badge', unreaded.length);
-          }
-        }
-    },
-    (err) => {
+    this.updatingTicketSubscription = Observable.merge(
+      this.socketService.getMessage(WsEvents.ticketHistory.create),
+      this.socketService.getMessage(WsEvents.ticket.updated),
+    ).subscribe((data: ITicket) => {
+      if (data.id === this.idTicket) {
+        this.ticket.next(data);
+        this.status = data.status.status;
+      }
+    }, (err) => {
       console.log(err);
     });
-
   }
 
   ngOnDestroy() {
-    this.socketService.removeListener(WsEvents.ticketHistory.create);
-    this.socketService.removeListener(WsEvents.ticket.updated);
+    if (this.updatingTicketSubscription) {
+      this.updatingTicketSubscription.unsubscribe();
+    }
   }
 
   setOpen($event) {
     this.open = $event;
   }
-
 }

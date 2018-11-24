@@ -61,7 +61,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
         this.toastMessage.error('ATTENZIONE! TICKET GIA ACQUISITO', 'TICKET PRESO IN CARICO DA ALTRO OPERATORE');
         this.location.back();
       }
-      this.ticket = NormalizeTicket.normalizeItem([data])[0];
+      this.ticket = NormalizeTicket.normalizeItems([data])[0];
       const initMessage = find(data.historys, item => item.type.type === 'INITIAL');
       this.ticketReason = (initMessage) ? initMessage.action : '';
       if (data.status.status === 'ONLINE' && data.id_operator === this.user.id) {

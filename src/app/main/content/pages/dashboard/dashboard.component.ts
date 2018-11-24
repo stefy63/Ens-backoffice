@@ -1,17 +1,21 @@
+import * as _ from 'lodash';
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { ApiTicketService } from '../../../services/api/api-ticket.service';
 import { ITicket } from '../../../../interfaces/i-ticket';
 import { LocalStorageService } from '../../../services/local-storage/local-storage.service';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import * as _ from 'lodash';
 import { SocketService } from '../../../services/socket/socket.service';
 import { WsEvents } from '../../../../type/ws-events';
 import { NotificationsService } from 'angular2-notifications';
-import { ToastOptions } from '../../../../type/toast-options';
 import { MatTabChangeEvent } from '@angular/material';
-import * as moment from 'moment';
 import { environment } from '../../../../../environments/environment';
 import { NormalizeTicket } from '../../../services/helper/normalize-ticket';
+import { mergeMap, tap, map } from 'rxjs/operators';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { Observable } from 'rxjs/Observable';
+import { Status } from '../../../../enums/ticket-status.enum';
+import { ToastOptions } from '../../../../type/toast-options';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'fuse-dashboard',
@@ -21,61 +25,86 @@ import { NormalizeTicket } from '../../../services/helper/normalize-ticket';
 export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @ViewChild('tabGroup') tabGroup: any;
-  private ticket: ITicket[];
   private idOperator: number;
-  public newTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
-  public openTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
-  public closedTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
-  public refusedTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
-  public myOpenTicket: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>(this.ticket);
   public totalBadge = 0;
-  public options = ToastOptions;
   public beep;
-
+  public currentTabIndex: number = this.storage.getItem('dashboard_selected_tabindex') || 0;
+  public tabChangedSubject: BehaviorSubject<number> = new BehaviorSubject<number>(this.currentTabIndex);
+  public tableTickets: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>([]);
+  public currentStatus: Status = Status.NEW;
+  private MINE_TICKETS_TAB = 4;
+  public options = ToastOptions;
+  private newTicketSubscription: Subscription;
+  private tabChangedSubscription: Subscription;
+  private newHistoryTicketSubscription: Subscription;
+  private updatingTicketSubscription: Subscription;
 
   constructor(
     private apiTicket: ApiTicketService,
     private storage: LocalStorageService,
     private socketService: SocketService,
     private toast: NotificationsService,
+    private spinner: NgxSpinnerService,
+
   ) {
     this.idOperator = this.storage.getItem('user').id;
-    this.beep = new Audio();
-    this.beep.src = '../../../../assets/audio/beep.wav';
+    this.beep = new Audio('../../../../assets/audio/beep.wav');
   }
 
   ngOnInit() {
-    this.apiTicket.getFromDate(environment.APP_TICKET_RETENTION_DAY)
-        .subscribe(data => {
-          this.ticket = NormalizeTicket.normalizeItem(data);
-          this._setDataOutput(this.ticket);
-        });
-    this.socketService.getMessage(WsEvents.ticket.create)
+    this.tabChangedSubscription = this.tabChangedSubject.pipe(
+      tap(() => this.spinner.show()),
+      mergeMap((status: number) => this.loadTicketsWith(status)),
+      map((tickets: ITicket[]) => NormalizeTicket.normalizeItems(tickets)),
+      tap((tickets) => {
+        this.tableTickets.next(tickets);
+        this.spinner.hide();
+      })
+    ).subscribe();
+
+    this.newTicketSubscription = this.socketService.getMessage(WsEvents.ticket.create)
       .subscribe((data: ITicket) => {
-        this.ticket.push(NormalizeTicket.normalizeItem([data])[0]);
-        this._setDataOutput(this.ticket);
+        if (this.currentStatus === Status.NEW) {
+          this.tabChangedSubject.next(this.currentTabIndex);
+        }
+
         const newUserSurname = (data.id_user != null) ? data.user.userdata.surname : 'Unknown';
         const message = this.toast.info('Nuovo Ticket!', 'Nuovo ticket da ' + newUserSurname);
-        this.beep.load();
-        this.beep.play();
-        message.click.subscribe((e) => {
+        message.click.subscribe((event) => {
           this.tabGroup.selectedIndex = 0;
         });
+
+        this.beep.load();
+        this.beep.play();
       });
-    this.socketService.getMessage(WsEvents.ticket.updated)
-      .subscribe((data: ITicket) => {
-        const index = _.findIndex(this.ticket, item => item.id === data.id);
-        if (index >= 0) {
-          this.ticket.splice(index, 1, NormalizeTicket.normalizeItem([data])[0]);
-        }
-        this._setDataOutput(this.ticket);
-        // this.toast.info('Ticket Modificato', 'Il ticket ' + data.id + ' è stato modificato!');
-      });
+
+    this.newHistoryTicketSubscription = this.socketService.getMessage(WsEvents.ticketHistory.create).subscribe((ticket: ITicket) => {
+      if (ticket.operator.id === this.idOperator && this.currentTabIndex === this.MINE_TICKETS_TAB) {
+        this.tabChangedSubject.next(this.currentTabIndex);
+      }
+    });
+
+    this.updatingTicketSubscription = this.socketService.getMessage(WsEvents.ticket.updated).subscribe((ticket: ITicket) => {
+      if (ticket.operator.id !== this.idOperator && this.currentTabIndex === this.MINE_TICKETS_TAB) {
+        return;
+      }
+      this.tabChangedSubject.next(this.currentTabIndex);
+    });
   }
 
   ngOnDestroy(): void {
-    this.socketService.removeListener(WsEvents.ticket.create);
-    this.socketService.removeListener(WsEvents.ticket.updated);
+    if (this.newTicketSubscription) {
+      this.newTicketSubscription.unsubscribe();
+    }
+    if (this.tabChangedSubscription) {
+      this.tabChangedSubscription.unsubscribe();
+    }
+    if (this.newHistoryTicketSubscription){
+      this.newHistoryTicketSubscription.unsubscribe();
+    }
+    if (this.updatingTicketSubscription){
+      this.updatingTicketSubscription.unsubscribe();
+    }
   }
 
   ngAfterViewInit() {
@@ -87,19 +116,18 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   tabChanged = (tabChangeEvent: MatTabChangeEvent): void => {
     this.storage.setItem('dashboard_selected_tabindex', tabChangeEvent.index.toString());
+    this.currentTabIndex = tabChangeEvent.index;
+    this.tabChangedSubject.next(tabChangeEvent.index);
   }
 
-  private _setDataOutput(data: ITicket[]) {
-    // const returnTickets = this.apiTicket.normalizeTickets(this.ticket);
-    const returnTickets: ITicket[] = _.map(data, item => {
-            item.closed_at = (item.closed_at) ? moment.utc(item.closed_at.date_time).format('DD/MM/YYYY HH:mm') : undefined;
-            return item;
-          });
-    this.newTicket.next( _.filter(returnTickets, item => item.status === 'NEW'));
-    this.openTicket.next(_.filter(returnTickets, item => item.status === 'ONLINE' && item.id_operator !== this.idOperator));
-    this.closedTicket.next(_.filter(returnTickets, item => item.status === 'CLOSED'));
-    this.refusedTicket.next(_.filter(returnTickets, item => item.status === 'REFUSED'));
-    this.myOpenTicket.next(_.filter(returnTickets, item => item.status === 'ONLINE' && item.id_operator === this.idOperator));
+  private loadTicketsWith(statusId: number): Observable<ITicket[]> {
+    const tabsToStatus: Status[] = [Status.NEW, Status.ONLINE, Status.CLOSED, Status.REFUSED, Status.ONLINE];
+    this.currentStatus = tabsToStatus[statusId];
+    if (statusId === this.MINE_TICKETS_TAB) {
+      return this.apiTicket.getWithCriterias(environment.APP_TICKET_RETENTION_DAY, this.currentStatus, this.idOperator);
+    }
+
+    return this.apiTicket.getWithCriterias(environment.APP_TICKET_RETENTION_DAY, this.currentStatus);
   }
 
 }
