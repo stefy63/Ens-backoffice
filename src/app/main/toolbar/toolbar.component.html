@@ -4,9 +4,13 @@
 
     <div fxFlex fxFill fxLayout="row" fxLayoutAlign="end">
         <div class="" fxFlex="0 1 auto" fxLayout="row" fxLayoutAlign="start">
-            <div class="badge-container" *ngIf="totalBadge > 0">
+            <div class="badge-container" *ngIf="totalNewedTickets > 0">
+                    <mat-icon>call</mat-icon>
+                    <span class="badge badge-pill badge-primary">{{totalNewedTickets}}</span>
+            </div>        
+            <div class="badge-container" *ngIf="totalUnreadedMessages > 0">
                 <mat-icon>notifications_active</mat-icon>
-                <span class="badge badge-pill badge-danger">{{totalBadge}}</span>
+                <span class="badge badge-pill badge-danger">{{totalUnreadedMessages}}</span>
             </div>
             <button mat-button [matMenuTriggerFor]="userMenu"
                     class="user-button">

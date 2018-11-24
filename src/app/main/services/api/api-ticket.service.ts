@@ -46,4 +46,7 @@ export class ApiTicketService {
     return this.http.put(this.baseUrl + '/ticket/' + ticket.id, ticket).map((data) => data as ITicket);
   }
 
+  public getNewedCount(): Observable<number> {
+    return this.http.get<number>(this.baseUrl + '/ticket/newedcount/').map(data => data || 0);
+  }
 }

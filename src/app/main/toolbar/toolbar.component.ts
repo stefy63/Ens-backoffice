@@ -13,6 +13,7 @@ import 'rxjs/add/operator/debounceTime';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/merge';
 import { Subscription } from 'rxjs/Subscription';
+import { ApiTicketService } from '../services/api/api-ticket.service';
 @Component({
     selector: 'fuse-toolbar',
     templateUrl: './toolbar.component.html',
@@ -23,9 +24,11 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     showLoadingBar: boolean;
     horizontalNav: boolean;
     profile: string;
-    public totalBadge = 0;
+    public totalUnreadedMessages = 0;
+    public totalNewedTickets = 0;
     public beep;
     private newHistorySubscription: Subscription;
+    private newTicketSubscription: Subscription;
 
     constructor(
         private router: Router,
@@ -33,6 +36,7 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
         private storage: LocalStorageService,
         private apiLoginService: ApiLoginService,
         private ticketHistoryService: ApiTicketHistoryService,
+        private ticketService: ApiTicketService,
         private socketService: SocketService,
     ) {
         this.beep = new Audio('../../../../assets/audio/beep.wav');
@@ -68,11 +72,20 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
                 Observable.of(null)
             ).debounceTime(500).mergeMap(() => this.ticketHistoryService.getUnreadedMessages())
                 .subscribe((total: number) => {
-                    this.totalBadge = total;
-                    if (total > 0 && this.totalBadge !== total) {
+                    this.totalUnreadedMessages = total;
+                    if (total > 0 && this.totalUnreadedMessages !== total) {
                         this.beep.load();
                         this.beep.play();
                     }
+                });
+
+            this.newTicketSubscription = Observable.merge(
+                this.socketService.getMessage(WsEvents.ticket.create),
+                this.socketService.getMessage(WsEvents.ticket.updated),
+                Observable.of(null)
+            ).debounceTime(500).mergeMap(() => this.ticketService.getNewedCount())
+                .subscribe((count: number) => {
+                    this.totalNewedTickets = count;
                 });
         }
     }
@@ -80,6 +93,9 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     ngOnDestroy() {
         if (this.newHistorySubscription) {
             this.newHistorySubscription.unsubscribe();
+        }
+        if (this.newTicketSubscription) {
+            this.newTicketSubscription.unsubscribe();
         }
     }
 
