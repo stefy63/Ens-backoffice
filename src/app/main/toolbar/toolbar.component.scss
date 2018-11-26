@@ -11,12 +11,12 @@
     }
 
     .badge-container {
-        position: absolute;
-        left: 36em;;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin: 0px 5px;
         .badge {
-            position: absolute;
-            right: -2em;
-            top: -10px;
+            margin-bottom: 20px;
         }
     }
     

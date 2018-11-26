@@ -1,11 +1,19 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import { FuseConfigService } from '../../core/services/config.service';
-import { TranslateService } from '@ngx-translate/core';
 import { LocalStorageService } from '../services/local-storage/local-storage.service';
 import { ApiLoginService } from '../services/api/api-login.service';
-import { UnreadedMessageEmitterService } from '../services/helper/unreaded-message-emitter.service';
-
+import { ApiTicketHistoryService } from '../services/api/api-ticket-history.service';
+import { SocketService } from '../services/socket/socket.service';
+import { WsEvents } from '../../type/ws-events';
+import 'rxjs/add/operator/startWith';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/mergeMap';
+import 'rxjs/add/operator/debounceTime';
+import { Observable } from 'rxjs/Observable';
+import 'rxjs/add/observable/merge';
+import { Subscription } from 'rxjs/Subscription';
+import { ApiTicketService } from '../services/api/api-ticket.service';
 @Component({
     selector: 'fuse-toolbar',
     templateUrl: './toolbar.component.html',
@@ -13,66 +21,25 @@ import { UnreadedMessageEmitterService } from '../services/helper/unreaded-messa
 })
 
 export class FuseToolbarComponent implements OnInit, OnDestroy {
-    userStatusOptions: any[];
-    languages: any;
-    selectedLanguage: any;
     showLoadingBar: boolean;
     horizontalNav: boolean;
     profile: string;
-    public totalBadge = 0;
+    public totalUnreadedMessages = 0;
+    public totalNewedTickets = 0;
     public beep;
+    private newHistorySubscription: Subscription;
+    private newTicketSubscription: Subscription;
 
     constructor(
         private router: Router,
         private fuseConfig: FuseConfigService,
-        private translate: TranslateService,
         private storage: LocalStorageService,
         private apiLoginService: ApiLoginService,
+        private ticketHistoryService: ApiTicketHistoryService,
+        private ticketService: ApiTicketService,
+        private socketService: SocketService,
     ) {
-        this.beep = new Audio();
-        this.beep.src = '../../../../assets/audio/beep.wav';
-        this.userStatusOptions = [
-            {
-                'title': 'Online',
-                'icon': 'icon-checkbox-marked-circle',
-                'color': '#4CAF50'
-            },
-            {
-                'title': 'Away',
-                'icon': 'icon-clock',
-                'color': '#FFC107'
-            },
-            {
-                'title': 'Do not Disturb',
-                'icon': 'icon-minus-circle',
-                'color': '#F44336'
-            },
-            {
-                'title': 'Invisible',
-                'icon': 'icon-checkbox-blank-circle-outline',
-                'color': '#BDBDBD'
-            },
-            {
-                'title': 'Offline',
-                'icon': 'icon-checkbox-blank-circle-outline',
-                'color': '#616161'
-            }
-        ];
-
-        this.languages = [
-            {
-                'id': 'en',
-                'title': 'English',
-                'flag': 'us'
-            },
-            {
-                'id': 'tr',
-                'title': 'Turkish',
-                'flag': 'tr'
-            }
-        ];
-
-        this.selectedLanguage = this.languages[0];
+        this.beep = new Audio('../../../../assets/audio/beep.wav');
 
         router.events.subscribe(
             (event) => {
@@ -99,42 +66,47 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
         }
 
         if (token && token.id_user) {
-            UnreadedMessageEmitterService.subscribe('sum_badge', (data) => {
-                if (this.totalBadge < data && this.totalBadge !== 0) {
-                    this.beep.load();
-                    this.beep.play();
-                }
-                this.totalBadge = data;
-            });
-        }
+            this.newHistorySubscription = Observable.merge(
+                this.socketService.getMessage(WsEvents.ticketHistory.create),
+                this.socketService.getMessage(WsEvents.ticketHistory.updated),
+                Observable.of(null)
+            ).debounceTime(500).mergeMap(() => this.ticketHistoryService.getUnreadedMessages())
+                .subscribe((total: number) => {
+                    this.totalUnreadedMessages = total;
+                    if (total > 0 && this.totalUnreadedMessages !== total) {
+                        this.beep.load();
+                        this.beep.play();
+                    }
+                });
 
+            this.newTicketSubscription = Observable.merge(
+                this.socketService.getMessage(WsEvents.ticket.create),
+                this.socketService.getMessage(WsEvents.ticket.updated),
+                Observable.of(null)
+            ).debounceTime(500).mergeMap(() => this.ticketService.getNewedCount())
+                .subscribe((count: number) => {
+                    this.totalNewedTickets = count;
+                });
+        }
     }
 
     ngOnDestroy() {
+        if (this.newHistorySubscription) {
+            this.newHistorySubscription.unsubscribe();
+        }
+        if (this.newTicketSubscription) {
+            this.newTicketSubscription.unsubscribe();
+        }
     }
 
     logout() {
         this.apiLoginService.apiLogout().subscribe();
         this.storage.clear();
-        // this.router.navigate(['pages/authentication/login-2']);
         this.router.navigate(['/']);
     }
 
     edit_profile() {
         this.router.navigate(['/pages/profile']);
-    }
-
-    search(value) {
-        // Do your search here...
-        console.log(value);
-    }
-
-    setLanguage(lang) {
-        // Set the selected language for toolbar
-        this.selectedLanguage = lang;
-
-        // Use the selected language for translations
-        this.translate.use(lang.id);
     }
 
     elaborateFakeOperatorId(id_operator) {

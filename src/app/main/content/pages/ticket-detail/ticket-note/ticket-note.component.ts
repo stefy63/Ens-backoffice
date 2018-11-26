@@ -20,6 +20,6 @@ export class TicketNoteComponent {
   }
 
   onSelectChange(elem) {
-    UnreadedMessageEmitterService.next('defaul-message', elem);
+    UnreadedMessageEmitterService.next('fast-reply-message', elem);
   }
 }

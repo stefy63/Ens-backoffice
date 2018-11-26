@@ -52,15 +52,17 @@ mat-header-row {
 }
 
 .action {
-    // position: relative;
-    display: inline-block;
-    text-align:rigth;
-    span {
-        position: absolute;
-        right:0em;
-        top: 1.3em;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    .badge {
+        margin-left: 5px;
     }
+}
 
+.icon--clickable {
+    cursor: pointer;
 }
 
 .table__service__chat {

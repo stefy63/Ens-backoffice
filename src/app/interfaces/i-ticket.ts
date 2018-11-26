@@ -16,4 +16,5 @@ export interface ITicket {
     user?: any;
     historys?: any[];
     reports?: any[];
+    unreaded_messages?: number;
 }
