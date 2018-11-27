@@ -47,6 +47,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   public options = ToastOptions;
   private ticketSubscription: Subscription;
   private replyEventSubscription: Subscription;
+  private timeoutFunction;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -75,17 +76,16 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
       console.log(err);
     });
 
-    this.replyEventSubscription = this.socketService.getMessage('onUserWriting')
-      .subscribe((data: any) => {
-        if (!this.activeSpinner && this.ticket && data.idTicket === this.ticket.id) {
-          this.activeSpinner = true;
-          setTimeout(() => {
-            this.activeSpinner = false;
-            this.onWritingMsg.nativeElement.style.display = 'none';
-          }, 3000);
-          this.onWritingMsg.nativeElement.style.display = 'block';
-        }
-      });
+    this.replyEventSubscription = this.socketService.getMessage('onUserWriting').subscribe((data: any) => {
+      if (!this.activeSpinner && this.ticket && data.idTicket === this.ticket.id) {
+        this.activeSpinner = true;
+        setTimeout(() => {
+          this.activeSpinner = false;
+          this.onWritingMsg.nativeElement.style.display = 'none';
+        }, 3000);
+        this.onWritingMsg.nativeElement.style.display = 'block';
+      }
+    });
   }
 
   ngOnDestroy() {
@@ -163,7 +163,10 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
 
   public typing(evt) {
     if (!this.isTyping && this.ticket.service.id === Services.CHAT) {
-      setTimeout(() => this.isTyping = false, 3000);
+      if (this.timeoutFunction) {
+        clearTimeout(this.timeoutFunction);
+      }
+      this.timeoutFunction = setTimeout(() => this.isTyping = false, 3000);
       this.isTyping = true;
       this.socketService.sendMessage('send-to', {
         idTicket: this.ticket.id,
