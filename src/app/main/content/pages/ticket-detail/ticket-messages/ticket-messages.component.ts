@@ -15,6 +15,8 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { HistoryTypes } from '../../../../../enums/ticket-history-type.enum';
 import { IDefaultDialog } from '../../../../../interfaces/i-defaul-dialog';
 import { Subscription } from 'rxjs/Subscription';
+import { Status } from '../../../../../enums/ticket-status.enum';
+import { Services } from '../../../../../enums/ticket-services.enum';
 
 @Component({
   selector: 'fuse-ticket-messages',
@@ -68,7 +70,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
       this.spinner.hide();
       this.scrollToBottom();
       this.cd.markForCheck();
-      this.showReplyMessage = !_.includes(['REFUSED', 'CLOSED'], this.ticket.status.status);
+      this.showReplyMessage = !_.includes([Status.REFUSED, Status.CLOSED], this.ticket.status.id);
     }, (err) => {
       console.log(err);
     });
@@ -160,7 +162,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public typing(evt) {
-    if (!this.isTyping) {
+    if (!this.isTyping && this.ticket.service.id === Services.CHAT) {
       setTimeout(() => this.isTyping = false, 3000);
       this.isTyping = true;
       this.socketService.sendMessage('send-to', {
