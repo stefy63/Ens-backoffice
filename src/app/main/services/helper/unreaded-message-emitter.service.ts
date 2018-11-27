@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import {assign} from 'lodash';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
 
 @Injectable()
 export class UnreadedMessageEmitterService {
-  static subject = new BehaviorSubject<ManifestPayload>({channel: 'all', data: null});
+  static subject = new Subject<ManifestPayload>();
 
   static subscribe(channel: string, next?, error?, complete?) {
     // tslint:disable-next-line:triple-equals
@@ -16,7 +16,6 @@ export class UnreadedMessageEmitterService {
   static next(channel, data) {
     this.subject.next( assign<ManifestPayload>({channel: channel}, {data: data}));
   }
-
 }
 
 export interface ManifestPayload {channel: string; data: any; }
