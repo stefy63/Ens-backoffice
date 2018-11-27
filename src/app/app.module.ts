@@ -26,7 +26,6 @@ import { SimpleNotificationsModule } from 'angular2-notifications';
 import { ApiTicketHistoryService } from './main/services/api/api-ticket-history.service';
 import { IsOperatorGuard } from './guard/is-operator.guard';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { UnreadedMessageEmitterService } from './main/services/helper/unreaded-message-emitter.service';
 import { RollbarErrorHandler } from './main/services/errors/RollbarErrorHandler.service';
 import { ApiTicketReportService } from './main/services/api/api-ticket-report.service';
 import { ExportmanagerComponent } from '../app/main/content/pages/exportmanager/exportmanager.component';
@@ -91,7 +90,6 @@ const config: SocketIoConfig = { url: environment.ws_url + wssPort, options: opt
         IsOperatorGuard,
         LocalStorageService,
         ApiTicketHistoryService,
-        UnreadedMessageEmitterService,
         {provide: ErrorHandler, useClass: RollbarErrorHandler},
         ApiTicketReportService
     ],
