@@ -24,7 +24,7 @@
     <!-- / CHAT CONTENT -->
     <div #onWritingMsg class="on-writing">L'utente sta scrivendo........</div>
     <!-- CHAT FOOTER -->
-    <div class="chat-footer" fxLayout="row" fxLayoutAlign="center center" *ngIf="ticket.status.status !== 'REFUSED' && ticket.status.status !== 'CLOSED'">
+    <div class="chat-footer" fxLayout="row" fxLayoutAlign="center center" [hidden]="!showReplyMessage">
         <button mat-mini-fab color="accent" (click)="toglePuseScroll()" [ngClass]=" {'mat-button-pause-on' : !pause2scroll, 'mat-button-pause-off': pause2scroll}  ">
             <mat-icon *ngIf="pause2scroll">pause</mat-icon>
             <mat-icon *ngIf="!pause2scroll">play_arrow</mat-icon>
@@ -43,6 +43,12 @@
     </div>
     <!-- / CHAT FOOTER-->
 </div>
-
+<div [hidden]="!showReplyMessage" class="col-5 ticket_fast_reply__container">
+    <div class="row" *ngFor="let msg of defaultDialogs">
+        <button class="ticket_fast_reply__container__button" mat-raised-button color="accent" (click)="onSelectChange(msg)">
+            {{msg.description}}
+        </button>
+    </div>    
+</div>
 
 <simple-notifications [options]="options"></simple-notifications>

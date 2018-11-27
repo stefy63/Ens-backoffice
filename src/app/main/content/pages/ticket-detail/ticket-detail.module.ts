@@ -7,7 +7,6 @@ import { IsOperatorGuard } from '../../../../guard/is-operator.guard';
 import { TicketHeadComponent} from './ticket-head/ticket-head.component';
 import { TicketMessagesComponent } from './ticket-messages/ticket-messages.component';
 import { ChatService } from '../../../services/ticket-messages/ticket-messages.service';
-import { TicketNoteComponent } from './ticket-note/ticket-note.component';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { TicketVideoChatComponent } from './ticket-video-chat/ticket-video-chat.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -30,7 +29,6 @@ const routes: Routes = [
     TicketDetailComponent,
     TicketHeadComponent,
     TicketMessagesComponent,
-    TicketNoteComponent,
     TicketVideoChatComponent,
     DialogCloseTicket,
     DialogDetail,

@@ -5,11 +5,6 @@ import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
 import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
-import { IUser } from '../../../../../interfaces/i-user';
-import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
-import { SocketService } from '../../../../services/socket/socket.service';
-import { WsEvents } from '../../../../../type/ws-events';
-import { UnreadedMessageEmitterService } from '../../../../services/helper/unreaded-message-emitter.service';
 
 @Component({
   selector: 'fuse-ticket-item',

@@ -5,16 +5,16 @@ import { FusePerfectScrollbarDirective } from '../../../../../core/directives/fu
 import { ChatService } from '../../../../services/ticket-messages/ticket-messages.service';
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import * as _ from 'lodash';
-import { ITicketHistoryType } from '../../../../../interfaces/i-ticket-history-type';
 import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
 import { ToastOptions } from '../../../../../type/toast-options';
 import { NotificationsService } from 'angular2-notifications';
 import { Observable } from 'rxjs/Observable';
 import { SocketService } from '../../../../services/socket/socket.service';
-import { UnreadedMessageEmitterService } from '../../../../services/helper/unreaded-message-emitter.service';
 import 'rxjs/add/operator/distinctUntilChanged';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { HistoryTypes } from '../../../../../enums/ticket-history-type.enum';
+import { IDefaultDialog } from '../../../../../interfaces/i-defaul-dialog';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
   selector: 'fuse-ticket-messages',
@@ -31,10 +31,11 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   public activeSpinner = false;
   public pause2scroll = true;
 
-  private historyType: ITicketHistoryType[];
   private isTyping = false;
   private replyInput: any;
-
+  public defaultDialogs: IDefaultDialog[];
+  private viewInitFinish = false;
+  public showReplyMessage = false;
 
   @ViewChild(FusePerfectScrollbarDirective) directiveScroll: FusePerfectScrollbarDirective;
   @ViewChildren('replyInput') replyInputField;
@@ -42,6 +43,8 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   @ViewChild('onWritingMsg') onWritingMsg: ElementRef;
 
   public options = ToastOptions;
+  private ticketSubscription: Subscription;
+  private replyEventSubscription: Subscription;
 
   constructor(
     private cd: ChangeDetectorRef,
@@ -51,27 +54,26 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
     private socketService: SocketService,
     private spinner: NgxSpinnerService
   ) {
-    this.historyType = this.storage.getItem('ticket_history_type');
+    this.defaultDialogs = _.orderBy(this.storage.getItem('default_dialog'), 'ordine');
   }
 
   ngOnInit() {
     this.spinner.show();
-    this.data.subscribe((item: ITicket) => {
+    this.ticketSubscription = this.data.subscribe((item: ITicket) => {
       this.ticket = item;
       if (_.find(item.historys, (history) => history.readed === 0)) {
         this.chatService.markMessagesReaded(item.id).subscribe();
       }
       this.ticketHistorys = _.orderBy(this.ticket.historys, 'date_time', 'asc');
       this.spinner.hide();
-      setTimeout(() => {
-        this.scrollToBottom(2000);
-      }, 500);
+      this.scrollToBottom();
       this.cd.markForCheck();
+      this.showReplyMessage = !_.includes(['REFUSED', 'CLOSED'], this.ticket.status.status);
     }, (err) => {
       console.log(err);
     });
 
-    this.socketService.getMessage('onUserWriting')
+    this.replyEventSubscription = this.socketService.getMessage('onUserWriting')
       .subscribe((data: any) => {
         if (!this.activeSpinner && this.ticket && data.idTicket === this.ticket.id) {
           this.activeSpinner = true;
@@ -85,47 +87,32 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   ngOnDestroy() {
-    this.ticket = null;
+    if (this.ticketSubscription) {
+      this.ticketSubscription.unsubscribe();
+    }
+    if (this.replyEventSubscription) {
+      this.replyEventSubscription.unsubscribe();
+    }
   }
 
   ngAfterViewInit() {
-    if (this.ticket.status.status !== 'REFUSED' && this.ticket.status.status !== 'CLOSED') {
-      this.replyInput = this.replyInputField.first.nativeElement;
-      this.readyToReply();
-      this.cd.detectChanges();
-      this.focusReplyInput();
-    }
-
+    this.viewInitFinish = true;
+    this.replyInput = this.replyInputField.first.nativeElement;
+    this.cd.detectChanges();
+    this.resetForm();
+    this.scrollToBottom();
     this.onWritingMsg.nativeElement.style.display = 'none';
-    UnreadedMessageEmitterService.subscribe('fast-reply-message', (data) => {
-      this.sendMessage(data.description, false);
-    });
-  }
-
-  readyToReply() {
-    if (this.ticket.status.status !== 'REFUSED' && this.ticket.status.status !== 'CLOSED') {
-      setTimeout(() => {
-        this.resetForm();
-        this.scrollToBottom(2000);
-      });
-    }
-
   }
 
   focusReplyInput() {
-    setTimeout(() => {
-      this.replyInput.focus();
-    });
+    this.replyInput.focus();
   }
 
   scrollToBottom(speed?: number) {
-    speed = speed || 400;
-    if (this.directiveScroll && this.directiveScroll.isInitialized && this.pause2scroll) {
+    speed = speed || 2000;
+    if (this.viewInitFinish && this.directiveScroll && this.directiveScroll.isInitialized && this.pause2scroll) {
       this.directiveScroll.update();
-
-      setTimeout(() => {
-        this.directiveScroll.scrollToBottom(0, speed);
-      });
+      this.directiveScroll.scrollToBottom(0, speed);
     }
   }
 
@@ -184,4 +171,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
     }
   }
 
+  onSelectChange(data: IDefaultDialog): void {
+    this.sendMessage(data.description, false);
+  }
 }
