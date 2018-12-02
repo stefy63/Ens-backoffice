@@ -32,7 +32,7 @@
                         }">{{ticket.service}}</td>
                   <td class="table__ticket__detail" [ngClass]="{'warn-900-fg blink': timeout }">{{ticket.date_time |
                     date:'dd/MM/yyyy HH:mm':'UTC'}}</td>
-                    <td class="table__ticket__detail">
+                    <td class="table__ticket__detail table__ticket__detail--phone">
                       <p *ngFor="let item of ticket.reports">{{item.number}}</p>
                     </td>
                   </tr>
