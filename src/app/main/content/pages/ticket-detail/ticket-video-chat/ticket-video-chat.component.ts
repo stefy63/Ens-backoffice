@@ -24,7 +24,7 @@ export class TicketVideoChatComponent implements OnInit, OnDestroy {
   constructor(
     private toast: NotificationsService
   ) {
-   }
+  }
 
 
 
