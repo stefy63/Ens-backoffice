@@ -10,6 +10,8 @@ import * as _ from 'lodash';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/merge';
+import { Services } from '../../../../enums/ticket-services.enum';
+import { Status } from '../../../../enums/ticket-status.enum';
 @Component({
   selector: 'fuse-ticket-detail',
   templateUrl: './ticket-detail.component.html',
@@ -20,6 +22,7 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
   public idTicket: number;
   public service: string;
   public ticket = new BehaviorSubject<ITicket>(this.ticket);
+  public isVideochat = false;
   public open = false;
   public user;
   public status;
@@ -41,14 +44,9 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
       .subscribe((data: ITicket) => {
         this.ticket.next(data);
         this.service = data.service.service;
-        if (data.service.service !== 'VIDEOCHAT' && (
-          (data.status.status === 'REFUSED' ||
-            data.status.status === 'CLOSED' ||
-            data.status.status === 'ONLINE') &&
-          data.id_operator === this.user.id)) { // FIXME: this predicate must be semplify, in particolar open is meaningless
-          this.open = true;
-          this.status = data.status.status;
-        }
+        this.isVideochat = data.id_service === Services.VIDEOCHAT;
+        this.open = _.includes([Status.ONLINE, Status.REFUSED, Status.CLOSED], data.id_status);
+        this.status = data.status.status;
       }, (err) => {
         console.log(err);
       });
