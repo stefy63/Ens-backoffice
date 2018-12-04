@@ -13,8 +13,8 @@
                   <th>Data e Ora</th>
                   <th>
                     <div class="button-row info-button">Numero di Telefono
-                      <mat-icon *ngIf="!isOpen" class="pull-right icon--white" (click)="openDialogDetail()">info_outline</mat-icon>
-                      <mat-icon *ngIf="isOpen" class="pull-right icon--white" (click)="openDialogDetail()">edit</mat-icon>
+                      <mat-icon *ngIf="!isOpen" class="pull-right icon--white" (click)="openDialogDetail(false)">info_outline</mat-icon>
+                      <mat-icon *ngIf="isOpen" class="pull-right icon--white" (click)="openDialogDetail(false)">edit</mat-icon>
                   </div>
                   </th>
                 </tr>
@@ -59,7 +59,7 @@
       <button *ngIf="!isOpen && ticket.status === 'NEW'" class="mat-button done-button mat-accent col" (click)="activateChat()">
         <mat-icon>done</mat-icon> Accetta
       </button>
-      <button *ngIf="isOpen" class="mat-button delete-button mat-warn col" (click)="openDialog()">
+      <button *ngIf="isOpen" class="mat-button delete-button mat-warn col" (click)="openDialogDetail(true)">
         <mat-icon>close</mat-icon> Close
       </button>
       <button *ngIf="!isOpen && ticket.status == 'NEW'" class="mat-button delete-button mat-warn col" (click)="refuseChat()">

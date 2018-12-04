@@ -197,25 +197,22 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     return this.apiTicketService.update(updateTicket as ITicket);
   }
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(DialogCloseTicket, {
-      width: '80%',
-      data: { ticket: this.ticket }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
-      if (!!result) {
-        this.closeChat();
-      }
-    });
-  }
-
-  openDialogDetail(): void {
+  openDialogDetail(close: boolean): void {
     const dialog: ComponentType<DialogCloseTicket | DialogDetail> = this.isOpen ? DialogCloseTicket : DialogDetail;
-    this.dialog.open(dialog, {
+    const dialogRef = this.dialog.open(dialog, {
       width: '80%',
       data: { ticket: this.ticket }
     });
+
+    if (close) {
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed', result);
+        if (!!result) {
+          this.closeChat();
+        }
+      });
+    }
   }
+
+
 }
