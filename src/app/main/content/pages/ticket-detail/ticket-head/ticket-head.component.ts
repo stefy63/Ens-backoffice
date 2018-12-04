@@ -155,7 +155,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
 
   private async refuseChat() {
     return await swal({
-      title: 'Conferma Rifiuto Chat?',
+      title: 'Conferma Rifiuto Ticket?',
       text: 'Inserire la motivazione di questa scelta!',
       input: 'text',
       showCancelButton: true,
@@ -179,7 +179,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
             // tslint:disable-next-line:max-line-length
             this.createHistoryTicketSystem('Rifiutato ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname + 'per il seguente motivo: ' + result.value)
               .subscribe(() => {
-                this.toastMessage.success('La Chat è stata rifiutata!', 'Rifiutata per: ' + result.value);
+                this.toastMessage.success('Il ticket è stato rifiutato!', 'Rifiutata per: ' + result.value);
                 this.location.back();
               });
           });

@@ -1,0 +1,14 @@
+<div class="ticket__videochat__container">
+    <div class="ticket__videochat__icon__container icon--green" *ngIf="videochatRunnable">
+            <mat-icon class="videocam__icon">videocam_outline</mat-icon>
+    </div>
+    <div class="ticket__videochat__icon__container icon--red" *ngIf="!videochatRunnable">
+            <mat-icon class="videocam__icon">videocam_off_outline</mat-icon>
+    </div>
+    <div class="ticket__videochat__container__actions">
+        <a [href]="showRoom" target="_blank" class="mat-raised-button ticket__videochat__button" *ngIf="videochatRunnable">
+            Avvia Videochat
+        </a>
+        <span *ngIf="!videochatRunnable">Videochat Terminata</span>
+    </div>
+</div>

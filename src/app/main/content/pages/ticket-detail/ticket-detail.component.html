@@ -2,8 +2,7 @@
 <div class="p-20" fxFlex fxLayout="column" *ngIf="!!service">
     <fuse-ticket-head [ticket]="ticket" (open)="setOpen($event)"></fuse-ticket-head>
     <div class="ticket_detail_service__container" *ngIf="open && ticket">
-        <fuse-ticket-messages *ngIf="!isVideochat" id="chat" class="col p-0" [ticket]="ticket" style="overflow: hidden;"></fuse-ticket-messages>
+        <fuse-ticket-messages *ngIf="!isVideochat" class="col p-0" [ticket]="ticket" style="overflow: hidden;"></fuse-ticket-messages>
+        <fuse-ticket-redirect-videochat *ngIf="isVideochat" class="col p-0" [ticket]="ticket" style="overflow: hidden;"></fuse-ticket-redirect-videochat>
     </div>
 </div>
-
-<!-- <fuse-ticket-video-chat [idTicket]="idTicket" *ngIf="open"></fuse-ticket-video-chat> -->
