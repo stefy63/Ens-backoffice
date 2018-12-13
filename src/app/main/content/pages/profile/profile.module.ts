@@ -4,14 +4,14 @@ import { ProfileComponent } from './profile.component';
 import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from '../../../../core/modules/shared.module';
 import { SimpleNotificationsModule } from 'angular2-notifications';
-// import { AuthGuard } from '../../../../guard/auth.guard';
-// import { IsOperatorGuard } from '../../../../guard/is-operator.guard';
+import { AuthGuard } from '../../../../guard/auth.guard';
+import { IsOperatorGuard } from '../../../../guard/is-operator.guard';
 
 
 const routes: Routes = [
   {
       path     : 'pages/profile',
-      // canActivate: [AuthGuard, IsOperatorGuard],
+      canActivate: [AuthGuard, IsOperatorGuard],
       component: ProfileComponent
   }
 ];

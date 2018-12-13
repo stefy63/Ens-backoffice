@@ -28,6 +28,30 @@ export class NavigationModel
                         //     },
                         // ]
                     },
+                      {
+                          'id'   : 'export',
+                          'title': 'Report',
+                          'type' : 'item',
+                          'icon' : 'trending_up',
+                          'url'  : '/pages/export-report',
+                          // 'badge': {
+                          //     'title': 25,
+                          //     'bg'   : '#F44336',
+                          //     'fg'   : '#FFFFFF'
+                          // }
+                      },
+                        {
+                        'id'   : 'user_manager',
+                        'title': 'Gestione Utenti',
+                        'type' : 'item',
+                        'icon' : 'sentiment_satisfied',
+                        'url'  : '/pages/user_manager',
+                        // 'badge': {
+                        //     'title': 25,
+                        //     'bg'   : '#F44336',
+                        //     'fg'   : '#FFFFFF'
+                        // }
+                    }
                     // {
                     //   'id'      : 'usermanager',
                     //   'title'   : 'Gestione Utenti',
@@ -51,25 +75,44 @@ export class NavigationModel
                     // }
                 ]
             },
-            {
-              'id'      : 'analytics',
-              'title'   : 'Analytics',
-              'type'    : 'group',
-              'children': [
-                  {
-                      'id'   : 'export',
-                      'title': 'Report',
-                      'type' : 'item',
-                      'icon' : 'trending_up',
-                      'url'  : '/pages/export-report',
+            // {
+            //   'id'      : 'analytics',
+            //   'title'   : 'Analytics',
+            //   'type'    : 'group',
+            //   'children': [
+            //       {
+            //           'id'   : 'export',
+            //           'title': 'Report',
+            //           'type' : 'item',
+            //           'icon' : 'trending_up',
+            //           'url'  : '/pages/export-report',
                       // 'badge': {
                       //     'title': 25,
                       //     'bg'   : '#F44336',
                       //     'fg'   : '#FFFFFF'
                       // }
-                  }
-              ]
-            }
+            //       }
+            //   ]
+            // },
+            // {
+            //   'id'      : 'user_profile',
+            //   'title'   : 'Profilo Utenti',
+            //   'type'    : 'group',
+            //   'children': [
+            //       {
+            //           'id'   : 'user_manager',
+            //           'title': 'Gestione Utenti',
+            //           'type' : 'item',
+            //           'icon' : 'sentiment_satisfied',
+            //           'url'  : '/pages/user_manager',
+            //           // 'badge': {
+            //           //     'title': 25,
+            //           //     'bg'   : '#F44336',
+            //           //     'fg'   : '#FFFFFF'
+            //           // }
+            //       }
+            //   ]
+            // }
 
         ];
     }
