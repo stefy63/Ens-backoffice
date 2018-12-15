@@ -8,11 +8,8 @@ import { Status } from '../../../../../enums/ticket-status.enum';
 import swal from 'sweetalert2';
 import { ApiTicketHistoryService } from '../../../../services/api/api-ticket-history.service';
 import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
-import { SocketService } from '../../../../services/socket/socket.service';
 import { Observable } from 'rxjs/Observable';
 import * as moment from 'moment';
-import { WsEvents } from '../../../../../type/ws-events';
-import { Router } from '@angular/router';
 import { NormalizeTicket } from '../../../../services/helper/normalize-ticket';
 import { HistoryTypes } from '../../../../../enums/ticket-history-type.enum';
 import { MatDialog} from '@angular/material';
@@ -20,7 +17,9 @@ import * as _ from 'lodash';
 import { ToastMessage } from '../../../../services/toastMessage.service';
 import 'rxjs/add/operator/mergeMap';
 import { DialogCloseTicket } from './dialog-component/dialog-close.component';
+import { Subscription } from 'rxjs/Subscription';
 import { DialogDetail } from './dialog-component/dialog-detail.component';
+import { ComponentType } from '@angular/cdk/portal';
 
 @Component({
   selector: 'fuse-ticket-head',
@@ -40,15 +39,14 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   public isOpen = false;
   public timeout = false;
   public phone: string;
+  private ticketSubscription: Subscription;
 
 
   constructor(
     private location: Location,
     private store: LocalStorageService,
     private apiTicketService: ApiTicketService,
-    private socketService: SocketService,
     private apiTicketHistoryService: ApiTicketHistoryService,
-    private router: Router,
     public dialog: MatDialog,
     private toastMessage: ToastMessage
   ) {
@@ -56,7 +54,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.newTicket.subscribe(async (data: ITicket) => {
+    this.ticketSubscription = this.newTicket.subscribe(async (data: ITicket) => {
       if (this.ticket && this.ticket.status.status === 'NEW' && data.status.status !== 'NEW' && !this.isOpen) {
         this.toastMessage.error('ATTENZIONE! TICKET GIA ACQUISITO', 'TICKET PRESO IN CARICO DA ALTRO OPERATORE');
         this.location.back();
@@ -72,16 +70,6 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
         }, 10000);
       }
 
-      this.socketService.getMessage(WsEvents.ticket.updated)
-        .subscribe(async (ticket: ITicket) => {
-          if (this.ticket && this.ticket.id === ticket.id && ticket.id_operator !== this.user.id) {
-            this.open.next(false);
-            this.isOpen = false;
-            this.toastMessage.error('ATTENZIONE! TICKET GIA ACQUISITO', 'TICKET PRESO IN CARICO DA ALTRO OPERATORE');
-            this.router.navigate(['/pages/dashboard']);
-          }
-        });
-
       this.msgAlert = (data.id_operator
         && this.user.id !== data.id_operator
         && data.status.status === 'ONLINE');
@@ -92,7 +80,9 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.ticket = null;
+    if (this.ticketSubscription) {
+      this.ticketSubscription.unsubscribe();
+    }
     clearInterval(this.interval);
   }
 
@@ -155,7 +145,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
 
   private async refuseChat() {
     return await swal({
-      title: 'Conferma Rifiuto Chat?',
+      title: 'Conferma Rifiuto Ticket?',
       text: 'Inserire la motivazione di questa scelta!',
       input: 'text',
       showCancelButton: true,
@@ -179,7 +169,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
             // tslint:disable-next-line:max-line-length
             this.createHistoryTicketSystem('Rifiutato ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname + 'per il seguente motivo: ' + result.value)
               .subscribe(() => {
-                this.toastMessage.success('La Chat è stata rifiutata!', 'Rifiutata per: ' + result.value);
+                this.toastMessage.success('Il ticket è stato rifiutato!', 'Rifiutata per: ' + result.value);
                 this.location.back();
               });
           });
@@ -207,24 +197,22 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     return this.apiTicketService.update(updateTicket as ITicket);
   }
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(DialogCloseTicket, {
+  openDialogDetail(close: boolean): void {
+    const dialog: ComponentType<DialogCloseTicket | DialogDetail> = this.isOpen ? DialogCloseTicket : DialogDetail;
+    const dialogRef = this.dialog.open(dialog, {
       width: '80%',
       data: { ticket: this.ticket }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed', result);
-      if (!!result) {
-        this.closeChat();
-      }
-    });
+    if (close) {
+      dialogRef.afterClosed().subscribe(result => {
+        console.log('The dialog was closed', result);
+        if (!!result) {
+          this.closeChat();
+        }
+      });
+    }
   }
 
-  openDialogDetail(): void {
-    this.dialog.open(DialogDetail, {
-      width: '80%',
-      data: { ticket: this.ticket }
-    });
-  }
+
 }

@@ -14,6 +14,7 @@ import { ToastMessage } from '../../../services/toastMessage.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DialogCloseTicket } from './ticket-head/dialog-component/dialog-close.component';
 import { DialogDetail } from './ticket-head/dialog-component/dialog-detail.component';
+import { TicketRedirectVideochatComponent } from './ticket-redirect-videochat/ticket-redirect-videochat.component';
 
 const routes: Routes = [
     {
@@ -32,6 +33,7 @@ const routes: Routes = [
     TicketVideoChatComponent,
     DialogCloseTicket,
     DialogDetail,
+    TicketRedirectVideochatComponent,
   ],
   entryComponents: [
     DialogCloseTicket,

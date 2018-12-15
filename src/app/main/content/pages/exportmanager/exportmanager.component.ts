@@ -12,6 +12,8 @@ import { MatDatepickerInputEvent, MAT_DATE_LOCALE, DateAdapter, MAT_DATE_FORMATS
 import { ToastOptions } from '../../../../type/toast-options';
 import { NotificationsService } from 'angular2-notifications';
 import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-moment-adapter';
+import { ITicketService } from '../../../../interfaces/i-ticket-service';
+import { ITicketOffice } from '../../../../interfaces/i-ticket-office';
 
 @Component({
   selector: 'fuse-exportmanager',
@@ -27,16 +29,19 @@ import { MAT_MOMENT_DATE_FORMATS, MomentDateAdapter } from '@angular/material-mo
 
 export class ExportmanagerComponent implements OnInit {
 
-  public category: ITicketCategory[];
-  public state: ITicketStatus[];
+  public categories: ITicketCategory[];
+  public statuses: ITicketStatus[];
+  public services: ITicketService[];
+  public offices: ITicketOffice[];
   public id_category: number;
   public id_state: number;
+  public id_office: number;
+  public id_service: number;
   public phone_number: string;
   public MINstartAt = moment(new Date()).subtract(180, 'day').toDate();
   public MAXendAt = new Date();
   public start_date = new FormControl(moment().subtract(31, 'day').toDate());
   public end_date = new FormControl(new Date());
-  public activeSpinner = false;
   public numberFormControl = new FormControl('', PhoneValidator.validPhone);
   public isValidForm = true;
   public options = ToastOptions;
@@ -48,14 +53,15 @@ export class ExportmanagerComponent implements OnInit {
     private toast: NotificationsService,
     private adapter: DateAdapter<any>
   ) {
-    this.category = this.storage.getItem('ticket_category');
-    this.state = this.storage.getItem('ticket_status');
+    this.categories = this.storage.getItem('ticket_category');
+    this.statuses = this.storage.getItem('ticket_status');
+    this.services = this.storage.getItem('services');
+    this.offices = this.storage.getItem('offices');
     this.adapter.setLocale('it');
   }
 
   ngOnInit() {
   }
-
 
   onSubmit() {
     if (!this.start_date.valid || !this.end_date.valid) {
@@ -65,11 +71,13 @@ export class ExportmanagerComponent implements OnInit {
     const filter: ITicketExportRequest = {};
     this.spinner.show();
 
-    if (!!this.id_category) { filter.category = this.id_category; }
-    if (!!this.phone_number) { filter.phone = this.phone_number.trim(); }
-    if (!!this.start_date) { filter.date_start = moment(this.start_date.value).format('YYYY-MM-DD'); }
-    if (!!this.end_date) { filter.date_end = moment(this.end_date.value).format('YYYY-MM-DD'); }
-    if (!!this.id_state) { filter.status = this.id_state; }
+    if (this.id_category) { filter.category = this.id_category; }
+    if (this.phone_number) { filter.phone = this.phone_number.trim(); }
+    if (this.start_date) { filter.date_start = moment(this.start_date.value).format('YYYY-MM-DD'); }
+    if (this.end_date) { filter.date_end = moment(this.end_date.value).format('YYYY-MM-DD'); }
+    if (this.id_state) { filter.status = this.id_state; }
+    if (this.id_office) { filter.id_office = this.id_office; }
+    if (this.id_service) { filter.id_service = this.id_service; }
 
     this.ticketExportService.get(filter).subscribe(data => {
       const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
