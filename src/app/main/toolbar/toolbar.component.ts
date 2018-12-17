@@ -109,6 +109,10 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
         this.router.navigate(['/pages/profile']);
     }
 
+    change_password() {
+      // TODO Create modal windows to change password
+    }
+
     elaborateFakeOperatorId(id_operator) {
         const date = new Date();
         // tslint:disable-next-line:radix
