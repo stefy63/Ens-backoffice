@@ -14,6 +14,8 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/merge';
 import { Subscription } from 'rxjs/Subscription';
 import { ApiTicketService } from '../services/api/api-ticket.service';
+import { MatDialog } from '@angular/material';
+
 @Component({
     selector: 'fuse-toolbar',
     templateUrl: './toolbar.component.html',
@@ -31,6 +33,7 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     private newTicketSubscription: Subscription;
 
     constructor(
+        public dialog: MatDialog,
         private router: Router,
         private fuseConfig: FuseConfigService,
         private storage: LocalStorageService,
@@ -110,7 +113,10 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     }
 
     change_password() {
-      // TODO Create modal windows to change password
+      const dialogRef = this.dialog.open(FuseDialogChangePassword, {
+        width: '80%',
+        data: { ticket: this.ticket }
+      });
     }
 
     elaborateFakeOperatorId(id_operator) {
