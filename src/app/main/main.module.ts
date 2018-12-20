@@ -15,6 +15,8 @@ import { FuseQuickPanelComponent } from './quick-panel/quick-panel.component';
 import { FuseThemeOptionsComponent } from '../core/components/theme-options/theme-options.component';
 import { FuseShortcutsModule } from '../core/components/shortcuts/shortcuts.module';
 import { FuseSearchBarModule } from '../core/components/search-bar/search-bar.module';
+import { DialogChangePassword } from './toolbar/dialog-component/dialog-change-password.component';
+import { ApiUserService } from './services/api/api-user.service';
 
 @NgModule({
     declarations: [
@@ -27,7 +29,7 @@ import { FuseSearchBarModule } from '../core/components/search-bar/search-bar.mo
         FuseNavbarVerticalToggleDirective,
         FuseThemeOptionsComponent,
         FuseQuickPanelComponent,
-        FuseDialogChangePassword
+        DialogChangePassword
     ],
     imports     : [
         SharedModule,
@@ -35,10 +37,16 @@ import { FuseSearchBarModule } from '../core/components/search-bar/search-bar.mo
         FuseNavigationModule,
         FuseShortcutsModule,
         FuseSearchBarModule,
-
+       
     ],
     exports     : [
         FuseMainComponent
+    ],
+    entryComponents: [
+        DialogChangePassword
+    ],
+    providers: [
+        ApiUserService
     ]
 })
 

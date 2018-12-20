@@ -1,6 +1,8 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import * as _ from 'lodash';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { IChangePassword } from '../../../interfaces/i-change-password';
+import { ApiUserService } from '../../services/api/api-user.service';
 
 @Component({
   selector: 'fuse-dialog-change-password',
@@ -8,14 +10,35 @@ import * as _ from 'lodash';
   styleUrls: ['../toolbar.component.scss']
 })
 // tslint:disable-next-line:component-class-suffix
-export class DialogDetail {
+export class DialogChangePassword {
+  
+  public modalData: IChangePassword;
+
 
   constructor(
-    public dialogRef: MatDialogRef<DialogCloseTicket>,
-    private storage: LocalStorageService,
-    @Inject(MAT_DIALOG_DATA) public data: any
+    @Inject(MAT_DIALOG_DATA) public user_id: number;
+    public dialogRef: MatDialogRef<DialogChangePassword>,
+    private apiUserService: ApiUserService
   ) {
-    this.call_type = this.storage.getItem('call_type');
-    this.call_result = this.storage.getItem('call_result');
+    this.modalData = {
+    user_id: this.user_id,
+    old_password: '',
+    new_password: '',
+    confirm_password: ''
+  };
   }
+
+  async onYesClick() {
+
+    if(!!this.modalData && this.modalData.new_password && this.modalData.confirm_password) {
+      delete this.modalData.confirm_password;
+      this.apiUserService.apiChangePassword(this.modalData)
+        .subscribe(() => {
+          this.dialogRef.close('true');
+        });
+    }
+    }
+      
+  }
+
 }

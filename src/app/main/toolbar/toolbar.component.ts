@@ -15,6 +15,9 @@ import 'rxjs/add/observable/merge';
 import { Subscription } from 'rxjs/Subscription';
 import { ApiTicketService } from '../services/api/api-ticket.service';
 import { MatDialog } from '@angular/material';
+import { DialogChangePassword } from './dialog-component/dialog-change-password.component';
+import { IUser } from '../../interfaces/i-user';
+import { IChangePassword } from '../../interfaces/i-change-password';
 
 @Component({
     selector: 'fuse-toolbar',
@@ -31,6 +34,7 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     public beep;
     private newHistorySubscription: Subscription;
     private newTicketSubscription: Subscription;
+    private user: IUser;
 
     constructor(
         public dialog: MatDialog,
@@ -66,6 +70,7 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
         const fakeOperatorNumber = (user) ? this.elaborateFakeOperatorId(user.id) : 1;
         if (user) {
             this.profile = user.userdata.name + ' ' + user.userdata.surname + ' [' + fakeOperatorNumber + ']';
+            this.user = user;
         }
 
         if (token && token.id_user) {
@@ -113,9 +118,15 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     }
 
     change_password() {
-      const dialogRef = this.dialog.open(FuseDialogChangePassword, {
-        width: '80%',
-        data: { ticket: this.ticket }
+      const dialogRef = this.dialog.open(DialogChangePassword, {
+          width: '60%',
+          data: {
+            modalData: this.user.id
+          }});
+
+      dialogRef.afterClosed().subscribe(result => {
+          console.log(result);
+          // TODO
       });
     }
 
