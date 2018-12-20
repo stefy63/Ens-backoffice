@@ -119,7 +119,7 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
 
     change_password() {
       const dialogRef = this.dialog.open(DialogChangePassword, {
-          width: '60%',
+          width: '40%',
           data: {
             modalData: this.user.id
           }});
