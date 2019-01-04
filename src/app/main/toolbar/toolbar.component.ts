@@ -17,7 +17,8 @@ import { ApiTicketService } from '../services/api/api-ticket.service';
 import { MatDialog } from '@angular/material';
 import { DialogChangePassword } from './dialog-component/dialog-change-password.component';
 import { IUser } from '../../interfaces/i-user';
-import { IChangePassword } from '../../interfaces/i-change-password';
+import { NotificationsService } from 'angular2-notifications';
+import { ToastOptions } from '../../type/toast-options';
 
 @Component({
     selector: 'fuse-toolbar',
@@ -31,11 +32,12 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     profile: string;
     public totalUnreadedMessages = 0;
     public totalNewedTickets = 0;
+    public options = ToastOptions;
+
     public beep;
     private newHistorySubscription: Subscription;
     private newTicketSubscription: Subscription;
-    private user: IUser;
-
+    private user: IUser;  
     constructor(
         public dialog: MatDialog,
         private router: Router,
@@ -45,7 +47,8 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
         private ticketHistoryService: ApiTicketHistoryService,
         private ticketService: ApiTicketService,
         private socketService: SocketService,
-    ) {
+        private toast: NotificationsService,
+        ) {
         this.beep = new Audio('../../../../assets/audio/beep.wav');
 
         router.events.subscribe(
@@ -126,7 +129,9 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
 
       dialogRef.afterClosed().subscribe(result => {
           console.log(result);
-          // TODO
+          if (result) {
+            this.toast.success('Cambio Password', 'Password modificata con successo');
+          }
       });
     }
 
