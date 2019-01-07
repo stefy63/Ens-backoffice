@@ -37,7 +37,7 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     public beep;
     private newHistorySubscription: Subscription;
     private newTicketSubscription: Subscription;
-    private user: IUser;  
+    private user: IUser;
     constructor(
         public dialog: MatDialog,
         private router: Router,
@@ -123,6 +123,7 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     change_password() {
       const dialogRef = this.dialog.open(DialogChangePassword, {
           width: '40%',
+          height: '55%',
           data: {
             modalData: this.user.id
           }});

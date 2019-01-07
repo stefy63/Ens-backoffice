@@ -32,10 +32,11 @@ export class DialogChangePassword {
       };
       this.formGroup = new FormGroup({
         'old_password': new FormControl('', Validators.required),
-        'new_password': new FormControl('', [Validators.required, Validators.minLength(5)]),
-        'confirm_password': new FormControl('', Validators.required)
-      }, (form: FormGroup) => { 
-        return PasswordValidator.areEqual(form, 'new_password', 'confirm_password'); 
+        // tslint:disable-next-line:max-line-length
+        'new_password': new FormControl('', [Validators.required, Validators.minLength(5) /*, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')*/]),
+        'confirm_password': new FormControl('', [Validators.required])
+      }, (form: FormGroup) => {
+        return PasswordValidator.areEqualValidator(form, 'new_password', 'confirm_password');
       });
   }
 
