@@ -50,9 +50,4 @@ export class DialogChangePassword implements OnInit {
     }
 
   }
-
-  getErrorMessage() {
-    // return this.formGroup.controls[key].hasError('areEqual');
-    return this.formGroup.errors;
-  }
 }
