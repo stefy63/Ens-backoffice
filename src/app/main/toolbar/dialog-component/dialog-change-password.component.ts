@@ -1,10 +1,10 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import * as _ from 'lodash';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { IChangePassword } from '../../../interfaces/i-change-password';
 import { ApiUserService } from '../../services/api/api-user.service';
-import { FormGroup, FormControl, Validators, ValidatorFn, ValidationErrors, AbstractControl } from '@angular/forms';
-import { PasswordValidator } from '../../services/MaterialValidator/CustomPasswordValidator.service';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { PasswordValidator } from '../../services/MaterialValidator/PasswordValidator';
 
 @Component({
   selector: 'fuse-dialog-change-password',
@@ -12,7 +12,7 @@ import { PasswordValidator } from '../../services/MaterialValidator/CustomPasswo
   styleUrls: ['./dialog-change-password.scss']
 })
 // tslint:disable-next-line:component-class-suffix
-export class DialogChangePassword {
+export class DialogChangePassword implements OnInit {
 
   public modalData: IChangePassword;
   public formGroup: FormGroup;
@@ -24,22 +24,22 @@ export class DialogChangePassword {
     private apiUserService: ApiUserService
   ) {
     this.modalData = {
-        user_id: <number>this.data.modalData,
-        old_password: '',
-        new_password: '',
-        confirm_password: ''
-      };
-      this.formGroup = new FormGroup({
-        'old_password': new FormControl('', Validators.required),
-        'new_password': new FormControl('', [Validators.required, Validators.minLength(5)
-        /*, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')*/]),
-        'confirm_password': new FormControl('', [Validators.required])
-      }, { validators: this.MatchPasswordValidator() }
-      );
+      user_id: <number>this.data.modalData,
+      old_password: '',
+      new_password: '',
+      confirm_password: ''
+    };
+  }
+
+  ngOnInit(): void {
+    this.formGroup = new FormGroup({
+      'old_password': new FormControl('', Validators.required),
+      'new_password': new FormControl('', [Validators.required, Validators.minLength(5)]),
+      'confirm_password': new FormControl('', [Validators.required, PasswordValidator.match])
+    });
   }
 
   onYesClick() {
-
     if (this.modalData.old_password && this.modalData.new_password) {
       console.log(this.modalData);
       delete this.modalData.confirm_password;
@@ -55,20 +55,4 @@ export class DialogChangePassword {
     // return this.formGroup.controls[key].hasError('areEqual');
     return this.formGroup.errors;
   }
-
-  public MatchPasswordValidator(): ValidatorFn  {
-
-    return (control: AbstractControl): ValidationErrors | null => {
-      // if ( !!control ) {
-        const value = control.get('new_password').value;
-        const confirm = control.get('confirm_password').value;
-        const valid = (!!value && !!confirm && confirm === value);
-        console.log(value, confirm, valid);
-        return (valid) ? null : { areEqual: true };
-      // }
-    };
-  }
-
-
-
 }
