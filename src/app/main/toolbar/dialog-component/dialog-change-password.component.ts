@@ -3,8 +3,8 @@ import * as _ from 'lodash';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { IChangePassword } from '../../../interfaces/i-change-password';
 import { ApiUserService } from '../../services/api/api-user.service';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { PasswordValidator, ConfirmValidParentMatcher } from '../../services/MaterialValidator/CustomPasswordValidator.service';
+import { FormGroup, FormControl, Validators, ValidatorFn, ValidationErrors, AbstractControl } from '@angular/forms';
+import { PasswordValidator } from '../../services/MaterialValidator/CustomPasswordValidator.service';
 
 @Component({
   selector: 'fuse-dialog-change-password',
@@ -16,7 +16,6 @@ export class DialogChangePassword {
 
   public modalData: IChangePassword;
   public formGroup: FormGroup;
-  public confirmValidParentMatcher = new ConfirmValidParentMatcher();
 
 
   constructor(
@@ -32,12 +31,11 @@ export class DialogChangePassword {
       };
       this.formGroup = new FormGroup({
         'old_password': new FormControl('', Validators.required),
-        // tslint:disable-next-line:max-line-length
-        'new_password': new FormControl('', [Validators.required, Validators.minLength(5) /*, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')*/]),
+        'new_password': new FormControl('', [Validators.required, Validators.minLength(5)
+        /*, Validators.pattern('(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&].{8,}')*/]),
         'confirm_password': new FormControl('', [Validators.required])
-      }, (form: FormGroup) => {
-        return PasswordValidator.areEqualValidator(form, 'new_password', 'confirm_password');
-      });
+      }, { validators: this.MatchPasswordValidator() }
+      );
   }
 
   onYesClick() {
@@ -53,9 +51,24 @@ export class DialogChangePassword {
 
   }
 
-  getErrorMessage(key: string) {
+  getErrorMessage() {
     // return this.formGroup.controls[key].hasError('areEqual');
-    return this.formGroup.controls[key].errors;
+    return this.formGroup.errors;
   }
+
+  public MatchPasswordValidator(): ValidatorFn  {
+
+    return (control: AbstractControl): ValidationErrors | null => {
+      // if ( !!control ) {
+        const value = control.get('new_password').value;
+        const confirm = control.get('confirm_password').value;
+        const valid = (!!value && !!confirm && confirm === value);
+        console.log(value, confirm, valid);
+        return (valid) ? null : { areEqual: true };
+      // }
+    };
+  }
+
+
 
 }

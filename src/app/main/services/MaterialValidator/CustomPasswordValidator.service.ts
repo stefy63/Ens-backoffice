@@ -1,27 +1,19 @@
-import { FormGroup, FormControl, FormGroupDirective, NgForm, ValidatorFn, AbstractControl } from '@angular/forms';
-import { ErrorStateMatcher } from '@angular/material';
+import { ValidatorFn, AbstractControl, ValidationErrors } from '@angular/forms';
 
 export class PasswordValidator {
 
-    static areEqualValidator(formGroup: FormGroup, newKey: string, confirmKey: string): ValidatorFn {
-        const value = formGroup.get(newKey).value;
-        let valid = true;
-        if (!!value && !!formGroup.get(confirmKey).value && formGroup.get(confirmKey).value !== value) {
-          console.log(value, formGroup.get(confirmKey).value);
-          valid = false;
-        }
+    public static areEqualValidator(): ValidatorFn {
 
-        return (control: AbstractControl): { [key: string]: boolean } | null => {
-            return (valid) ? null : { 'areEqual': true };
+        return (control: AbstractControl): ValidationErrors | null => {
+          // if ( !!control ) {
+            const value = control.get('new_password').value;
+            const confirm = control.get('confirm_password').value;
+            const valid = (!!value && !!confirm && confirm === value);
+            console.log(value, confirm, valid);
+            return (valid) ? null : { areEqual: true };
+          // }
         };
     }
 
-}
-
-export class ConfirmValidParentMatcher implements ErrorStateMatcher {
-    isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-      console.log('EEEEEEEEE   -<  ', control);
-      return control.parent.invalid && control.touched;
-    }
 }
 
