@@ -6,6 +6,7 @@ export class PasswordValidator {
     const newPassword = (control.parent) ? control.parent.get('new_password').value : '';
 
     if (newPassword && confirmPassword && newPassword !== confirmPassword){
+      control.markAsTouched();
       return { passwordMatch: true };
     }
     return null;

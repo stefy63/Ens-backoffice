@@ -19,7 +19,7 @@ export class ApiUserService {
   ) { }
 
   public apiChangePassword(user: IChangePassword): Observable<any> {
-    return this.http.put(this.baseUrl + '/password/' + user.user_id, user);
+    return this.http.put(this.baseUrl + '/user/password/' + user.user_id, user);
   }
 
 

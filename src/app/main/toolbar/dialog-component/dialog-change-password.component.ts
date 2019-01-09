@@ -34,7 +34,7 @@ export class DialogChangePassword implements OnInit {
   ngOnInit(): void {
     this.formGroup = new FormGroup({
       'old_password': new FormControl('', Validators.required),
-      'new_password': new FormControl('', [Validators.required, Validators.minLength(5)]),
+      'new_password': new FormControl('', [Validators.required]),
       'confirm_password': new FormControl('', [Validators.required, PasswordValidator.match])
     });
   }
