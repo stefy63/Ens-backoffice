@@ -40,18 +40,7 @@ export class DialogChangePassword implements OnInit {
   }
 
   onYesClick() {
-    if (this.modalData.old_password && this.modalData.new_password) {
-      console.log(this.modalData);
-      delete this.modalData.confirm_password;
-      this.apiUserService.apiChangePassword(this.modalData)
-        .subscribe(() => {
-          this.dialogRef.close('true');
-        },
-        (err) => {
-          this.dialogRef.close('false');
-        }
-        );
-    }
-
+    delete this.modalData.confirm_password;
+    this.dialogRef.close(this.modalData);
   }
 }

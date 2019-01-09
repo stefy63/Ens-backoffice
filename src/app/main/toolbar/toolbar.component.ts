@@ -19,6 +19,7 @@ import { DialogChangePassword } from './dialog-component/dialog-change-password.
 import { IUser } from '../../interfaces/i-user';
 import { NotificationsService } from 'angular2-notifications';
 import { ToastOptions } from '../../type/toast-options';
+import { ApiUserService } from '../services/api/api-user.service';
 
 @Component({
     selector: 'fuse-toolbar',
@@ -48,6 +49,7 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
         private ticketService: ApiTicketService,
         private socketService: SocketService,
         private toast: NotificationsService,
+        private apiUserService: ApiUserService
         ) {
         this.beep = new Audio('../../../../assets/audio/beep.wav');
 
@@ -129,12 +131,19 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
           }});
 
       dialogRef.afterClosed().subscribe(result => {
+        if (!!result) {
           console.log(result);
-          if (result) {
+          this.apiUserService.apiChangePassword(result)
+          .subscribe((data) => {
+            console.log(data);
             this.toast.success('Cambio Password', 'Password modificata con successo');
-          } else {
-            this.toast.alert('Cambio Password', 'Modifica password fallita');
+          },
+          (err) => {
+            console.log(err);
+            this.toast.error('Cambio Password', 'Modifica password fallita');
           }
+          );
+        }
       });
     }
 
