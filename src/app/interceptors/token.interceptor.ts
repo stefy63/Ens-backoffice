@@ -32,9 +32,10 @@ export class TokenInterceptor implements HttpInterceptor {
       return next
               .handle(request)
               .catch(response => {
-                this.storage.clear();
-                this.router.navigate(['pages/authentication/login-2']);
-
+                if (response.status === 401) {
+                  this.storage.clear();
+                  this.router.navigate(['pages/authentication/login-2']);
+                }
                 return Observable.throw(response);
               });
     }
