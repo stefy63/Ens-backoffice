@@ -46,7 +46,11 @@ export class DialogChangePassword implements OnInit {
       this.apiUserService.apiChangePassword(this.modalData)
         .subscribe(() => {
           this.dialogRef.close('true');
-        });
+        },
+        (err) => {
+          this.dialogRef.close('false');
+        }
+        );
     }
 
   }

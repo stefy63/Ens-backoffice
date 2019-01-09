@@ -132,6 +132,8 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
           console.log(result);
           if (result) {
             this.toast.success('Cambio Password', 'Password modificata con successo');
+          } else {
+            this.toast.alert('Cambio Password', 'Modifica password fallita');
           }
       });
     }
