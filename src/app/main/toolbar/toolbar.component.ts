@@ -20,6 +20,7 @@ import { IUser } from '../../interfaces/i-user';
 import { NotificationsService } from 'angular2-notifications';
 import { ToastOptions } from '../../type/toast-options';
 import { ApiUserService } from '../services/api/api-user.service';
+import { DialogProfileComponent } from './dialog-component/profile/profile.component';
 
 @Component({
     selector: 'fuse-toolbar',
@@ -119,7 +120,12 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     }
 
     edit_profile() {
-        this.router.navigate(['/pages/profile']);
+      const dialogRef = this.dialog.open(DialogProfileComponent, {
+        width: '50%',
+        height: '90%',
+        data: {
+          modalData: this.user
+        }});
     }
 
     change_password() {

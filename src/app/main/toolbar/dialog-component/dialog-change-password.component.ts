@@ -2,7 +2,6 @@ import { Component, Inject, OnInit } from '@angular/core';
 import * as _ from 'lodash';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { IChangePassword } from '../../../interfaces/i-change-password';
-import { ApiUserService } from '../../services/api/api-user.service';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PasswordValidator } from '../../services/MaterialValidator/PasswordValidator';
 
@@ -21,7 +20,6 @@ export class DialogChangePassword implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<DialogChangePassword>,
-    private apiUserService: ApiUserService
   ) {
     this.modalData = {
       user_id: <number>this.data.modalData,

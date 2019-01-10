@@ -1,0 +1,31 @@
+:host {
+  mat-form-field {
+    width: 100%;
+  }
+  mat-dialog-content {
+    min-height: 90%;
+  }
+  form {
+    height: 85%;
+    width: 100%;
+    .dialog-input {
+      font-size: 2rem;
+    }
+  }
+  .dialog-header {
+    position: relative;
+    text-align: center;
+  }
+  .modal-title {
+    margin: 30px 0 30px;
+    font-size: 3em;
+    font-weight: bold;
+    color: #25b2f7;
+  }
+
+  .close-dialog {
+    position: absolute;
+    top: -40px;
+    right: -10px;
+  }
+}

@@ -17,6 +17,8 @@ import { FuseShortcutsModule } from '../core/components/shortcuts/shortcuts.modu
 import { FuseSearchBarModule } from '../core/components/search-bar/search-bar.module';
 import { DialogChangePassword } from './toolbar/dialog-component/dialog-change-password.component';
 import { ApiUserService } from './services/api/api-user.service';
+import { DialogProfileComponent } from './toolbar/dialog-component/profile/profile.component';
+import { SimpleNotificationsModule } from 'angular2-notifications';
 
 @NgModule({
     declarations: [
@@ -29,7 +31,8 @@ import { ApiUserService } from './services/api/api-user.service';
         FuseNavbarVerticalToggleDirective,
         FuseThemeOptionsComponent,
         FuseQuickPanelComponent,
-        DialogChangePassword
+        DialogChangePassword,
+        DialogProfileComponent
     ],
     imports     : [
         SharedModule,
@@ -37,13 +40,15 @@ import { ApiUserService } from './services/api/api-user.service';
         FuseNavigationModule,
         FuseShortcutsModule,
         FuseSearchBarModule,
-       
+        SimpleNotificationsModule
+
     ],
     exports     : [
         FuseMainComponent
     ],
     entryComponents: [
-        DialogChangePassword
+        DialogChangePassword,
+        DialogProfileComponent
     ],
     providers: [
         ApiUserService
