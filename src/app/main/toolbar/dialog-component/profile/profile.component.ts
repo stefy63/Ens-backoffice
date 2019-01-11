@@ -2,6 +2,7 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { ToastOptions } from '../../../../type/toast-options';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { IUser } from '../../../../interfaces/i-user';
 
 @Component({
   selector: 'fuse-dialog-profile',
@@ -11,7 +12,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 export class DialogProfileComponent implements OnInit {
 
   public options = ToastOptions;
-  public modalData: any;
+  public modalData: IUser;
   public formGroup: FormGroup;
 
 
@@ -22,11 +23,25 @@ export class DialogProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.data);
+    console.log(this.data.modalData);
+    this.modalData = this.data.modalData;
     this.formGroup = new FormGroup({
-      'old_password': new FormControl('', Validators.required),
-      'new_password': new FormControl('', [Validators.required]),
-      'confirm_password': new FormControl('', [Validators.required])
+      'name': new FormControl('', Validators.required),
+      'surname': new FormControl('', [Validators.required]),
+      'born_date': new FormControl('', [Validators.required]),
+      'born_city': new FormControl('', [Validators.required]),
+      'born_state': new FormControl('', [Validators.required]),
+      'email': new FormControl('', [Validators.required]),
+      'gender': new FormControl('', [Validators.required]),
+      'city': new FormControl('', [Validators.required]),
+      'address': new FormControl('', [Validators.required]),
+      'state': new FormControl('', [Validators.required]),
+      'phone': new FormControl('', [Validators.required]),
+      'card_number': new FormControl('', [Validators.required]),
+      'vat': new FormControl('', [Validators.required]),
+      'privacyaccept': new FormControl(true, [Validators.required]),
+      'newsletteraccept': new FormControl('', [Validators.required]),
+      'becontacted': new FormControl('', [Validators.required]),
     });
   }
 

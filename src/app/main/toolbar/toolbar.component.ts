@@ -121,7 +121,7 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
 
     edit_profile() {
       const dialogRef = this.dialog.open(DialogProfileComponent, {
-        width: '50%',
+        width: '60%',
         height: '90%',
         data: {
           modalData: this.user
