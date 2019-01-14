@@ -3,6 +3,7 @@ import { environment } from '../../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { IChangePassword } from '../../../interfaces/i-change-password';
+import { IUser } from '../../../interfaces/i-user';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -22,6 +23,9 @@ export class ApiUserService {
     return this.http.put(this.baseUrl + '/user/password/' + user.user_id, user);
   }
 
+  public apiChangeProfile(user: IUser): Observable<any> {
+    return this.http.put(this.baseUrl + '/user', user);
+  }
 
 
 

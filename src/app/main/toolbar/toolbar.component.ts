@@ -126,6 +126,21 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
         data: {
           modalData: this.user
         }});
+
+        dialogRef.afterClosed().subscribe(result => {
+          if (!!result) {
+            console.log(result);
+            this.apiUserService.apiChangeProfile(result)
+            .subscribe((data) => {
+              this.toast.success('Aggiornamento Profilo', 'Profilo modificato con successo');
+            },
+            (err) => {
+              console.log(err);
+              this.toast.error('Aggiornamento Profilo', 'Modifica Profilo fallita');
+            }
+            );
+          }
+        });
     }
 
     change_password() {
