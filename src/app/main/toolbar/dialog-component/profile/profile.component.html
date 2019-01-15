@@ -3,8 +3,8 @@
   <button mat-dialog-close class="close-dialog"><mat-icon>close</mat-icon></button>
 </div>
 <form [formGroup]="formGroup" (ngSubmit)="onYesClick()">
-    <mat-dialog-content>
-      <div class="row col-12">
+    <div class="form__body">
+      <div class="row mb-3">
           <mat-form-field class="col-6">
               <input matInput class="dialog-input form-control" type="text"  formControlName="name" [(ngModel)]="modalData.userdata.name"  required>
               <mat-placeholder>Nome</mat-placeholder>
@@ -18,7 +18,7 @@
               <mat-error class="error-message" *ngIf="formGroup.controls['surname'].hasError('required')">Campo obbligatorio</mat-error>
           </mat-form-field>
       </div>
-      <div class="row col-12">
+      <div class="row mb-3">
           <mat-form-field class="col-4">
               <input matInput class="dialog-input form-control" [matDatepicker]="picker" formControlName="born_date" [(ngModel)]="modalData.userdata.born_date"  required >
               <mat-placeholder>Data di Nascita</mat-placeholder>
@@ -42,10 +42,10 @@
               <mat-error class="error-message" *ngIf="formGroup.controls['born_state'].hasError('required')">Campo obbligatorio</mat-error>
           </mat-form-field>
       </div>
-      <div class="row col-12">
+      <div class="row mb-3">
           <mat-form-field class="col-6">
               <input matInput class="dialog-input form-control" type="text"  formControlName="address"  [(ngModel)]="modalData.userdata.address"  required >
-              <mat-placeholder>Indirizzo (Via, Numer)</mat-placeholder>
+              <mat-placeholder>Indirizzo (Via, Numero)</mat-placeholder>
               <mat-icon matSuffix>home</mat-icon>
               <mat-error class="error-message" *ngIf="formGroup.controls['address'].hasError('required')">Campo obbligatorio</mat-error>
           </mat-form-field>
@@ -65,12 +65,15 @@
               <mat-error class="error-message" *ngIf="formGroup.controls['state'].hasError('required')">Campo obbligatorio</mat-error>
           </mat-form-field>
       </div>
-      <div class="row col-12">
+      <div class="row mb-3">
           <mat-form-field class="col-4">
-              <input matInput class="dialog-input form-control" type="text"  formControlName="gender" [(ngModel)]="modalData.userdata.gender"  required>
-              <mat-placeholder>Sesso</mat-placeholder>
-              <mat-icon matSuffix>local_phone</mat-icon>
-              <mat-error class="error-message" *ngIf="formGroup.controls['gender'].hasError('required')">Campo obbligatorio</mat-error>
+              <mat-select formControlName="gender"  [(ngModel)]="modalData.userdata.gender"  required>
+                  <mat-option *ngFor="let sex of gender" [value]="sex.id">
+                    {{sex.name}}
+                  </mat-option>
+                </mat-select>
+                <mat-placeholder>Sesso</mat-placeholder>
+                <mat-error class="error-message" *ngIf="formGroup.controls['gender'].hasError('required')">Campo obbligatorio</mat-error>
           </mat-form-field>
           <mat-form-field class="col-4">
               <input matInput class="dialog-input form-control" type="text"  formControlName="phone"  [(ngModel)]="modalData.userdata.phone"  required >
@@ -85,7 +88,7 @@
               <mat-error class="error-message" *ngIf="formGroup.controls['card_number'].hasError('required')">Campo obbligatorio</mat-error>
           </mat-form-field>
       </div>
-      <div class="row col-12">
+      <div class="row mb-3">
           <mat-form-field class="col-6">
               <input matInput class="dialog-input form-control" type="text"  formControlName="email" [(ngModel)]="modalData.userdata.email"  required >
               <mat-placeholder>Indirizzo e-mail</mat-placeholder>
@@ -110,14 +113,13 @@
         <mat-checkbox formControlName="becontacted" [(ngModel)]="modalData.userdata.becontacted" >
                 <span class="mat-caption col-12">Acconsento ad essere contattato</span>
             </mat-checkbox>
-
-    </mat-dialog-content>
-  <mat-dialog-actions align="center">
-    <button mat-raised-button class="col-6" type="submit" color="accent" [disabled]="!formGroup.valid">
-        Salva
-    </button>
-  </mat-dialog-actions>
-  <span class="mat-caption col-12">Tutti i campi contrassegnati con l'asterisco sono obbligatori.</span>
+      </div>
+    <div class="form__footer">
+        <button mat-raised-button class="col-6" type="submit" color="accent" [disabled]="!formGroup.valid">
+            Salva
+        </button>
+        <span class="mat-cation d-block mt-3">Tutti i campi contrassegnati con l'asterisco sono obbligatori.</span>
+    </div>
 </form>
 
 <simple-notifications [options]="options"></simple-notifications>

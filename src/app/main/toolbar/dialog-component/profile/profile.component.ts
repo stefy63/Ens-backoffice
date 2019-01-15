@@ -1,14 +1,33 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ToastOptions } from '../../../../type/toast-options';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import { IUser } from '../../../../interfaces/i-user';
+import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import { ApiItalyGeoService } from '../../../services/api/api-italy-geo.service';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+
+
+export const MY_FORMATS = {
+  parse: {
+      dateInput: 'DD/MM/YYYY',
+  },
+  display: {
+      dateInput: 'DD/MM/YYYY',
+      monthYearLabel: 'MMM YYYY',
+      dateA11yLabel: 'LL',
+      monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'fuse-dialog-profile',
   templateUrl: './profile.component.html',
-  styleUrls: ['./profile.component.scss']
+  styleUrls: ['./profile.component.scss'],
+  providers: [
+    {provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE]},
+    {provide: MAT_DATE_FORMATS, useValue: MY_FORMATS},
+  ]
 })
 export class DialogProfileComponent implements OnInit {
 
@@ -16,6 +35,10 @@ export class DialogProfileComponent implements OnInit {
   public modalData: IUser;
   public formGroup: FormGroup;
   public states: any[];
+  public gender = [
+    { id: 'male', name: 'Maschio'},
+    { id: 'female', name: 'Femmina'}
+  ];
 
 
   constructor(

@@ -6,7 +6,7 @@ export interface IUserData {
     card_number: string;
     city: string;
     email: string;
-    gender: {'male', 'female'};
+    gender: string;
     name: string;
     newsletteraccept: boolean;
     phone: string;
@@ -18,5 +18,5 @@ export interface IUserData {
     address: string;
     state: string;
     vat: string;
-    
+
 }

@@ -40,6 +40,8 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     private newHistorySubscription: Subscription;
     private newTicketSubscription: Subscription;
     private user: IUser;
+    private fakeOperatorNumber: number;
+
     constructor(
         public dialog: MatDialog,
         private router: Router,
@@ -73,9 +75,9 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     ngOnInit() {
         const user = this.storage.getItem('user');
         const token = this.storage.getItem('token');
-        const fakeOperatorNumber = (user) ? this.elaborateFakeOperatorId(user.id) : 1;
+        this.fakeOperatorNumber = (user) ? this.elaborateFakeOperatorId(user.id) : 1;
         if (user) {
-            this.profile = user.userdata.name + ' ' + user.userdata.surname + ' [' + fakeOperatorNumber + ']';
+            this.profile = user.userdata.name + ' ' + user.userdata.surname + ' [' + this.fakeOperatorNumber + ']';
             this.user = user;
         }
 
@@ -122,25 +124,27 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     edit_profile() {
       const dialogRef = this.dialog.open(DialogProfileComponent, {
         width: '60%',
-        height: '90%',
+        height: '85%',
         data: {
           modalData: this.user
         }});
 
-        dialogRef.afterClosed().subscribe(result => {
-          if (!!result) {
-            console.log(result);
-            this.apiUserService.apiChangeProfile(result)
-            .subscribe((data) => {
+        dialogRef
+          .afterClosed()
+          .filter((result) => !!result)
+          .flatMap((result) => this.apiUserService.apiChangeProfile(result))
+          .subscribe(user => {
+              this.storage.setItem('user', user);
+              if (user) {
+                this.profile = user.userdata.name + ' ' + user.userdata.surname + ' [' + this.fakeOperatorNumber + ']';
+                this.user = user;
+            }
               this.toast.success('Aggiornamento Profilo', 'Profilo modificato con successo');
             },
             (err) => {
-              console.log(err);
               this.toast.error('Aggiornamento Profilo', 'Modifica Profilo fallita');
             }
-            );
-          }
-        });
+          );
     }
 
     change_password() {
@@ -151,21 +155,17 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
             modalData: this.user.id
           }});
 
-      dialogRef.afterClosed().subscribe(result => {
-        if (!!result) {
-          console.log(result);
-          this.apiUserService.apiChangePassword(result)
-          .subscribe((data) => {
-            console.log(data);
+      dialogRef
+      .afterClosed()
+      .filter((result) => !!result)
+      .flatMap((result) => this.apiUserService.apiChangePassword(result))
+      .subscribe(() => {
             this.toast.success('Cambio Password', 'Password modificata con successo');
           },
           (err) => {
-            console.log(err);
             this.toast.error('Cambio Password', 'Modifica password fallita');
           }
-          );
-        }
-      });
+      );
     }
 
     elaborateFakeOperatorId(id_operator) {
