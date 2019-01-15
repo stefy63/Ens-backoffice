@@ -19,9 +19,9 @@ export const WsEvents = {
         updated: 'onTichetHistoryUpdated',
     },
     serverMessage: {
-      connect: 'connect',
-      disconnect: 'connection-close',
-      welcome: 'welcome-message'
+        connect: 'connect',
+        disconnect: 'connection-close',
+        welcome: 'welcome-message'
     }
 };
 
