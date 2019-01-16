@@ -40,18 +40,18 @@ export class NavigationModel
                           //     'fg'   : '#FFFFFF'
                           // }
                       },
-                        {
-                        'id'   : 'user_manager',
-                        'title': 'Gestione Utenti',
-                        'type' : 'item',
-                        'icon' : 'sentiment_satisfied',
-                        'url'  : '/pages/user_manager',
-                        // 'badge': {
-                        //     'title': 25,
-                        //     'bg'   : '#F44336',
-                        //     'fg'   : '#FFFFFF'
-                        // }
-                    }
+                    //     {
+                    //     'id'   : 'user_manager',
+                    //     'title': 'Gestione Utenti',
+                    //     'type' : 'item',
+                    //     'icon' : 'sentiment_satisfied',
+                    //     'url'  : '/pages/user_manager',
+                    //     // 'badge': {
+                    //     //     'title': 25,
+                    //     //     'bg'   : '#F44336',
+                    //     //     'fg'   : '#FFFFFF'
+                    //     // }
+                    // }
                     // {
                     //   'id'      : 'usermanager',
                     //   'title'   : 'Gestione Utenti',
