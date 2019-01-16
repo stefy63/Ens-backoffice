@@ -22,7 +22,7 @@
         <div class="col-12">
             <div class="row">
                 <mat-form-field class="col-6">
-                    <input [formControl]="start_date" matInput [min]="MINstartAt" [max]="MAXendAt" [matDatepicker]="pickerStart"
+                    <input [formControl]="start_date" matInput [max]="MAXendAt" [matDatepicker]="pickerStart"
                         (dateChange)="addEvent($event)" placeholder="Date di inizio ricerca." required>
                     <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
                     <mat-datepicker class="pull-right" #pickerStart [startAt]="MINstartAt" [endAt]="MAXendAt"></mat-datepicker>
