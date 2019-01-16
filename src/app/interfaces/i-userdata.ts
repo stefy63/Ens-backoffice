@@ -14,9 +14,9 @@ export interface IUserData {
     surname: string;
     born_date: Date;
     born_city: string;
-    born_state: string;
+    born_province: string;
     address: string;
-    state: string;
-    vat: string;
+    province: string;
+    fiscalcode: string;
 
 }

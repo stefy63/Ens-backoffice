@@ -34,7 +34,7 @@ export class DialogProfileComponent implements OnInit {
   public options = ToastOptions;
   public modalData: IUser;
   public formGroup: FormGroup;
-  public states: any[];
+  public provinces: any[];
   public gender = [
     { id: 'male', name: 'Maschio'},
     { id: 'female', name: 'Femmina'}
@@ -47,8 +47,8 @@ export class DialogProfileComponent implements OnInit {
     private httpItalyGeo: ApiItalyGeoService
     ) {
       this.httpItalyGeo.apiGetAllProvince()
-        .subscribe(province => {
-          this.states = province;
+        .subscribe(provinces => {
+          this.provinces = provinces;
         });
   }
 
@@ -61,15 +61,15 @@ export class DialogProfileComponent implements OnInit {
       'surname': new FormControl('', [Validators.required]),
       'born_date': new FormControl('', [Validators.required]),
       'born_city': new FormControl('', [Validators.required]),
-      'born_state': new FormControl('', [Validators.required]),
+      'born_province': new FormControl('', [Validators.required]),
       'email': new FormControl('', [Validators.required]),
       'gender': new FormControl('', [Validators.required]),
       'city': new FormControl('', [Validators.required]),
       'address': new FormControl('', [Validators.required]),
-      'state': new FormControl('', [Validators.required]),
+      'province': new FormControl('', [Validators.required]),
       'phone': new FormControl('', [Validators.required]),
       'card_number': new FormControl('', [Validators.required]),
-      'vat': new FormControl('', [Validators.required]),
+      'fiscalcode': new FormControl('', [Validators.required]),
       'privacyaccept': new FormControl(),
       'newsletteraccept': new FormControl(),
       'becontacted': new FormControl(),

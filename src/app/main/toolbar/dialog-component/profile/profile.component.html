@@ -33,13 +33,13 @@
               <mat-error class="error-message" *ngIf="formGroup.controls['born_city'].hasError('required')">Campo obbligatorio</mat-error>
           </mat-form-field>
           <mat-form-field class="col-4">
-              <mat-select formControlName="born_state"  [(ngModel)]="modalData.userdata.born_state"  required>
-                <mat-option *ngFor="let state of states" [value]="state.id">
-                  {{state.nome}}
+              <mat-select formControlName="born_province"  [(ngModel)]="modalData.userdata.born_province"  required>
+                <mat-option *ngFor="let province of provinces" [value]="province.id">
+                  {{province.nome}}
                 </mat-option>
               </mat-select>
               <mat-placeholder>Provincia di Nascita</mat-placeholder>
-              <mat-error class="error-message" *ngIf="formGroup.controls['born_state'].hasError('required')">Campo obbligatorio</mat-error>
+              <mat-error class="error-message" *ngIf="formGroup.controls['born_province'].hasError('required')">Campo obbligatorio</mat-error>
           </mat-form-field>
       </div>
       <div class="row mb-3">
@@ -56,13 +56,13 @@
               <mat-error class="error-message" *ngIf="formGroup.controls['city'].hasError('required')">Campo obbligatorio</mat-error>
           </mat-form-field>
           <mat-form-field class="col-3">
-              <mat-select formControlName="state"  [(ngModel)]="modalData.userdata.state"  required>
-                <mat-option *ngFor="let state of states" [value]="state.id">
-                  {{state.nome}}
+              <mat-select formControlName="province"  [(ngModel)]="modalData.userdata.province"  required>
+                <mat-option *ngFor="let province of provinces" [value]="province.id">
+                  {{province.nome}}
                 </mat-option>
               </mat-select>
               <mat-placeholder>Provincia</mat-placeholder>
-              <mat-error class="error-message" *ngIf="formGroup.controls['state'].hasError('required')">Campo obbligatorio</mat-error>
+              <mat-error class="error-message" *ngIf="formGroup.controls['province'].hasError('required')">Campo obbligatorio</mat-error>
           </mat-form-field>
       </div>
       <div class="row mb-3">
@@ -96,10 +96,10 @@
               <mat-error class="error-message" *ngIf="formGroup.controls['email'].hasError('required')">Campo obbligatorio</mat-error>
           </mat-form-field>
           <mat-form-field class="col-6">
-              <input matInput class="dialog-input form-control" type="text"  formControlName="vat" [(ngModel)]="modalData.userdata.vat"  required >
+              <input matInput class="dialog-input form-control" type="text"  formControlName="fiscalcode" [(ngModel)]="modalData.userdata.fiscalcode"  required >
               <mat-placeholder>Codice Fiscale</mat-placeholder>
               <mat-icon matSuffix>credit_card</mat-icon>
-              <mat-error class="error-message" *ngIf="formGroup.controls['vat'].hasError('required')">Campo obbligatorio</mat-error>
+              <mat-error class="error-message" *ngIf="formGroup.controls['fiscalcode'].hasError('required')">Campo obbligatorio</mat-error>
           </mat-form-field>
       </div>
       <br>
