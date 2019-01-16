@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { ITicket } from '../../../interfaces/i-ticket';
 import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
-import * as moment from 'moment';
+import { GetBaseUrl } from '../helper/getBaseUrl';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -13,8 +12,8 @@ const httpOptions = {
 @Injectable()
 export class ApiTicketService {
 
-  private apiPort = (environment.api_port) ? ':' + environment.api_port : '';
-  private baseUrl: string = environment.api_url + this.apiPort + environment.api_suffix;
+
+  private baseUrl = GetBaseUrl.baseUrl();
 
   constructor(
     private http: HttpClient,

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { IChangePassword } from '../../../interfaces/i-change-password';
 import { IUser } from '../../../interfaces/i-user';
+import { GetBaseUrl } from '../helper/getBaseUrl';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -12,8 +12,7 @@ const httpOptions = {
 @Injectable()
 export class ApiUserService {
 
-  private  apiPort = (environment.api_port) ?  ':' + environment.api_port : '';
-  private baseUrl: string = environment.api_url + this.apiPort + environment.api_suffix;
+  private baseUrl = GetBaseUrl.baseUrl();
 
   constructor(
     private http: HttpClient,
@@ -26,17 +25,4 @@ export class ApiUserService {
   public apiChangeProfile(user: IUser): Observable<any> {
     return this.http.put(this.baseUrl + '/user', user);
   }
-
-
-
-  // public apiLogin(dataLogin: IDataLogin): Observable<any> {
-  //   // const isOperator = dataLogin.operator;
-  //   delete dataLogin.operator;
-
-  //   return this.http.post(this.baseUrl + '/login', dataLogin);
-  // }
-
-  // public apiLogout(): Observable<any> {
-  //   return this.http.post(this.baseUrl + '/logout', null);
-  // }
 }

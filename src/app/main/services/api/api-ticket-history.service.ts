@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../../environments/environment';
-import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ITicketHistory } from '../../../interfaces/i-ticket-history';
-import * as moment from 'moment';
 import { Observable } from 'rxjs/Observable';
+import { GetBaseUrl } from '../helper/getBaseUrl';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -12,8 +11,8 @@ const httpOptions = {
 @Injectable()
 export class ApiTicketHistoryService {
 
-  private  apiPort = (environment.api_port) ?  ':' + environment.api_port : '';
-  private baseUrl: string = environment.api_url + this.apiPort + environment.api_suffix;
+
+  private baseUrl = GetBaseUrl.baseUrl();
 
   constructor( private http: HttpClient ) { }
 
