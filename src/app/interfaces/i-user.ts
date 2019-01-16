@@ -1,3 +1,6 @@
+import { ITicketService } from './i-ticket-service';
+import { ITokenSession } from './i-token-session';
+import { IUserData } from './i-userdata';
 
 export interface IUser {
 
@@ -11,4 +14,9 @@ export interface IUser {
     date_update: Date;
     id_role: number;
     id_office: number;
+    office: any;
+    role: any;
+    services: ITicketService;
+    token: ITokenSession;
+    userdata: IUserData;
 }

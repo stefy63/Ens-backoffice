@@ -1,23 +1,40 @@
 :host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
   mat-form-field {
     width: 100%;
   }
   mat-dialog-content {
-    min-height: 90%;
+    min-height: auto;
   }
   form {
-    height: 85%;
-    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    height: 100%;
+
     .dialog-input {
-      font-size: 2rem;
+      font-size: 1em;
     }
   }
+
+  .form__body {
+    flex-grow: 1;
+    display: block;
+  }
+
+  .form__footer {
+    display: block;
+    text-align: center;
+  }
+
   .dialog-header {
     position: relative;
     text-align: center;
   }
   .modal-title {
-    margin: 30px 0 30px;
     font-size: 3em;
     font-weight: bold;
     color: #25b2f7;
@@ -25,7 +42,7 @@
 
   .close-dialog {
     position: absolute;
-    top: -40px;
+    top: 0;
     right: -10px;
   }
 }

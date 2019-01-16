@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../../environments/environment';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { IDataLogin } from '../../../interfaces/i-data-login';
 import { Observable } from 'rxjs/Observable';
 import { LocalStorageService } from '../local-storage/local-storage.service';
-import { ITokenSession } from '../../../interfaces/i-token-session';
+import { GetBaseUrl } from '../helper/getBaseUrl';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -13,8 +12,8 @@ const httpOptions = {
 @Injectable()
 export class ApiLoginService {
 
-  private  apiPort = (environment.api_port) ?  ':' + environment.api_port : '';
-  private baseUrl: string = environment.api_url + this.apiPort + environment.api_suffix;
+
+  private baseUrl = GetBaseUrl.baseUrl();
 
   constructor(
     private http: HttpClient,

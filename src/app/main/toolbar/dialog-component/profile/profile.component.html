@@ -1,64 +1,125 @@
 <div class="dialog-header" >
-  <h1 mat-dialog-title class="accent modal-title" >Cambio Password</h1>
+  <h1 mat-dialog-title class="accent modal-title" >Profilo</h1>
   <button mat-dialog-close class="close-dialog"><mat-icon>close</mat-icon></button>
 </div>
-<form [formGroup]="formGroup">
-    <mat-dialog-content>
-      <div class="row col-12">
+<form [formGroup]="formGroup" (ngSubmit)="onYesClick()">
+    <div class="form__body">
+      <div class="row mb-3">
           <mat-form-field class="col-6">
-              <input matInput class="dialog-input form-control" type="password"  formControlName="old_password"  >
-          </mat-form-field>
-          <mat-form-field class="col-6">
-              <input matInput class="dialog-input form-control" type="password"  formControlName="old_password"  >
-          </mat-form-field>
-      </div>
-      <div class="row col-12">
-          <mat-form-field class="col-4">
-              <input matInput class="dialog-input form-control" type="password"  formControlName="old_password"  >
-          </mat-form-field>
-          <mat-form-field class="col-4">
-              <input matInput class="dialog-input form-control" type="password"  formControlName="old_password"  >
-          </mat-form-field>
-          <mat-form-field class="col-4">
-              <input matInput class="dialog-input form-control" type="password"  formControlName="old_password"  >
-          </mat-form-field>
-      </div>
-      <div class="row col-12">
-          <mat-form-field class="col-6">
-              <input matInput class="dialog-input form-control" type="password"  formControlName="old_password"  >
+              <input matInput class="dialog-input form-control" type="text"  formControlName="name" [(ngModel)]="modalData.userdata.name"  required>
+              <mat-placeholder>Nome</mat-placeholder>
+              <mat-icon matSuffix>face</mat-icon>
+              <mat-error class="error-message" *ngIf="formGroup.controls['name'].hasError('required')">Campo obbligatorio</mat-error>
           </mat-form-field>
           <mat-form-field class="col-6">
-              <input matInput class="dialog-input form-control" type="password"  formControlName="old_password"  >
+              <input matInput class="dialog-input form-control" type="text"  formControlName="surname"  [(ngModel)]="modalData.userdata.surname"  required>
+              <mat-placeholder>Cognome</mat-placeholder>
+              <mat-icon matSuffix>face</mat-icon>
+              <mat-error class="error-message" *ngIf="formGroup.controls['surname'].hasError('required')">Campo obbligatorio</mat-error>
           </mat-form-field>
       </div>
-      <div class="row col-12">
+      <div class="row mb-3">
           <mat-form-field class="col-4">
-              <input matInput class="dialog-input form-control" type="password"  formControlName="old_password"  >
+              <input matInput class="dialog-input form-control" [matDatepicker]="picker" formControlName="born_date" [(ngModel)]="modalData.userdata.born_date"  required >
+              <mat-placeholder>Data di Nascita</mat-placeholder>
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+              <mat-error class="error-message" *ngIf="formGroup.controls['born_date'].hasError('required')">Campo obbligatorio</mat-error>
           </mat-form-field>
           <mat-form-field class="col-4">
-              <input matInput class="dialog-input form-control" type="password"  formControlName="old_password"  >
+              <input matInput class="dialog-input form-control" type="text"  formControlName="born_city"  [(ngModel)]="modalData.userdata.born_city"  required >
+              <mat-placeholder>Citta di Nascita</mat-placeholder>
+              <mat-icon matSuffix>location_city</mat-icon>
+              <mat-error class="error-message" *ngIf="formGroup.controls['born_city'].hasError('required')">Campo obbligatorio</mat-error>
           </mat-form-field>
           <mat-form-field class="col-4">
-              <input matInput class="dialog-input form-control" type="password"  formControlName="old_password"  >
+              <mat-select formControlName="born_province"  [(ngModel)]="modalData.userdata.born_province"  required>
+                <mat-option *ngFor="let province of provinces" [value]="province.id">
+                  {{province.nome}}
+                </mat-option>
+              </mat-select>
+              <mat-placeholder>Provincia di Nascita</mat-placeholder>
+              <mat-error class="error-message" *ngIf="formGroup.controls['born_province'].hasError('required')">Campo obbligatorio</mat-error>
           </mat-form-field>
       </div>
-      <div class="row col-12">
+      <div class="row mb-3">
           <mat-form-field class="col-6">
-              <input matInput class="dialog-input form-control" type="password"  formControlName="old_password"  >
+              <input matInput class="dialog-input form-control" type="text"  formControlName="address"  [(ngModel)]="modalData.userdata.address"  required >
+              <mat-placeholder>Indirizzo (Via, Numero)</mat-placeholder>
+              <mat-icon matSuffix>home</mat-icon>
+              <mat-error class="error-message" *ngIf="formGroup.controls['address'].hasError('required')">Campo obbligatorio</mat-error>
+          </mat-form-field>
+          <mat-form-field class="col-3">
+              <input matInput class="dialog-input form-control" type="text"  formControlName="city"   [(ngModel)]="modalData.userdata.city"  required>
+              <mat-placeholder>Città</mat-placeholder>
+              <mat-icon matSuffix>location_city</mat-icon>
+              <mat-error class="error-message" *ngIf="formGroup.controls['city'].hasError('required')">Campo obbligatorio</mat-error>
+          </mat-form-field>
+          <mat-form-field class="col-3">
+              <mat-select formControlName="province"  [(ngModel)]="modalData.userdata.province"  required>
+                <mat-option *ngFor="let province of provinces" [value]="province.id">
+                  {{province.nome}}
+                </mat-option>
+              </mat-select>
+              <mat-placeholder>Provincia</mat-placeholder>
+              <mat-error class="error-message" *ngIf="formGroup.controls['province'].hasError('required')">Campo obbligatorio</mat-error>
           </mat-form-field>
       </div>
-      <div class="col-12">
-          <mat-checkbox class="dialog-input col-12" >Checked</mat-checkbox>
-          <mat-checkbox class="dialog-input col-12" >Checked</mat-checkbox>
-          <mat-checkbox class="dialog-input col-12" >Checked</mat-checkbox>
+      <div class="row mb-3">
+          <mat-form-field class="col-4">
+              <mat-select formControlName="gender"  [(ngModel)]="modalData.userdata.gender"  required>
+                  <mat-option *ngFor="let sex of gender" [value]="sex.id">
+                    {{sex.name}}
+                  </mat-option>
+                </mat-select>
+                <mat-placeholder>Sesso</mat-placeholder>
+                <mat-error class="error-message" *ngIf="formGroup.controls['gender'].hasError('required')">Campo obbligatorio</mat-error>
+          </mat-form-field>
+          <mat-form-field class="col-4">
+              <input matInput class="dialog-input form-control" type="text"  formControlName="phone"  [(ngModel)]="modalData.userdata.phone"  required >
+              <mat-placeholder>Telefono</mat-placeholder>
+              <mat-icon matSuffix>local_phone</mat-icon>
+              <mat-error class="error-message" *ngIf="formGroup.controls['phone'].hasError('required')">Campo obbligatorio</mat-error>
+          </mat-form-field>
+          <mat-form-field class="col-4">
+              <input matInput class="dialog-input form-control" type="text"  formControlName="card_number"  [(ngModel)]="modalData.userdata.card_number"  required >
+              <mat-placeholder>Numero di Carta ENS</mat-placeholder>
+              <mat-icon matSuffix>desktop_mac</mat-icon>
+              <mat-error class="error-message" *ngIf="formGroup.controls['card_number'].hasError('required')">Campo obbligatorio</mat-error>
+          </mat-form-field>
       </div>
-
-    </mat-dialog-content>
-  <mat-dialog-actions align="center">
-    <button mat-raised-button class="col-6" type="submit" color="accent" [disabled]="!formGroup.valid">
-        Salva
-    </button>
-  </mat-dialog-actions>
+      <div class="row mb-3">
+          <mat-form-field class="col-6">
+              <input matInput class="dialog-input form-control" type="text"  formControlName="email" [(ngModel)]="modalData.userdata.email"  required >
+              <mat-placeholder>Indirizzo e-mail</mat-placeholder>
+              <mat-icon matSuffix>mail_outline</mat-icon>
+              <mat-error class="error-message" *ngIf="formGroup.controls['email'].hasError('required')">Campo obbligatorio</mat-error>
+          </mat-form-field>
+          <mat-form-field class="col-6">
+              <input matInput class="dialog-input form-control" type="text"  formControlName="fiscalcode" [(ngModel)]="modalData.userdata.fiscalcode"  required >
+              <mat-placeholder>Codice Fiscale</mat-placeholder>
+              <mat-icon matSuffix>credit_card</mat-icon>
+              <mat-error class="error-message" *ngIf="formGroup.controls['fiscalcode'].hasError('required')">Campo obbligatorio</mat-error>
+          </mat-form-field>
+      </div>
+      <br>
+        <mat-checkbox formControlName="privacyaccept" [(ngModel)]="modalData.userdata.privacyaccept" [disabled]="true">
+            <span class="mat-caption col-12">Accetto le condizioni generali per la privacy*</span>
+        </mat-checkbox><br>
+        <mat-error class="error-message" *ngIf="formGroup.controls['privacyaccept'].hasError('required')">Campo obbligatorio</mat-error>
+        <mat-checkbox formControlName="newsletteraccept" [(ngModel)]="modalData.userdata.newsletteraccept" >
+                <span class="mat-caption col-12">Iscrizione alla Newsletter</span>
+            </mat-checkbox><br>
+        <mat-checkbox formControlName="becontacted" [(ngModel)]="modalData.userdata.becontacted" >
+                <span class="mat-caption col-12">Acconsento ad essere contattato</span>
+            </mat-checkbox>
+      </div>
+    <div class="form__footer">
+        <button mat-raised-button class="col-6" type="submit" color="accent" [disabled]="!formGroup.valid">
+            Salva
+        </button>
+        <span class="mat-cation d-block mt-3">Tutti i campi contrassegnati con l'asterisco sono obbligatori.</span>
+    </div>
 </form>
 
 <simple-notifications [options]="options"></simple-notifications>

@@ -21,4 +21,5 @@ export const environment = {
 
   // App Config
   APP_TICKET_RETENTION_DAY: 2,
+
 };
