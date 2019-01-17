@@ -35,7 +35,7 @@
                         valida.</mat-error>
                 </mat-form-field>
                 <mat-form-field class="col-6">
-                    <input [formControl]="end_date" matInput [min]="MINstartAt" [max]="MAXendAt" [matDatepicker]="pickerEnd"
+                    <input [formControl]="end_date" matInput [max]="MAXendAt" [matDatepicker]="pickerEnd"
                         (dateChange)="addEvent($event)" placeholder="Date di fine ricerca." required>
                     <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
                     <mat-datepicker class="pull-right" #pickerEnd [startAt]="end_date" [endAt]="MAXendAt"></mat-datepicker>

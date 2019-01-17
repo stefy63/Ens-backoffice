@@ -4,6 +4,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { IChangePassword } from '../../../interfaces/i-change-password';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { PasswordValidator } from '../../services/MaterialValidator/PasswordValidator';
+import { EmptyInputValidator } from '../../services/MaterialValidator/EmptyInputValidator';
 
 @Component({
   selector: 'fuse-dialog-change-password',
@@ -31,8 +32,8 @@ export class DialogChangePassword implements OnInit {
 
   ngOnInit(): void {
     this.formGroup = new FormGroup({
-      'old_password': new FormControl('', Validators.required),
-      'new_password': new FormControl('', [Validators.required]),
+      'old_password': new FormControl('', [Validators.required, EmptyInputValidator.whiteSpace]),
+      'new_password': new FormControl('', [Validators.required, EmptyInputValidator.whiteSpace]),
       'confirm_password': new FormControl('', [Validators.required, PasswordValidator.match])
     });
   }

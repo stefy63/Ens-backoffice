@@ -6,6 +6,7 @@ import { IUser } from '../../../../interfaces/i-user';
 import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import { ApiItalyGeoService } from '../../../services/api/api-italy-geo.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { DateValidator } from '../../../services/MaterialValidator/DateValidator';
 
 
 export const MY_FORMATS = {
@@ -57,19 +58,44 @@ export class DialogProfileComponent implements OnInit {
     this.modalData = this.data.modalData;
     this.modalData.userdata.privacyaccept = this.modalData.userdata.privacyaccept || true;
     this.formGroup = new FormGroup({
-      'name': new FormControl('', Validators.required),
-      'surname': new FormControl('', [Validators.required]),
-      'born_date': new FormControl('', [Validators.required]),
-      'born_city': new FormControl('', [Validators.required]),
+      'name': new FormControl('', [
+        Validators.required,
+        Validators.pattern('^(?=.*[a-zA-Z])[a-zA-Z]+$')
+      ]),
+      'surname': new FormControl('', [
+        Validators.required,
+        Validators.pattern('^(?=.*[a-zA-Z])[a-zA-Z]+$')
+      ]),
+      'born_date': new FormControl('', Validators.compose([
+        Validators.required,
+        DateValidator.date
+      ])),
+      'born_city': new FormControl('', [
+        Validators.required,
+        Validators.pattern('^(?=.*[a-zA-Z])[a-zA-Z]+$')
+      ]),
       'born_province': new FormControl('', [Validators.required]),
-      'email': new FormControl('', [Validators.required]),
+      'email': new FormControl('', [
+        Validators.required,
+        Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
+      ]),
       'gender': new FormControl('', [Validators.required]),
-      'city': new FormControl('', [Validators.required]),
+      'city': new FormControl('', [
+        Validators.required,
+        Validators.pattern('^(?=.*[a-zA-Z])[a-zA-Z]+$')
+      ]),
       'address': new FormControl('', [Validators.required]),
       'province': new FormControl('', [Validators.required]),
-      'phone': new FormControl('', [Validators.required]),
-      'card_number': new FormControl('', [Validators.required]),
-      'fiscalcode': new FormControl('', [Validators.required]),
+      'phone': new FormControl('', [
+        Validators.required,
+        Validators.pattern('^(?=.*[0-9])[0-9]+$')
+      ]),
+      'card_number': new FormControl('', []),
+      'fiscalcode': new FormControl('', [
+        Validators.required,
+        Validators.minLength(16),
+        Validators.maxLength(16)
+      ]),
       'privacyaccept': new FormControl(),
       'newsletteraccept': new FormControl(),
       'becontacted': new FormControl(),
