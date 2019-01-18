@@ -10,14 +10,14 @@
               <mat-placeholder>Nome</mat-placeholder>
               <mat-icon matSuffix>face</mat-icon>
               <mat-error class="error-message" *ngIf="formGroup.controls['name'].hasError('required')">Campo obbligatorio</mat-error>
-              <mat-error class="error-message" *ngIf="formGroup.controls['name'].hasError('pattern')">Numeri non permessi</mat-error>
+              <mat-error class="error-message" *ngIf="formGroup.controls['name'].hasError('alphabeticOnly')">Numeri non permessi</mat-error>
           </mat-form-field>
           <mat-form-field class="col-6">
               <input matInput class="dialog-input form-control" type="text"  formControlName="surname"  [(ngModel)]="modalData.userdata.surname"  required>
               <mat-placeholder>Cognome</mat-placeholder>
               <mat-icon matSuffix>face</mat-icon>
               <mat-error class="error-message" *ngIf="formGroup.controls['surname'].hasError('required')">Campo obbligatorio</mat-error>
-              <mat-error class="error-message" *ngIf="formGroup.controls['surname'].hasError('pattern')">Numeri non permessi</mat-error>
+              <mat-error class="error-message" *ngIf="formGroup.controls['surname'].hasError('alphabeticOnly')">Numeri non permessi</mat-error>
           </mat-form-field>
       </div>
       <div class="row mb-3">
@@ -35,7 +35,7 @@
               <mat-placeholder>Citta di Nascita</mat-placeholder>
               <mat-icon matSuffix>location_city</mat-icon>
               <mat-error class="error-message" *ngIf="formGroup.controls['born_city'].hasError('required')">Campo obbligatorio</mat-error>
-              <mat-error class="error-message" *ngIf="formGroup.controls['born_city'].hasError('pattern')">Numeri non permessi</mat-error>
+              <mat-error class="error-message" *ngIf="formGroup.controls['born_city'].hasError('alphabeticOnly')">Numeri non permessi</mat-error>
           </mat-form-field>
           <mat-form-field class="col-4">
               <mat-select formControlName="born_province"  [(ngModel)]="modalData.userdata.born_province"  required>
@@ -59,7 +59,7 @@
               <mat-placeholder>Città</mat-placeholder>
               <mat-icon matSuffix>location_city</mat-icon>
               <mat-error class="error-message" *ngIf="formGroup.controls['city'].hasError('required')">Campo obbligatorio</mat-error>
-              <mat-error class="error-message" *ngIf="formGroup.controls['city'].hasError('pattern')">Numeri non permessi</mat-error>
+              <mat-error class="error-message" *ngIf="formGroup.controls['city'].hasError('alphabeticOnly')">Numeri non permessi</mat-error>
           </mat-form-field>
           <mat-form-field class="col-3">
               <mat-select formControlName="province"  [(ngModel)]="modalData.userdata.province"  required>
@@ -86,7 +86,7 @@
               <mat-placeholder>Telefono</mat-placeholder>
               <mat-icon matSuffix>local_phone</mat-icon>
               <mat-error class="error-message" *ngIf="formGroup.controls['phone'].hasError('required')">Campo obbligatorio</mat-error>
-              <mat-error class="error-message" *ngIf="formGroup.controls['phone'].hasError('pattern')">Lettere non permesse</mat-error>
+              <mat-error class="error-message" *ngIf="formGroup.controls['phone'].hasError('numericOnly')">Lettere non permesse</mat-error>
           </mat-form-field>
           <mat-form-field class="col-4">
               <input matInput class="dialog-input form-control" type="text"  formControlName="card_number"  [(ngModel)]="modalData.userdata.card_number">
@@ -100,14 +100,14 @@
               <mat-placeholder>Indirizzo e-mail</mat-placeholder>
               <mat-icon matSuffix>mail_outline</mat-icon>
               <mat-error class="error-message" *ngIf="formGroup.controls['email'].hasError('required')">Campo obbligatorio</mat-error>
-              <mat-error class="error-message" *ngIf="formGroup.controls['email'].hasError('pattern')">Formato Mail errato</mat-error>
+              <mat-error class="error-message" *ngIf="formGroup.controls['email'].hasError('email_custom')">Formato Mail errato</mat-error>
           </mat-form-field>
           <mat-form-field class="col-6">
               <input matInput class="dialog-input form-control" type="text"  formControlName="fiscalcode" [(ngModel)]="modalData.userdata.fiscalcode"  required >
               <mat-placeholder>Codice Fiscale</mat-placeholder>
               <mat-icon matSuffix>credit_card</mat-icon>
               <mat-error class="error-message" *ngIf="formGroup.controls['fiscalcode'].hasError('required')">Campo obbligatorio</mat-error>
-              <mat-error class="error-message" *ngIf="formGroup.controls['name'].hasError('minLength') || formGroup.controls['name'].hasError('maxLength') ">Lunghezza errata</mat-error>
+              <mat-error class="error-message" *ngIf="formGroup.controls['name'].hasError('fiscalCode')">Formato Errato</mat-error>
           </mat-form-field>
       </div>
       <br>

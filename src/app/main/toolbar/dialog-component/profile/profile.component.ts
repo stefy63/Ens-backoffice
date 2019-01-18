@@ -7,6 +7,10 @@ import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import { ApiItalyGeoService } from '../../../services/api/api-italy-geo.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { DateValidator } from '../../../services/MaterialValidator/DateValidator';
+import { AlphabeticOnlyValidator } from '../../../services/MaterialValidator/AlphabeticOnlyValidator';
+import { NumericOnlyValidator } from '../../../services/MaterialValidator/NumericOnlyValidator';
+import { EmailCustomValidator } from '../../../services/MaterialValidator/EmailCustomValidator';
+import { FiscalCodeValidator } from '../../../services/MaterialValidator/FiscalCodeValidator';
 
 
 export const MY_FORMATS = {
@@ -60,11 +64,11 @@ export class DialogProfileComponent implements OnInit {
     this.formGroup = new FormGroup({
       'name': new FormControl('', [
         Validators.required,
-        Validators.pattern('^(?=.*[a-zA-Z])[a-zA-Z]+$')
+        AlphabeticOnlyValidator.alphabeticOnly
       ]),
       'surname': new FormControl('', [
         Validators.required,
-        Validators.pattern('^(?=.*[a-zA-Z])[a-zA-Z]+$')
+        AlphabeticOnlyValidator.alphabeticOnly
       ]),
       'born_date': new FormControl('', Validators.compose([
         Validators.required,
@@ -72,29 +76,26 @@ export class DialogProfileComponent implements OnInit {
       ])),
       'born_city': new FormControl('', [
         Validators.required,
-        Validators.pattern('^(?=.*[a-zA-Z])[a-zA-Z]+$')
+        AlphabeticOnlyValidator.alphabeticOnly
       ]),
       'born_province': new FormControl('', [Validators.required]),
       'email': new FormControl('', [
-        Validators.required,
-        Validators.pattern('^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+.[a-zA-Z0-9-.]+$')
+        Validators.required,EmailCustomValidator.email_custom
       ]),
       'gender': new FormControl('', [Validators.required]),
       'city': new FormControl('', [
         Validators.required,
-        Validators.pattern('^(?=.*[a-zA-Z])[a-zA-Z]+$')
+        AlphabeticOnlyValidator.alphabeticOnly
       ]),
       'address': new FormControl('', [Validators.required]),
       'province': new FormControl('', [Validators.required]),
       'phone': new FormControl('', [
-        Validators.required,
-        Validators.pattern('^(?=.*[0-9])[0-9]+$')
+        Validators.required,NumericOnlyValidator.numericOnly
       ]),
       'card_number': new FormControl('', []),
       'fiscalcode': new FormControl('', [
         Validators.required,
-        Validators.minLength(16),
-        Validators.maxLength(16)
+        FiscalCodeValidator.fiscalCode
       ]),
       'privacyaccept': new FormControl(),
       'newsletteraccept': new FormControl(),
