@@ -154,18 +154,6 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
           data: {
             modalData: this.user.id
           }});
-
-      dialogRef
-      .afterClosed()
-      .filter((result) => !!result)
-      .flatMap((result) => this.apiUserService.apiChangePassword(result))
-      .subscribe(() => {
-            this.toast.success('Cambio Password', 'Password modificata con successo');
-          },
-          (err) => {
-            this.toast.error('Cambio Password', 'Modifica password fallita');
-          }
-      );
     }
 
     elaborateFakeOperatorId(id_operator) {

@@ -80,7 +80,7 @@ export class DialogProfileComponent implements OnInit {
       ]),
       'born_province': new FormControl('', [Validators.required]),
       'email': new FormControl('', [
-        Validators.required,EmailCustomValidator.email_custom
+        Validators.required, EmailCustomValidator.email_custom
       ]),
       'gender': new FormControl('', [Validators.required]),
       'city': new FormControl('', [
@@ -90,7 +90,7 @@ export class DialogProfileComponent implements OnInit {
       'address': new FormControl('', [Validators.required]),
       'province': new FormControl('', [Validators.required]),
       'phone': new FormControl('', [
-        Validators.required,NumericOnlyValidator.numericOnly
+        Validators.required, NumericOnlyValidator.numericOnly
       ]),
       'card_number': new FormControl('', []),
       'fiscalcode': new FormControl('', [

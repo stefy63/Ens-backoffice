@@ -28,7 +28,6 @@
               <mat-datepicker #picker></mat-datepicker>
               <mat-error class="error-message" *ngIf="formGroup.controls['born_date'].hasError('required')">Campo obbligatorio</mat-error>
               <mat-error class="error-message" *ngIf="formGroup.controls['born_date'].hasError('date')">Data non valida, usare (GG/MM/YYYY)</mat-error>
-              {{formGroup.controls['born_date'].errors | json}}
           </mat-form-field>
           <mat-form-field class="col-4">
               <input matInput class="dialog-input form-control" type="text"  formControlName="born_city"  [(ngModel)]="modalData.userdata.born_city"  required >
@@ -103,11 +102,11 @@
               <mat-error class="error-message" *ngIf="formGroup.controls['email'].hasError('email_custom')">Formato Mail errato</mat-error>
           </mat-form-field>
           <mat-form-field class="col-6">
-              <input matInput class="dialog-input form-control" type="text"  formControlName="fiscalcode" [(ngModel)]="modalData.userdata.fiscalcode"  required >
+              <input matInput class="dialog-input form-control" type="text" #fiscalCode [value]="fiscalCode.value.toUpperCase()" formControlName="fiscalcode" [(ngModel)]="modalData.userdata.fiscalcode"  required >
               <mat-placeholder>Codice Fiscale</mat-placeholder>
               <mat-icon matSuffix>credit_card</mat-icon>
               <mat-error class="error-message" *ngIf="formGroup.controls['fiscalcode'].hasError('required')">Campo obbligatorio</mat-error>
-              <mat-error class="error-message" *ngIf="formGroup.controls['name'].hasError('fiscalCode')">Formato Errato</mat-error>
+              <mat-error class="error-message" *ngIf="formGroup.controls['fiscalcode'].hasError('fiscalCode')">Formato Errato</mat-error>
           </mat-form-field>
       </div>
       <br>
