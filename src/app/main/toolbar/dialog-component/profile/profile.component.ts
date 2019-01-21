@@ -3,7 +3,6 @@ import { ToastOptions } from '../../../../type/toast-options';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
 import { IUser } from '../../../../interfaces/i-user';
-import {MomentDateAdapter} from '@angular/material-moment-adapter';
 import { ApiItalyGeoService } from '../../../services/api/api-italy-geo.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { DateValidator } from '../../../services/MaterialValidator/DateValidator';
@@ -11,6 +10,7 @@ import { AlphabeticOnlyValidator } from '../../../services/MaterialValidator/Alp
 import { NumericOnlyValidator } from '../../../services/MaterialValidator/NumericOnlyValidator';
 import { EmailCustomValidator } from '../../../services/MaterialValidator/EmailCustomValidator';
 import { FiscalCodeValidator } from '../../../services/MaterialValidator/FiscalCodeValidator';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 
 
 export const MY_FORMATS = {
@@ -70,10 +70,10 @@ export class DialogProfileComponent implements OnInit {
         Validators.required,
         AlphabeticOnlyValidator.alphabeticOnly
       ]),
-      'born_date': new FormControl('', Validators.compose([
-        Validators.required,
+      'born_date': new FormControl(this.modalData.userdata.born_date, [
+        // Validators.required,
         DateValidator.date
-      ])),
+      ]),
       'born_city': new FormControl('', [
         Validators.required,
         AlphabeticOnlyValidator.alphabeticOnly

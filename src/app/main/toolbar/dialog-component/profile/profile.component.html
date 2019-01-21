@@ -22,8 +22,8 @@
       </div>
       <div class="row mb-3">
           <mat-form-field class="col-4">
-              <input matInput class="dialog-input form-control" [matDatepicker]="picker" formControlName="born_date" [(ngModel)]="modalData.userdata.born_date"  required >
-              <mat-placeholder>Data di Nascita</mat-placeholder>
+              <input matInput class="dialog-input form-control" [matDatepicker]="picker" formControlName="born_date" [(ngModel)]="modalData.userdata.born_date"   >
+              <mat-placeholder>Data di Nascita*</mat-placeholder>
               <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
               <mat-datepicker #picker></mat-datepicker>
               <mat-error class="error-message" *ngIf="formGroup.controls['born_date'].hasError('required')">Campo obbligatorio</mat-error>
