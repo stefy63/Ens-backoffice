@@ -29,6 +29,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RollbarErrorHandler } from './main/services/errors/RollbarErrorHandler.service';
 import { ApiTicketReportService } from './main/services/api/api-ticket-report.service';
 import { ExportmanagerComponent } from '../app/main/content/pages/exportmanager/exportmanager.component';
+import { MAT_DATE_LOCALE } from '@angular/material';
 
 const appRoutes: Routes = [
   {

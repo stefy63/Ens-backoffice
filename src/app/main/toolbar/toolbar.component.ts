@@ -14,6 +14,14 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/merge';
 import { Subscription } from 'rxjs/Subscription';
 import { ApiTicketService } from '../services/api/api-ticket.service';
+import { MatDialog } from '@angular/material';
+import { DialogChangePassword } from './dialog-component/dialog-change-password.component';
+import { IUser } from '../../interfaces/i-user';
+import { NotificationsService } from 'angular2-notifications';
+import { ToastOptions } from '../../type/toast-options';
+import { ApiUserService } from '../services/api/api-user.service';
+import { DialogProfileComponent } from './dialog-component/profile/profile.component';
+
 @Component({
     selector: 'fuse-toolbar',
     templateUrl: './toolbar.component.html',
@@ -26,11 +34,16 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     profile: string;
     public totalUnreadedMessages = 0;
     public totalNewedTickets = 0;
+    public options = ToastOptions;
+
     public beep;
     private newHistorySubscription: Subscription;
     private newTicketSubscription: Subscription;
+    private user: IUser;
+    private fakeOperatorNumber: number;
 
     constructor(
+        public dialog: MatDialog,
         private router: Router,
         private fuseConfig: FuseConfigService,
         private storage: LocalStorageService,
@@ -38,7 +51,9 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
         private ticketHistoryService: ApiTicketHistoryService,
         private ticketService: ApiTicketService,
         private socketService: SocketService,
-    ) {
+        private toast: NotificationsService,
+        private apiUserService: ApiUserService
+        ) {
         this.beep = new Audio('../../../../assets/audio/beep.wav');
 
         router.events.subscribe(
@@ -60,9 +75,10 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     ngOnInit() {
         const user = this.storage.getItem('user');
         const token = this.storage.getItem('token');
-        const fakeOperatorNumber = (user) ? this.elaborateFakeOperatorId(user.id) : 1;
+        this.fakeOperatorNumber = (user) ? this.elaborateFakeOperatorId(user.id) : 1;
         if (user) {
-            this.profile = user.userdata.name + ' ' + user.userdata.surname + ' [' + fakeOperatorNumber + ']';
+            this.profile = user.userdata.name + ' ' + user.userdata.surname + ' [' + this.fakeOperatorNumber + ']';
+            this.user = user;
         }
 
         if (token && token.id_user) {
@@ -106,7 +122,38 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     }
 
     edit_profile() {
-        this.router.navigate(['/pages/profile']);
+      const dialogRef = this.dialog.open(DialogProfileComponent, {
+        width: '60%',
+        height: '85%',
+        data: {
+          modalData: this.user
+        }});
+
+        dialogRef
+          .afterClosed()
+          .filter((result) => !!result)
+          .flatMap((result) => this.apiUserService.apiChangeProfile(result))
+          .subscribe(user => {
+              this.storage.setItem('user', user);
+              if (user) {
+                this.profile = user.userdata.name + ' ' + user.userdata.surname + ' [' + this.fakeOperatorNumber + ']';
+                this.user = user;
+            }
+              this.toast.success('Aggiornamento Profilo', 'Profilo modificato con successo');
+            },
+            (err) => {
+              this.toast.error('Aggiornamento Profilo', 'Modifica Profilo fallita');
+            }
+          );
+    }
+
+    change_password() {
+      const dialogRef = this.dialog.open(DialogChangePassword, {
+          width: '40%',
+          height: '55%',
+          data: {
+            modalData: this.user.id
+          }});
     }
 
     elaborateFakeOperatorId(id_operator) {

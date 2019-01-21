@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpHeaders, HttpClient, HttpParams, HttpResponse } from '@angular/common/http';
-import { environment } from '../../../../environments/environment';
+import { HttpHeaders, HttpClient, HttpParams } from '@angular/common/http';
 import { ITicketReport } from '../../../interfaces/i-ticket-report';
 import { Observable } from 'rxjs/Observable';
 import { ITicketExportRequest } from '../../../interfaces/i-ticket-export-request';
+import { GetBaseUrl } from '../helper/getBaseUrl';
 
 
 const httpOptions = {
@@ -13,8 +13,8 @@ const httpOptions = {
 @Injectable()
 export class ApiTicketReportService {
 
-  private  apiPort = (environment.api_port) ?  ':' + environment.api_port : '';
-  private baseUrl: string = environment.api_url + this.apiPort + environment.api_suffix;
+
+  private baseUrl = GetBaseUrl.baseUrl();
 
   constructor(private http: HttpClient) { }
 

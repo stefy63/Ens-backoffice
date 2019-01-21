@@ -15,6 +15,11 @@ import { FuseQuickPanelComponent } from './quick-panel/quick-panel.component';
 import { FuseThemeOptionsComponent } from '../core/components/theme-options/theme-options.component';
 import { FuseShortcutsModule } from '../core/components/shortcuts/shortcuts.module';
 import { FuseSearchBarModule } from '../core/components/search-bar/search-bar.module';
+import { DialogChangePassword } from './toolbar/dialog-component/dialog-change-password.component';
+import { ApiUserService } from './services/api/api-user.service';
+import { DialogProfileComponent } from './toolbar/dialog-component/profile/profile.component';
+import { SimpleNotificationsModule } from 'angular2-notifications';
+import { ApiItalyGeoService } from './services/api/api-italy-geo.service';
 
 @NgModule({
     declarations: [
@@ -26,7 +31,9 @@ import { FuseSearchBarModule } from '../core/components/search-bar/search-bar.mo
         FuseToolbarComponent,
         FuseNavbarVerticalToggleDirective,
         FuseThemeOptionsComponent,
-        FuseQuickPanelComponent
+        FuseQuickPanelComponent,
+        DialogChangePassword,
+        DialogProfileComponent
     ],
     imports     : [
         SharedModule,
@@ -34,10 +41,19 @@ import { FuseSearchBarModule } from '../core/components/search-bar/search-bar.mo
         FuseNavigationModule,
         FuseShortcutsModule,
         FuseSearchBarModule,
+        SimpleNotificationsModule
 
     ],
     exports     : [
         FuseMainComponent
+    ],
+    entryComponents: [
+        DialogChangePassword,
+        DialogProfileComponent
+    ],
+    providers: [
+        ApiUserService,
+        ApiItalyGeoService
     ]
 })
 
