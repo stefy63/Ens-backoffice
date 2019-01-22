@@ -49,7 +49,8 @@ const options = {
         reconnectionDelayMax : 5000,
         reconnectionAttempts: Infinity,
         multiplex: false,
-        path: environment.ws_path
+        path: environment.ws_path,
+        transports: ['websocket']
 };
 
 const wssPort =  (environment.ws_port) ? ':' + environment.ws_port : '';
