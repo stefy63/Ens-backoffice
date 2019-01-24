@@ -73,8 +73,8 @@ export class ExportmanagerComponent implements OnInit {
 
     if (this.id_category) { filter.category = this.id_category; }
     if (this.phone_number) { filter.phone = this.phone_number.trim(); }
-    if (this.start_date) { filter.date_start = moment(this.start_date.value).format('YYYY-MM-DD'); }
-    if (this.end_date) { filter.date_end = moment(this.end_date.value).format('YYYY-MM-DD'); }
+    if (this.start_date) { filter.date_start = moment(this.start_date.value).format('YYYY-MM-DD 00:00:00'); }
+    if (this.end_date) { filter.date_end = moment(this.end_date.value).format('YYYY-MM-DD 23:59:59'); }
     if (this.id_state) { filter.status = this.id_state; }
     if (this.id_office) { filter.id_office = this.id_office; }
     if (this.id_service) { filter.id_service = this.id_service; }
