@@ -12,6 +12,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/merge';
 import { Services } from '../../../../enums/ticket-services.enum';
 import { Status } from '../../../../enums/ticket-status.enum';
+import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'fuse-ticket-detail',
   templateUrl: './ticket-detail.component.html',
@@ -33,6 +34,7 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
     private storage: LocalStorageService,
     private apiTicket: ApiTicketService,
     private socketService: SocketService,
+    private spinner: NgxSpinnerService,
   ) {
     // tslint:disable-next-line:radix
     this.idTicket = parseInt(this.route.snapshot.paramMap.get('id'));
@@ -40,25 +42,22 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.apiTicket.getFromId(this.idTicket)
-      .subscribe((data: ITicket) => {
-        this.ticket.next(data);
-        this.service = data.service.service;
-        this.isVideochat = data.id_service === Services.VIDEOCHAT;
-        this.open = _.includes([Status.ONLINE, Status.REFUSED, Status.CLOSED], data.id_status);
-        this.status = data.status.status;
-      }, (err) => {
-        console.log(err);
-      });
-
     this.updatingTicketSubscription = Observable.merge(
       this.socketService.getMessage(WsEvents.ticketHistory.create),
       this.socketService.getMessage(WsEvents.ticket.updated),
-    ).subscribe((data: ITicket) => {
-      if (data.id === this.idTicket) {
-        this.ticket.next(data);
-        this.status = data.status.status;
-      }
+      Observable.of({id: this.idTicket})
+    )
+    .debounceTime(200)
+    .filter((data: ITicket) => data.id === this.idTicket)
+    .do(() => this.spinner.show())
+    .flatMap((data: ITicket) => this.apiTicket.getFromId(this.idTicket))
+    .subscribe((data: ITicket) => {
+      this.spinner.hide();
+      this.ticket.next(data);
+      this.service = data.service.service;
+      this.isVideochat = data.id_service === Services.VIDEOCHAT;
+      this.open = _.includes([Status.ONLINE, Status.REFUSED, Status.CLOSED], data.id_status);
+      this.status = data.status.status;
     }, (err) => {
       console.log(err);
     });
