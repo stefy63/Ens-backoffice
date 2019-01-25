@@ -28,13 +28,14 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
   public user;
   public status;
   private updatingTicketSubscription: Subscription;
+  private messageCreatedSubscription: Subscription;
+  private lastTicket: ITicket;
 
   constructor(
     private route: ActivatedRoute,
     private storage: LocalStorageService,
     private apiTicket: ApiTicketService,
     private socketService: SocketService,
-    private spinner: NgxSpinnerService,
   ) {
     // tslint:disable-next-line:radix
     this.idTicket = parseInt(this.route.snapshot.paramMap.get('id'));
@@ -42,30 +43,32 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.messageCreatedSubscription = this.socketService.getMessage(WsEvents.ticketHistory.create)
+      .debounceTime(500)
+      .filter((data: ITicket) => data.id === this.idTicket)
+      .subscribe((data: ITicket) => {
+        this.ticket.next(_.assign({}, this.lastTicket, data));
+      });
+
     this.updatingTicketSubscription = Observable.merge(
-      this.socketService.getMessage(WsEvents.ticketHistory.create),
-      this.socketService.getMessage(WsEvents.ticket.updated),
-      Observable.of({id: this.idTicket})
-    )
-    .debounceTime(200)
-    .filter((data: ITicket) => data.id === this.idTicket)
-    .do(() => this.spinner.show())
-    .flatMap((data: ITicket) => this.apiTicket.getFromId(this.idTicket))
-    .subscribe((data: ITicket) => {
-      this.spinner.hide();
+      this.apiTicket.getFromId(this.idTicket),
+      this.socketService.getMessage(WsEvents.ticket.updated)
+    ).subscribe((data: ITicket) => {
+      this.lastTicket = data;
       this.ticket.next(data);
       this.service = data.service.service;
       this.isVideochat = data.id_service === Services.VIDEOCHAT;
       this.open = _.includes([Status.ONLINE, Status.REFUSED, Status.CLOSED], data.id_status);
       this.status = data.status.status;
-    }, (err) => {
-      console.log(err);
     });
   }
 
   ngOnDestroy() {
     if (this.updatingTicketSubscription) {
       this.updatingTicketSubscription.unsubscribe();
+    }
+    if (this.messageCreatedSubscription) {
+      this.messageCreatedSubscription.unsubscribe();
     }
   }
 
