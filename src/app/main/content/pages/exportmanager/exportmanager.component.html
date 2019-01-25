@@ -25,7 +25,7 @@
                     <input [formControl]="start_date" matInput [max]="MAXendAt" [matDatepicker]="pickerStart"
                         (dateChange)="addEvent($event)" placeholder="Date di inizio ricerca." required>
                     <mat-datepicker-toggle matSuffix [for]="pickerStart"></mat-datepicker-toggle>
-                    <mat-datepicker class="pull-right" #pickerStart [startAt]="MINstartAt" [endAt]="MAXendAt"></mat-datepicker>
+                    <mat-datepicker class="pull-right" #pickerStart [endAt]="MAXendAt"></mat-datepicker>
                     <mat-error *ngIf="start_date.hasError('required')">Campo obbligatorio</mat-error>
                     <mat-error *ngIf="start_date.hasError('matDatepickerParse')">Data con formato non
                         valido.</mat-error>
@@ -38,7 +38,7 @@
                     <input [formControl]="end_date" matInput [max]="MAXendAt" [matDatepicker]="pickerEnd"
                         (dateChange)="addEvent($event)" placeholder="Date di fine ricerca." required>
                     <mat-datepicker-toggle matSuffix [for]="pickerEnd"></mat-datepicker-toggle>
-                    <mat-datepicker class="pull-right" #pickerEnd [startAt]="end_date" [endAt]="MAXendAt"></mat-datepicker>
+                    <mat-datepicker class="pull-right" #pickerEnd [endAt]="MAXendAt"></mat-datepicker>
                     <mat-error *ngIf="end_date.hasError('required')">Campo obbligatorio</mat-error>
                     <mat-error *ngIf="end_date.hasError('matDatepickerParse')">Data con formato non valido.</mat-error>
                     <mat-error *ngIf="end_date.hasError('matDatepickerMin')">Data inferiore ai 180 giorni
