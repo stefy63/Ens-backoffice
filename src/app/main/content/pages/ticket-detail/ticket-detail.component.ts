@@ -21,12 +21,10 @@ import { NgxSpinnerService } from 'ngx-spinner';
 export class TicketDetailComponent implements OnInit, OnDestroy {
 
   public idTicket: number;
-  public service: string;
   public ticket = new BehaviorSubject<ITicket>(this.ticket);
   public isVideochat = false;
   public open = false;
   public user;
-  public status;
   private updatingTicketSubscription: Subscription;
 
   constructor(
@@ -53,11 +51,9 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
     .flatMap((data: ITicket) => this.apiTicket.getFromId(this.idTicket))
     .subscribe((data: ITicket) => {
       this.spinner.hide();
-      this.ticket.next(data);
-      this.service = data.service.service;
       this.isVideochat = data.id_service === Services.VIDEOCHAT;
       this.open = _.includes([Status.ONLINE, Status.REFUSED, Status.CLOSED], data.id_status);
-      this.status = data.status.status;
+      this.ticket.next(data);
     }, (err) => {
       console.log(err);
     });
