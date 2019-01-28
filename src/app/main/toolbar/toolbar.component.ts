@@ -125,6 +125,7 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
       const dialogRef = this.dialog.open(DialogProfileComponent, {
         maxWidth: '850px',
         maxHeight: '600px',
+        hasBackdrop: true,
         data: {
           modalData: this.user
         }});
