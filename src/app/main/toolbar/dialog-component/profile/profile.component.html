@@ -34,7 +34,7 @@
                     [(ngModel)]="modalData.userdata.born_date">
                 <mat-placeholder>Data di Nascita*</mat-placeholder>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
+                <mat-datepicker touchUi="true" #picker></mat-datepicker>
                 <mat-error class="error-message" *ngIf="formGroup.controls['born_date'].hasError('required')">Campo
                     obbligatorio</mat-error>
                 <mat-error class="error-message" *ngIf="formGroup.controls['born_date'].hasError('date')">Data non
