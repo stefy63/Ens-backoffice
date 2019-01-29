@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import { Location } from '@angular/common';
-import { find } from 'lodash';
+import { find, assign } from 'lodash';
 import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
 import { ApiTicketService } from '../../../../services/api/api-ticket.service';
 import { Status } from '../../../../../enums/ticket-status.enum';
@@ -32,6 +32,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   @Input('ticket') newTicket: Observable<ITicket>;
   @Output('open') open: EventEmitter<boolean> = new EventEmitter();
   public ticket: ITicket;
+  public ticketNotNormalized: any; 
   public ticketReason: string;
   public user;
   public badge = 0;
@@ -59,6 +60,8 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
         this.toastMessage.error('ATTENZIONE! TICKET GIA ACQUISITO', 'TICKET PRESO IN CARICO DA ALTRO OPERATORE');
         this.location.back();
       }
+
+      this.ticketNotNormalized = data;
       this.ticket = NormalizeTicket.normalizeItems([data])[0];
       const initMessage = find(data.historys, item => item.type.type === 'INITIAL');
       this.ticketReason = (initMessage) ? initMessage.action : '';
@@ -189,11 +192,11 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   }
 
   private updateTicketStatus(id_status: number): Observable<ITicket> {
-    const updateTicket: ITicket = {
-      id: this.ticket.id,
+    const updateTicket: ITicket = assign({}, this.ticketNotNormalized, {
       id_status: id_status,
-      id_operator: this.user.id
-    };
+      id_operator: this.user.id,
+    });
+    
     return this.apiTicketService.update(updateTicket as ITicket);
   }
 
