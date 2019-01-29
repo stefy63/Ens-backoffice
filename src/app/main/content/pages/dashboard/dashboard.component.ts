@@ -79,13 +79,13 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
       });
 
     this.newHistoryTicketSubscription = this.socketService.getMessage(WsEvents.ticketHistory.create).subscribe((ticket: ITicket) => {
-      if (ticket.operator.id === this.idOperator && this.currentTabIndex === this.MINE_TICKETS_TAB) {
+      if (ticket.id_operator === this.idOperator && this.currentTabIndex === this.MINE_TICKETS_TAB) {
         this.tabChangedSubject.next(this.currentTabIndex);
       }
     });
 
     this.updatingTicketSubscription = this.socketService.getMessage(WsEvents.ticket.updated).subscribe((ticket: ITicket) => {
-      if (ticket.operator.id !== this.idOperator && this.currentTabIndex === this.MINE_TICKETS_TAB) {
+      if (ticket.id_operator !== this.idOperator && this.currentTabIndex === this.MINE_TICKETS_TAB) {
         return;
       }
       this.tabChangedSubject.next(this.currentTabIndex);
