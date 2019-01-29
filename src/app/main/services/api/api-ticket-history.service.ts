@@ -17,15 +17,12 @@ export class ApiTicketHistoryService {
   constructor( private http: HttpClient ) { }
 
   public create(history: ITicketHistory): Observable<ITicketHistory> {
-
     history.readed = 0;
-    // history.date_time = moment().toISOString();
-
-    return this.http.post(this.baseUrl + '/tickethistory/' + history.id_ticket, history).map(data => data as ITicketHistory);
+    return this.http.post(this.baseUrl + '/tickethistory/', history).map(data => data as ITicketHistory);
   }
 
   public updateReaded(idTicket: number): Observable<boolean> {
-    return this.http.put(this.baseUrl + '/tickethistory/' + idTicket, null).map(data => data as boolean);
+    return this.http.put(this.baseUrl + '/tickethistory/readed/' + idTicket, null).map(data => data as boolean);
   }
 
   public getUnreadedMessages(): Observable<number> {

@@ -123,8 +123,9 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
 
     edit_profile() {
       const dialogRef = this.dialog.open(DialogProfileComponent, {
-        width: '60%',
-        height: '85%',
+        maxWidth: '850px',
+        maxHeight: '600px',
+        hasBackdrop: true,
         data: {
           modalData: this.user
         }});
@@ -149,8 +150,8 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
 
     change_password() {
       const dialogRef = this.dialog.open(DialogChangePassword, {
-          width: '40%',
-          height: '55%',
+          maxWidth: '550px',
+          maxHeight: '370px',
           data: {
             modalData: this.user.id
           }});
