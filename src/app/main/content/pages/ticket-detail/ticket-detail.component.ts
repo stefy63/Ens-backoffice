@@ -12,7 +12,6 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/merge';
 import { Services } from '../../../../enums/ticket-services.enum';
 import { Status } from '../../../../enums/ticket-status.enum';
-import { NgxSpinnerService } from 'ngx-spinner';
 @Component({
   selector: 'fuse-ticket-detail',
   templateUrl: './ticket-detail.component.html',

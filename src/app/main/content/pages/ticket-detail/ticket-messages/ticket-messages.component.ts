@@ -126,7 +126,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   reply(event) {
-    if (!!this.replyForm.form.value.message) {
+    if (this.replyForm.form.value.message && this.replyForm.form.value.message.trim()) {
       this.sendMessage(this.replyForm.form.value.message.trim(), true);
     } else {
       this.toast.error('Messaggio Vuoto', 'Impossibile spedire messaggi vuoti');
