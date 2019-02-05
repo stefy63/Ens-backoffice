@@ -4,9 +4,8 @@
     <div class="status__toggle" *ngIf="user">
         <mat-slide-toggle [checked]="user.isOnline" (change)="changeOnlineStatus($event)">
         <span [ngClass]="{'toogle--active': user.isOnline}">
-            Operatore
-            <span *ngIf="user.isOnline">online</span> 
-            <span *ngIf="!user.isOnline">offline</span>
+            <span *ngIf="user.isOnline">Online</span> 
+            <span *ngIf="!user.isOnline">Offline</span>
         </span>
         </mat-slide-toggle>
     </div>
