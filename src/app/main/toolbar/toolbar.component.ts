@@ -21,6 +21,7 @@ import { NotificationsService } from 'angular2-notifications';
 import { ToastOptions } from '../../type/toast-options';
 import { ApiUserService } from '../services/api/api-user.service';
 import { DialogProfileComponent } from './dialog-component/profile/profile.component';
+import { cloneDeep } from 'lodash';
 
 @Component({
     selector: 'fuse-toolbar',
@@ -53,7 +54,7 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
         private socketService: SocketService,
         private toast: NotificationsService,
         private apiUserService: ApiUserService
-        ) {
+    ) {
         this.beep = new Audio('../../../../assets/audio/beep.wav');
 
         router.events.subscribe(
@@ -122,39 +123,52 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
     }
 
     edit_profile() {
-      const dialogRef = this.dialog.open(DialogProfileComponent, {
-        maxWidth: '850px',
-        maxHeight: '600px',
-        hasBackdrop: true,
-        data: {
-          modalData: this.user
-        }});
+        const dialogRef = this.dialog.open(DialogProfileComponent, {
+            maxWidth: '850px',
+            maxHeight: '600px',
+            hasBackdrop: true,
+            data: {
+                modalData: this.user
+            }
+        });
 
         dialogRef
-          .afterClosed()
-          .filter((result) => !!result)
-          .flatMap((result) => this.apiUserService.apiChangeProfile(result))
-          .subscribe(user => {
-              this.storage.setItem('user', user);
-              if (user) {
-                this.profile = user.userdata.name + ' ' + user.userdata.surname + ' [' + this.fakeOperatorNumber + ']';
-                this.user = user;
-            }
-              this.toast.success('Aggiornamento Profilo', 'Profilo modificato con successo');
+            .afterClosed()
+            .filter((result) => !!result)
+            .flatMap((result) => this.apiUserService.apiChangeProfile(result))
+            .subscribe(user => {
+                this.storage.setItem('user', user);
+                if (user) {
+                    this.profile = user.userdata.name + ' ' + user.userdata.surname + ' [' + this.fakeOperatorNumber + ']';
+                    this.user = user;
+                }
+                this.toast.success('Aggiornamento Profilo', 'Profilo modificato con successo');
             },
-            (err) => {
-              this.toast.error('Aggiornamento Profilo', 'Modifica Profilo fallita');
+                (err) => {
+                    this.toast.error('Aggiornamento Profilo', 'Modifica Profilo fallita');
+                }
+            );
+    }
+
+    changeOnlineStatus(event: any) {
+        const user = cloneDeep(this.user);
+        user.isOnline = event.checked;
+        this.apiUserService.apiChangeProfile(user).subscribe(
+            (_user) => {
+                this.storage.setItem('user', _user);
+                this.user = _user;
             }
-          );
+        );
     }
 
     change_password() {
-      const dialogRef = this.dialog.open(DialogChangePassword, {
-          maxWidth: '550px',
-          maxHeight: '370px',
-          data: {
-            modalData: this.user.id
-          }});
+        const dialogRef = this.dialog.open(DialogChangePassword, {
+            maxWidth: '550px',
+            maxHeight: '370px',
+            data: {
+                modalData: this.user.id
+            }
+        });
     }
 
     elaborateFakeOperatorId(id_operator) {

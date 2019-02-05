@@ -70,4 +70,13 @@
         }
     }
 
+    .status__toggle {
+        display: flex;
+        align-items: center;
+        padding-left: 27px;
+    }
+
+    .toogle--active {
+        color: #25b2f7;
+    }
 }
