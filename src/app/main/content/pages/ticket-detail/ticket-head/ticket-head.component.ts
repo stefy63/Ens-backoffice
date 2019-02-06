@@ -94,7 +94,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
       const confirm = await this.toastMessage.warning('Vuoi acquisire il ticket?', '');
       if (confirm.value) {
         this.isOpen = this.ticket.status === 'ONLINE';
-        this.updateTicketStatus(this.ticket.id_status).subscribe(() => {
+        this.updateTicketStatus(this.ticketNotNormalized.id_status).subscribe(() => {
           this.msgAlert = false;
           this.open.next(true);
           this.createHistoryTicketSystem('Ticket acquisito da: ' + this.user.userdata.name + ' ' + this.user.userdata.surname).subscribe();
@@ -196,6 +196,8 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
       id_status: id_status,
       id_operator: this.user.id,
     });
+
+    console.log(updateTicket);
     
     return this.apiTicketService.update(updateTicket as ITicket);
   }

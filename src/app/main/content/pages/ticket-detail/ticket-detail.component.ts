@@ -24,6 +24,7 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
   public ticket = new BehaviorSubject<ITicket>(this.ticket);
   public isVideochat = false;
   public open = false;
+  public isManagedByOperator = false;
   public user;
   public status;
   private updatingTicketSubscription: Subscription;
@@ -58,6 +59,7 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
       this.service = data.service.service;
       this.isVideochat = data.id_service === Services.VIDEOCHAT;
       this.open = _.includes([Status.ONLINE, Status.REFUSED, Status.CLOSED], data.id_status);
+      this.isManagedByOperator = data.id_operator === this.user.id;
       this.status = data.status.status;
     });
   }
