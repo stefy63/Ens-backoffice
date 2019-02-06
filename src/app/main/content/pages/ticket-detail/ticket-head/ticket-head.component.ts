@@ -197,8 +197,6 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
       id_operator: this.user.id,
     });
 
-    console.log(updateTicket);
-    
     return this.apiTicketService.update(updateTicket as ITicket);
   }
 
