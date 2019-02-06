@@ -7,7 +7,7 @@ import * as _ from 'lodash';
 export class NormalizeTicket {
 
     public static normalizeItems(ticket: ITicket[]): any {
-        return _.map(ticket, (item) => {
+        return _.map(ticket, (item: ITicket) => {
             const closed_at = (item.status.status === 'CLOSED' || item.status.status === 'REFUSED') ? _.chain(item.historys)
                 .filter(elem => elem.type.type === 'SYSTEM')
                 .orderBy(['date_time'], ['ASC'])
@@ -17,6 +17,7 @@ export class NormalizeTicket {
             return {
                 id: item.id,
                 id_service: item.id_service,
+                id_status: item.id_status,
                 service: item.service.service,
                 status: item.status.status,
                 id_operator: item.id_operator,
