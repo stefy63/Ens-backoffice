@@ -16,12 +16,12 @@
                       <mat-icon *ngIf="!isOpen" class="pull-right icon--white" (click)="openDialogDetail(false)">info_outline</mat-icon>
                       <mat-icon *ngIf="isOpen" class="pull-right icon--white" (click)="openDialogDetail(false)">edit</mat-icon>
                   </div>
-                  </th>
+                  </th>s
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td class="table__ticket__detail" [ngClass]="{'blink': (ticket.status.status === 'ONLINE') }">{{ticket.status}}</td>
+                  <td class="table__ticket__detail" [ngClass]="{'blink': (isOpen) }">{{ticket.status}}</td>
                   <td class="table__ticket__detail">{{ticket.category}}</td>
                   <td class="table__ticket__detail">{{ticket.user_name}}</td>
                   <td class="table__ticket__detail">{{ticket.user_surname}}</td>
