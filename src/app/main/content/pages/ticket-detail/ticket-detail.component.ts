@@ -24,9 +24,12 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
   public ticket = new BehaviorSubject<ITicket>(this.ticket);
   public isVideochat = false;
   public open = false;
+  public isManagedByOperator = false;
   public user;
   public status;
   private updatingTicketSubscription: Subscription;
+  private messageCreatedSubscription: Subscription;
+  private lastTicket: ITicket;
 
   constructor(
     private route: ActivatedRoute,
@@ -40,33 +43,33 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.apiTicket.getFromId(this.idTicket)
+    this.messageCreatedSubscription = this.socketService.getMessage(WsEvents.ticketHistory.create)
+      .debounceTime(500)
+      .filter((data: ITicket) => data.id === this.idTicket)
       .subscribe((data: ITicket) => {
-        this.ticket.next(data);
-        this.service = data.service.service;
-        this.isVideochat = data.id_service === Services.VIDEOCHAT;
-        this.open = _.includes([Status.ONLINE, Status.REFUSED, Status.CLOSED], data.id_status);
-        this.status = data.status.status;
-      }, (err) => {
-        console.log(err);
+        this.ticket.next(_.assign({}, this.lastTicket, data));
       });
 
     this.updatingTicketSubscription = Observable.merge(
-      this.socketService.getMessage(WsEvents.ticketHistory.create),
-      this.socketService.getMessage(WsEvents.ticket.updated),
+      this.apiTicket.getFromId(this.idTicket),
+      this.socketService.getMessage(WsEvents.ticket.updated)
     ).subscribe((data: ITicket) => {
-      if (data.id === this.idTicket) {
-        this.ticket.next(data);
-        this.status = data.status.status;
-      }
-    }, (err) => {
-      console.log(err);
+      this.lastTicket = data;
+      this.ticket.next(data);
+      this.service = data.service.service;
+      this.isVideochat = data.id_service === Services.VIDEOCHAT;
+      this.open = _.includes([Status.ONLINE, Status.REFUSED, Status.CLOSED], data.id_status);
+      this.isManagedByOperator = data.id_operator === this.user.id;
+      this.status = data.status.status;
     });
   }
 
   ngOnDestroy() {
     if (this.updatingTicketSubscription) {
       this.updatingTicketSubscription.unsubscribe();
+    }
+    if (this.messageCreatedSubscription) {
+      this.messageCreatedSubscription.unsubscribe();
     }
   }
 

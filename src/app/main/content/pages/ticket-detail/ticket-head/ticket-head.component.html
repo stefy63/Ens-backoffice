@@ -21,7 +21,7 @@
               </thead>
               <tbody>
                 <tr>
-                  <td class="table__ticket__detail" [ngClass]="{'blink': (ticket.status.status === 'ONLINE') }">{{ticket.status}}</td>
+                  <td class="table__ticket__detail" [ngClass]="{'blink': (isOpen) }">{{ticket.status}}</td>
                   <td class="table__ticket__detail">{{ticket.category}}</td>
                   <td class="table__ticket__detail">{{ticket.user_name}}</td>
                   <td class="table__ticket__detail">{{ticket.user_surname}}</td>

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import { Location } from '@angular/common';
-import { find } from 'lodash';
+import { find, assign } from 'lodash';
 import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
 import { ApiTicketService } from '../../../../services/api/api-ticket.service';
 import { Status } from '../../../../../enums/ticket-status.enum';
@@ -32,6 +32,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   @Input('ticket') newTicket: Observable<ITicket>;
   @Output('open') open: EventEmitter<boolean> = new EventEmitter();
   public ticket: ITicket;
+  public ticketNotNormalized: any; 
   public ticketReason: string;
   public user;
   public badge = 0;
@@ -55,14 +56,16 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.ticketSubscription = this.newTicket.subscribe(async (data: ITicket) => {
-      if (this.ticket && this.ticket.status.status === 'NEW' && data.status.status !== 'NEW' && !this.isOpen) {
+      if (this.ticket && this.ticket.id_status === Status.NEW && data.id_status !== Status.NEW && !this.isOpen) {
         this.toastMessage.error('ATTENZIONE! TICKET GIA ACQUISITO', 'TICKET PRESO IN CARICO DA ALTRO OPERATORE');
         this.location.back();
       }
+
+      this.ticketNotNormalized = data;
       this.ticket = NormalizeTicket.normalizeItems([data])[0];
       const initMessage = find(data.historys, item => item.type.type === 'INITIAL');
       this.ticketReason = (initMessage) ? initMessage.action : '';
-      if (data.status.status === 'ONLINE' && data.id_operator === this.user.id) {
+      if (data.id_status === Status.ONLINE && data.id_operator === this.user.id) {
         this.open.next(true);
         this.isOpen = true;
         this.interval = setInterval(() => {
@@ -72,7 +75,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
 
       this.msgAlert = (data.id_operator
         && this.user.id !== data.id_operator
-        && data.status.status === 'ONLINE');
+        && data.id_status === Status.ONLINE);
     },
       (err) => {
         console.log(err);
@@ -90,8 +93,8 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     if (this.ticket.id_operator !== this.user.id) {
       const confirm = await this.toastMessage.warning('Vuoi acquisire il ticket?', '');
       if (confirm.value) {
-        this.isOpen = this.ticket.status === 'ONLINE';
-        this.updateTicketStatus(this.ticket.id_status).subscribe(() => {
+        this.isOpen = this.ticket.id_status === Status.ONLINE;
+        this.updateTicketStatus(this.ticketNotNormalized.id_status).subscribe(() => {
           this.msgAlert = false;
           this.open.next(true);
           this.createHistoryTicketSystem('Ticket acquisito da: ' + this.user.userdata.name + ' ' + this.user.userdata.surname).subscribe();
@@ -101,9 +104,9 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   }
 
   activateChat() {
-    if (this.ticket.status === 'ONLINE' && this.ticket.id_operator !== this.user.id) {
+    if (this.ticket.id_status === Status.ONLINE && this.ticket.id_operator !== this.user.id) {
       this.setUserChoise('Conferma Trasferimento Ticket?', 'Trasferito ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
-    } else if (this.ticket.status === 'CLOSED') {
+    } else if (this.ticket.id_status === Status.CLOSED) {
       this.setUserChoise('Conferma Riapertura Ticket?', 'Riapertura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
     } else {
       this.setUserChoise('Conferma Presa in carico Ticket?', 'Acquisito ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
@@ -189,11 +192,11 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   }
 
   private updateTicketStatus(id_status: number): Observable<ITicket> {
-    const updateTicket: ITicket = {
-      id: this.ticket.id,
+    const updateTicket: ITicket = assign({}, this.ticketNotNormalized, {
       id_status: id_status,
-      id_operator: this.user.id
-    };
+      id_operator: this.user.id,
+    });
+
     return this.apiTicketService.update(updateTicket as ITicket);
   }
 

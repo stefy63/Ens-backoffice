@@ -58,7 +58,6 @@ export class DialogProfileComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log(this.data.modalData);
     this.modalData = this.data.modalData;
     this.modalData.userdata.privacyaccept = this.modalData.userdata.privacyaccept || true;
     this.formGroup = new FormGroup({

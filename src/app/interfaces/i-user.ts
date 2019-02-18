@@ -3,12 +3,12 @@ import { ITokenSession } from './i-token-session';
 import { IUserData } from './i-userdata';
 
 export interface IUser {
-
     id: number;
     id_userdata: number;
     username: string;
     password: string;
     isOperator: boolean;
+    isOnline: boolean;
     disabled: boolean;
     date_creations: Date;
     date_update: Date;
