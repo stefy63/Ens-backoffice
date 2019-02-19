@@ -54,11 +54,11 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
     )
     .filter((data: ITicket) => data.id === this.idTicket)
     .subscribe((data: ITicket) => {
-      this.lastTicket = data;
-      this.ticket.next(data);
-      this.isVideochat = data.id_service === Services.VIDEOCHAT;
-      this.open = _.includes([Status.ONLINE, Status.REFUSED, Status.CLOSED], data.id_status);
-      this.isManagedByOperator = data.id_operator === this.user.id;
+      this.lastTicket = _.assign({}, this.lastTicket || {}, data);
+      this.ticket.next(this.lastTicket);
+      this.isVideochat = this.lastTicket.id_service === Services.VIDEOCHAT;
+      this.open = _.includes([Status.ONLINE, Status.REFUSED, Status.CLOSED], this.lastTicket.id_status);
+      this.isManagedByOperator = this.lastTicket.id_operator === this.user.id;
     });
   }
 
