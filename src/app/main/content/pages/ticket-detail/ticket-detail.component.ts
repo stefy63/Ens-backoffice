@@ -20,13 +20,11 @@ import { Status } from '../../../../enums/ticket-status.enum';
 export class TicketDetailComponent implements OnInit, OnDestroy {
 
   public idTicket: number;
-  public service: string;
   public ticket = new BehaviorSubject<ITicket>(this.ticket);
   public isVideochat = false;
   public open = false;
   public isManagedByOperator = false;
   public user;
-  public status;
   private updatingTicketSubscription: Subscription;
   private messageCreatedSubscription: Subscription;
   private lastTicket: ITicket;
@@ -54,18 +52,13 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
       this.apiTicket.getFromId(this.idTicket),
       this.socketService.getMessage<ITicket>(WsEvents.ticket.updated)
     )
-    .do((ticket) => {
-      console.log(ticket);
-    })
     .filter((data: ITicket) => data.id === this.idTicket)
     .subscribe((data: ITicket) => {
       this.lastTicket = data;
       this.ticket.next(data);
-      this.service = data.service.service;
       this.isVideochat = data.id_service === Services.VIDEOCHAT;
       this.open = _.includes([Status.ONLINE, Status.REFUSED, Status.CLOSED], data.id_status);
       this.isManagedByOperator = data.id_operator === this.user.id;
-      this.status = data.status.status;
     });
   }
 
