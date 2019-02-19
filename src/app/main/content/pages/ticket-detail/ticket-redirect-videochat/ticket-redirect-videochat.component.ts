@@ -22,7 +22,7 @@ export class TicketRedirectVideochatComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.ticketSubscription = this.data.subscribe((item: ITicket) => {
       this.ticket = item;
-      this.videochatRunnable = !_.includes([Status.REFUSED, Status.CLOSED], this.ticket.status.id);
+      this.videochatRunnable = !_.includes([Status.REFUSED, Status.CLOSED], this.ticket.id_status);
       this.showRoom = 'https://appear.in/comunicaens_op' + item.id_operator;
     }, (err) => {
       console.error(err);

@@ -53,7 +53,9 @@ export class TicketDetailComponent implements OnInit, OnDestroy {
     this.updatingTicketSubscription = Observable.merge(
       this.apiTicket.getFromId(this.idTicket),
       this.socketService.getMessage(WsEvents.ticket.updated)
-    ).subscribe((data: ITicket) => {
+    )
+    .filter((data: ITicket) => data.id === this.idTicket)
+    .subscribe((data: ITicket) => {
       this.lastTicket = data;
       this.ticket.next(data);
       this.service = data.service.service;

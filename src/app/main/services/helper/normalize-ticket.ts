@@ -19,7 +19,7 @@ export class NormalizeTicket {
                 id_service: item.id_service,
                 id_status: item.id_status,
                 service: item.service.service,
-                status: item.status.status,
+                status: (item.status) ? item.status.status : item.status.status,
                 id_operator: item.id_operator,
                 id_user: item.id_user,
                 id_user_unknown: item.id_user_unknown,

@@ -71,7 +71,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
       this.spinner.hide();
       this.scrollToBottom();
       this.cd.markForCheck();
-      this.showReplyMessage = !_.includes([Status.REFUSED, Status.CLOSED], this.ticket.status.id);
+      this.showReplyMessage = !_.includes([Status.REFUSED, Status.CLOSED], this.ticket.id_status);
     }, (err) => {
       console.log(err);
     });
