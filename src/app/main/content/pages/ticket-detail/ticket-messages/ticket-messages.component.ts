@@ -162,7 +162,7 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   }
 
   public typing(evt) {
-    if (!this.isTyping && this.ticket.service.id === Services.CHAT) {
+    if (!this.isTyping && this.ticket.id_service === Services.CHAT) {
       if (this.timeoutFunction) {
         clearTimeout(this.timeoutFunction);
       }

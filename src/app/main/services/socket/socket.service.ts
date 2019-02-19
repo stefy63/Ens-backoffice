@@ -29,9 +29,9 @@ export class SocketService {
     this.socket.emit(messageName, msg);
   }
 
-  public getMessage(event: string) {
+  public getMessage<T = any>(event: string) {
     return this.socket
-      .fromEvent(event);
+      .fromEvent<T>(event);
   }
 
   public removeListener(event: string) {
