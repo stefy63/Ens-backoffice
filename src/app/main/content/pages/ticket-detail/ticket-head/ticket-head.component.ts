@@ -55,7 +55,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.ticketSubscription = this.newTicket.subscribe(async (data: ITicket) => {
+    this.ticketSubscription = this.newTicket.subscribe((data: ITicket) => {
       if (this.ticket && this.ticket.id_status === Status.NEW && data.id_status !== Status.NEW && !this.isOpen) {
         this.toastMessage.error('ATTENZIONE! TICKET GIA ACQUISITO', 'TICKET PRESO IN CARICO DA ALTRO OPERATORE');
         this.location.back();
