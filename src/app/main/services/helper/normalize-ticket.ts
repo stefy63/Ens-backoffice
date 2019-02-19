@@ -8,7 +8,7 @@ export class NormalizeTicket {
 
     public static normalizeItems(ticket: ITicket[]): any {
         return _.map(ticket, (item: ITicket) => {
-            const closed_at = (item.status.status === 'CLOSED' || item.status.status === 'REFUSED') ? _.chain(item.historys)
+            const closed_at = (item.status && (item.status.status === 'CLOSED' || item.status.status === 'REFUSED')) ? _.chain(item.historys)
                 .filter(elem => elem.type.type === 'SYSTEM')
                 .orderBy(['date_time'], ['ASC'])
                 .findLast()
