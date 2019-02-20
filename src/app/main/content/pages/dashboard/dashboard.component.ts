@@ -68,7 +68,8 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
           this.tabChangedSubject.next(this.currentTabIndex);
         }
 
-        const newUserSurname = (data.id_user != null) ? data.user.userdata.surname : 'Unknown';
+        // const newUserSurname = (data.id_user != null) ? data.user.userdata.surname : 'Unknown';
+        const newUserSurname = (_.get(data, 'user.userdata.surname', null)) ? data.user.userdata.surname : 'Unknown';
         const message = this.toast.info('Nuovo Ticket!', 'Nuovo ticket da ' + newUserSurname);
         message.click.subscribe((event) => {
           this.tabGroup.selectedIndex = 0;
