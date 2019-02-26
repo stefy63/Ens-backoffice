@@ -25,7 +25,6 @@ import { NavigationModel } from '../../../../../navigation.model';
 export class FuseLogin2Component implements OnInit {
   loginForm: FormGroup;
   loginFormErrors: any;
-  public options = ToastOptions;
   public title = environment.login_title;
   public nav_title = environment.nav_title;
 

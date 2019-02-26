@@ -33,7 +33,6 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   public tableTickets: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>([]);
   public currentStatus: Status = Status.NEW;
   private MINE_TICKETS_TAB = 4;
-  public options = ToastOptions;
   private newTicketSubscription: Subscription;
   private tabChangedSubscription: Subscription;
   private newHistoryTicketSubscription: Subscription;

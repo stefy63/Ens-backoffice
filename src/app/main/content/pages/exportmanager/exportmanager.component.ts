@@ -43,7 +43,6 @@ export class ExportmanagerComponent implements OnInit {
   public end_date = new FormControl(new Date());
   public numberFormControl = new FormControl('', PhoneValidator.validPhone);
   public isValidForm = true;
-  public options = ToastOptions;
 
   constructor(
     private storage: LocalStorageService,
