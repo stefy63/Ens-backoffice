@@ -7,6 +7,7 @@ import { AuthGuard } from '../../../../guard/auth.guard';
 import { IsOperatorGuard } from '../../../../guard/is-operator.guard';
 import { SendingSmsFormComponent } from './sending-sms-form/sending-sms-form.component';
 import { MaterialModule } from '../../../../core/modules/material.module';
+import { SearchUserDialogComponent } from './search-user-dialog/search-user-dialog.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,12 @@ const routes: Routes = [
     ReactiveFormsModule,
     SharedModule
   ],
-  declarations: [SendingSmsFormComponent]
+  declarations: [
+    SendingSmsFormComponent,
+    SearchUserDialogComponent
+  ],
+  entryComponents: [
+    SearchUserDialogComponent
+  ]
 })
 export class SendingSmsModule { }

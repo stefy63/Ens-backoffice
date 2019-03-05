@@ -1,0 +1,22 @@
+<div class="dialog-header">
+    <h1 mat-dialog-title class="accent modal-title">Ricerca</h1>
+    <button mat-dialog-close class="close-dialog">
+        <mat-icon>close</mat-icon>
+    </button>
+</div>
+<mat-dialog-content>
+    <form [formGroup]="formGroup" (ngSubmit)="search()" class="mb-3">
+        <mat-form-field class="col-md-5">
+            <input matInput type="text" placeholder="Nome" formControlName="name">
+        </mat-form-field>
+        <mat-form-field class="col-md-5">
+            <input matInput type="text" placeholder="Cognome" formControlName="surname">
+        </mat-form-field>
+        <div class="col-md-2">
+            <button mat-button color="accent" [disabled]="!validForm()">Ricerca</button>
+        </div>
+    </form>
+    <div class="row no-gutters mb-3">
+
+    </div>
+</mat-dialog-content>

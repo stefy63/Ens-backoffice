@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NumericOnlyValidator } from '../../../../services/MaterialValidator/NumericOnlyValidator';
+import { MatDialog } from '@angular/material';
+import { SearchUserDialogComponent } from '../search-user-dialog/search-user-dialog.component';
 
 @Component({
   selector: 'fuse-sending-sms-form',
@@ -10,7 +12,9 @@ import { NumericOnlyValidator } from '../../../../services/MaterialValidator/Num
 export class SendingSmsFormComponent implements OnInit {
   public formGroup: FormGroup;
 
-  constructor() { }
+  constructor(
+    public dialog: MatDialog,
+  ) { }
 
   ngOnInit() {
     this.formGroup = new FormGroup({
@@ -20,7 +24,14 @@ export class SendingSmsFormComponent implements OnInit {
   }
 
   searchUser() {
-    console.log('SEARCHING USER');
+    this.dialog.open(SearchUserDialogComponent, {
+      hasBackdrop: true,
+      panelClass: 'confirm-panel'
+    })
+    .afterClosed()
+    .subscribe((data) => {
+      console.log(data);
+    });
   }
 
   onSubmit() {
