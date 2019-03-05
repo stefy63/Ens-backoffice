@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { NumericOnlyValidator } from '../../../../services/MaterialValidator/NumericOnlyValidator';
 import { MatDialog } from '@angular/material';
 import { SearchUserDialogComponent } from '../search-user-dialog/search-user-dialog.component';
+import { IUserDataRequest, IUserDataResponse } from '../../../../../interfaces/i-userdata.request';
 
 @Component({
   selector: 'fuse-sending-sms-form',
@@ -29,8 +30,10 @@ export class SendingSmsFormComponent implements OnInit {
       panelClass: 'confirm-panel'
     })
     .afterClosed()
-    .subscribe((data) => {
-      console.log(data);
+    .subscribe((data: IUserDataResponse) => {
+      if (data){
+        this.formGroup.controls.phone.setValue(data.phone);
+      }
     });
   }
 

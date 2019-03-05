@@ -6,8 +6,8 @@ import { SharedModule } from '../../../../core/modules/shared.module';
 import { AuthGuard } from '../../../../guard/auth.guard';
 import { IsOperatorGuard } from '../../../../guard/is-operator.guard';
 import { SendingSmsFormComponent } from './sending-sms-form/sending-sms-form.component';
-import { MaterialModule } from '../../../../core/modules/material.module';
 import { SearchUserDialogComponent } from './search-user-dialog/search-user-dialog.component';
+import { ApiUserDataService } from '../../../services/api/api-userdata.service';
 
 const routes: Routes = [
   {
@@ -31,6 +31,9 @@ const routes: Routes = [
   ],
   entryComponents: [
     SearchUserDialogComponent
+  ],
+  providers: [
+    ApiUserDataService
   ]
 })
 export class SendingSmsModule { }

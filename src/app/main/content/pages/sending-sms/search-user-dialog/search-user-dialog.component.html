@@ -16,7 +16,24 @@
             <button mat-button color="accent" [disabled]="!validForm()">Ricerca</button>
         </div>
     </form>
-    <div class="row no-gutters mb-3">
-
+    <div class="col-12 no-gutters mb-3" *ngIf="userDataList">
+        <h3>Risultati</h3>
+        <div *ngIf="userDataList.length === 0"> La ricerca non ha prodotto risultati </div>
+        <mat-table #table [dataSource]="dataSource" matSort class="col-12" *ngIf="userDataList.length > 0">
+            <ng-container matColumnDef="nome">
+                <mat-header-cell *matHeaderCellDef class="col-6">Nome</mat-header-cell>
+                <mat-cell *matCellDef="let element" class="col-6"> 
+                    {{element.name}} 
+                </mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="cognome">
+                <mat-header-cell *matHeaderCellDef class="col-6">Cognome</mat-header-cell>
+                <mat-cell *matCellDef="let element" class="col-6" >
+                    {{element.surname}}
+                </mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: displayedColumns;" class="row--pointer" (click)="onUserClick(row)"></mat-row>
+        </mat-table>
     </div>
 </mat-dialog-content>
