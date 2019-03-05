@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
-import { SharedModule } from '../../../../core/modules/shared.module';
-import { NgxSpinnerModule } from 'ngx-spinner';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { SimpleNotificationsModule } from 'angular2-notifications';
-import { ReactiveFormsModule } from '@angular/forms';
+import { SharedModule } from '../../../../core/modules/shared.module';
 import { AuthGuard } from '../../../../guard/auth.guard';
 import { IsOperatorGuard } from '../../../../guard/is-operator.guard';
 import { SendingSmsFormComponent } from './sending-sms-form/sending-sms-form.component';
+import { MaterialModule } from '../../../../core/modules/material.module';
 
 const routes: Routes = [
   {
@@ -21,7 +21,8 @@ const routes: Routes = [
     SharedModule,
     RouterModule.forChild(routes),
     SimpleNotificationsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    SharedModule
   ],
   declarations: [SendingSmsFormComponent]
 })
