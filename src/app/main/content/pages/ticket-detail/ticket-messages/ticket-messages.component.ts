@@ -171,7 +171,9 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
       this.socketService.sendMessage('send-to', {
         idTicket: this.ticket.id,
         event: 'onUserWriting',
-        obj: {}
+        obj: {
+          idTicket: this.ticket.id
+        }
       });
     }
   }
