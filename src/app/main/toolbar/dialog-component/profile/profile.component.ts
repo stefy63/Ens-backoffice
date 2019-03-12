@@ -36,7 +36,6 @@ export const MY_FORMATS = {
 })
 export class DialogProfileComponent implements OnInit {
 
-  public options = ToastOptions;
   public modalData: IUser;
   public formGroup: FormGroup;
   public provinces: any[];

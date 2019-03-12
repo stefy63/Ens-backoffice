@@ -6,7 +6,6 @@ import { ChatService } from '../../../../services/ticket-messages/ticket-message
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import * as _ from 'lodash';
 import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
-import { ToastOptions } from '../../../../../type/toast-options';
 import { NotificationsService } from 'angular2-notifications';
 import { Observable } from 'rxjs/Observable';
 import { SocketService } from '../../../../services/socket/socket.service';
@@ -44,7 +43,6 @@ export class TicketMessagesComponent implements OnInit, AfterViewInit, OnDestroy
   @ViewChild('replyForm') replyForm: NgForm;
   @ViewChild('onWritingMsg') onWritingMsg: ElementRef;
 
-  public options = ToastOptions;
   private ticketSubscription: Subscription;
   private replyEventSubscription: Subscription;
   private timeoutFunction;

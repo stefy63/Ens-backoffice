@@ -1,0 +1,30 @@
+<div class="col-12 p-24">
+    <div class="header text-center">
+        <span class="mat-display-1 font-weight-900">Invio Sms</span>
+    </div>
+    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="form__container">
+      <div class="message__container mb-3">
+          <mat-form-field class="message__container__phone" appearance="outline">
+              <span matPrefix>+39 &nbsp;</span>
+              <input matInput type="text" placeholder="Telefono" formControlName="phone" required>
+              <mat-error class="error-message" *ngIf="formGroup.controls['phone'].hasError('required')">
+                  Campo obbligatorio</mat-error>
+              <mat-error class="error-message" *ngIf="formGroup.controls['phone'].hasError('numericOnly')">
+                  Ammessi solo numeri </mat-error>
+          </mat-form-field>
+          <span>
+              <mat-icon matSuffix (click)="searchUser()" class="icon--searchable">search</mat-icon>
+          </span>
+      </div>
+      <div class="row mb-3">
+          <mat-form-field class="col-12">
+              <textarea matInput placeholder="Inserisci Testo" class="message__textarea" formControlName="message"></textarea>
+              <mat-error class="error-message" *ngIf="formGroup.controls['message'].hasError('required')">
+                  Campo obbligatorio</mat-error>
+            </mat-form-field>  
+      </div>
+      <div class="row justify-content-center">
+          <button mat-button color="accent">Invia</button>
+      </div>
+    </form>
+</div>
