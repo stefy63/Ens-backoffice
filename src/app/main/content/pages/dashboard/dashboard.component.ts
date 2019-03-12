@@ -123,10 +123,17 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     const tabsToStatus: Status[] = [Status.NEW, Status.ONLINE, Status.CLOSED, Status.REFUSED, Status.ONLINE];
     this.currentStatus = tabsToStatus[statusId];
     if (statusId === this.MINE_TICKETS_TAB) {
-      return this.apiTicket.getWithCriterias(environment.APP_TICKET_RETENTION_DAY, this.currentStatus, this.idOperator);
+      return this.apiTicket.getWithCriterias({
+        mapped: environment.APP_TICKET_RETENTION_DAY.toString(), 
+        id_status: this.currentStatus.toString(), 
+        id_user: this.idOperator.toString()
+      });
     }
 
-    return this.apiTicket.getWithCriterias(environment.APP_TICKET_RETENTION_DAY, this.currentStatus);
+    return this.apiTicket.getWithCriterias({
+      mapped: environment.APP_TICKET_RETENTION_DAY.toString(), 
+      id_status: this.currentStatus.toString()
+    });
   }
 
 }
