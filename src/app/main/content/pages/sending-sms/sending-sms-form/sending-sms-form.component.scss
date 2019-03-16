@@ -10,8 +10,12 @@
             padding-bottom: 10px;
         }
     }
-    .message__textarea {
+    .message__textarea__message {
         height: 100px;
+    }
+
+    .message__textarea__description {
+        height: 80px;
     }
 
     .icon--searchable {

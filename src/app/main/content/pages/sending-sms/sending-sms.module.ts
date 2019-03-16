@@ -11,6 +11,7 @@ import { ApiUserDataService } from '../../../services/api/api-userdata.service';
 import { ApiTicketService } from '../../../services/api/api-ticket.service';
 import { ToastMessage } from '../../../services/toastMessage.service';
 import { ApiSmsService } from '../../../services/api/api-sms.service';
+import { ApiTicketHistoryService } from '../../../services/api/api-ticket-history.service';
 
 const routes: Routes = [
   {
@@ -39,6 +40,7 @@ const routes: Routes = [
     ApiUserDataService,
     NotificationsService,
     ApiSmsService,
+    ApiTicketHistoryService
   ]
 })
 export class SendingSmsModule { }

@@ -28,4 +28,5 @@ export class ApiSmsService {
 export interface ReverseSmsRequest {
     phone: string;
     message: string;
+    id_category: string;
 }
