@@ -25,14 +25,14 @@
         <mat-form-field>
           <input matInput placeholder="Username" formControlName="username">
           <mat-error *ngIf="loginFormErrors.username.required || loginFormErrors.username.minlength">
-            Username &egrave; obbligatorio e non inferiore a 3 carattori
+            Username &egrave; obbligatorio
           </mat-error>
         </mat-form-field>
 
         <mat-form-field>
           <input type="password" matInput placeholder="Password" formControlName="password">
           <mat-error *ngIf="loginFormErrors.password.required || loginFormErrors.password.minlength">
-            Paasowrd &egrave; obbligatoria e non inferiore a 3 carattori
+            Password &egrave; obbligatoria
           </mat-error>
         </mat-form-field>
 
