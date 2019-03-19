@@ -6,6 +6,7 @@ import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/map';
 // import { AuthService } from '../services/auth/auth.service';
+import { ToastOptions } from '../../type/toast-options';
 
 
 @Component({
@@ -18,6 +19,7 @@ export class FuseContentComponent implements OnInit, OnDestroy
 {
     onSettingsChanged: Subscription;
     fuseSettings: any;
+    public toastOptions = ToastOptions; 
 
     @HostBinding('@routerTransitionUp') routeAnimationUp = false;
     @HostBinding('@routerTransitionDown') routeAnimationDown = false;

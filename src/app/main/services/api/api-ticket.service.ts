@@ -4,6 +4,7 @@ import { ITicket } from '../../../interfaces/i-ticket';
 import { Observable } from 'rxjs/Observable';
 import * as _ from 'lodash';
 import { GetBaseUrl } from '../helper/getBaseUrl';
+import { Services } from '../../../enums/ticket-services.enum';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -31,13 +32,9 @@ export class ApiTicketService {
     return this.http.get<ITicket[]>(this.baseUrl + '/ticket?id_category=' + id).map((data) => data as ITicket[]);
   }
 
-  public getWithCriterias(limit: number, id_status?: number, id_user?: number): Observable<ITicket[]> {
+  public getWithCriterias(criteria: TicketFilterCriteria): Observable<ITicket[]> {
     return this.http.get<ITicket[]>(this.baseUrl + '/ticket', {
-      params: Object.assign(
-        { mapped: limit.toString() },
-        id_status ? { id_status: id_status.toString() } : null,
-        id_user ? { id_user: id_user.toString() } : null
-      )
+      params: criteria as any
     }).map((data) => data as ITicket[]);
   }
 
@@ -48,4 +45,12 @@ export class ApiTicketService {
   public getNewedCount(): Observable<number> {
     return this.http.get<number>(this.baseUrl + '/ticket/newedcount/').map(data => data || 0);
   }
+}
+
+export interface TicketFilterCriteria {
+  mapped?: string;
+  id_status?: string;
+  id_user?: string;
+  phone?: string;
+  id_service?: string;
 }

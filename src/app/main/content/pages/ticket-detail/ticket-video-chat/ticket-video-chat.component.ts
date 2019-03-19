@@ -2,9 +2,6 @@ import { Component, OnInit, Input, OnDestroy} from '@angular/core';
 import simplewebrtc from 'simplewebrtc';
 import { environment } from '../../../../../../environments/environment';
 import { NotificationsService } from 'angular2-notifications';
-import { ToastOptions } from '../../../../../type/toast-options';
-
-
 @Component({
   selector: 'fuse-ticket-video-chat',
   templateUrl: './ticket-video-chat.component.html',
@@ -19,7 +16,6 @@ export class TicketVideoChatComponent implements OnInit, OnDestroy {
   public remoteid;
   public n = <any>navigator;
   public room: string;
-  public options = ToastOptions;
 
   constructor(
     private toast: NotificationsService
@@ -34,8 +30,6 @@ export class TicketVideoChatComponent implements OnInit, OnDestroy {
       this.n.mozGetUserMedia ||
       this.n.mediaDevices.getUserMedia ||
       this.n.msGetUserMedia;
-
-      this.options.timeOut = 10000;
 
       this.room = environment.videoChat_room_suffix + this.idTicket;
       this.peer = new simplewebrtc({

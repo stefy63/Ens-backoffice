@@ -1,0 +1,52 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  mat-form-field {
+    width: 100%;
+  }
+  mat-dialog-content {
+    min-height: auto;
+  }
+
+  .close-dialog {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+
+  form {
+    display: flex;
+    height: 100%;
+    flex-direction: row;
+    align-items: center;
+
+    .dialog-input {
+      font-size: 1em;
+    }
+  }
+
+  .form__footer {
+    display: block;
+    text-align: center;
+  }
+
+  .dialog-header {
+    position: relative;
+    text-align: center;
+  }
+  .modal-title {
+    font-size: 2em;
+    font-weight: bold;
+    color: #25b2f7;
+  }
+
+  .row--pointer {
+    cursor: pointer;
+  }
+
+  .row--pointer:hover {
+    background-color: #e6eaed;
+  }
+}

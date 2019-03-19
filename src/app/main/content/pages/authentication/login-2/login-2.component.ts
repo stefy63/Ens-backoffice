@@ -13,7 +13,6 @@ import { SocketService } from '../../../../services/socket/socket.service';
 import { NotificationsService } from 'angular2-notifications';
 import { ToastOptions } from '../../../../../type/toast-options';
 import { FuseNavigationService } from '../../../../../core/components/navigation/navigation.service';
-// import { UserNavigationModel } from '../../../../../user-navigation.model';
 import { NavigationModel } from '../../../../../navigation.model';
 
 @Component({
@@ -25,7 +24,6 @@ import { NavigationModel } from '../../../../../navigation.model';
 export class FuseLogin2Component implements OnInit {
   loginForm: FormGroup;
   loginFormErrors: any;
-  public options = ToastOptions;
   public title = environment.login_title;
   public nav_title = environment.nav_title;
 
@@ -60,20 +58,12 @@ export class FuseLogin2Component implements OnInit {
       data => {
         this.storage.setItem('data', data);
         if (this.authService.isAuthenticated()) {
-          // const userType = isOperator ? 'OPERATOR' : 'USER';
           this.socketService.sendMessage('welcome-message', {
             userToken: this.authService.getToken().token_session,
             idUser: data.user.id,
             status: 'READY',
             userType: 'OPERATOR'
           });
-          // if (!this.authService.isOperator()) {
-          //   this.navService.setNavigationModel(new UserNavigationModel());
-          //   this.router.navigate(['pages/user/user-dashboard']);
-          // } else {
-          //   this.navService.setNavigationModel(new NavigationModel());
-          //   this.router.navigate(['pages/dashboard']);
-          // }
           this.navService.setNavigationModel(new NavigationModel());
           this.router.navigate(['pages/dashboard']);
         } else {
@@ -88,9 +78,8 @@ export class FuseLogin2Component implements OnInit {
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
-      password: ['', [Validators.required, Validators.minLength(3)]],
-      // operator: [false]
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required]],
     });
 
     this.loginForm.valueChanges.subscribe(() => {
