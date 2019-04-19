@@ -1,0 +1,115 @@
+<div class="tab-container col-md-12 p-24" fusePerfectScrollbar>
+    <!-- <ngx-datatable
+      class="material"
+      [rows]="rows"
+      [columns]="[{name:'Nome', prop: 'userdata.name'},{name:'Cognome', prop: 'userdata.surname'},{name:'eMail', prop: 'userdata.email'},{name:'Username'},{name:'Azioni'}]"
+      [columnMode]="'force'"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [rowHeight]="'auto'"
+      [externalPaging]="true"
+      [count]="page.totalElements"
+      [offset]="page.pageNumber"
+      [limit]="page.size"
+      (page)='setPage($event)'>
+  </ngx-datatable> -->
+
+  <div>
+      <mat-form-field class="col-12">
+        <input matInput (keyup)="updateFilter($event.target.value)" placeholder="Filter">
+      </mat-form-field>
+  </div>
+
+  <ngx-datatable
+    #myTable
+    [rows]="rows"
+    class="material striped"
+    [loadingIndicator]="isLoading"
+    [scrollbarV]="auto"
+    [columnMode]="'force'"
+    [headerHeight]="50"
+    [footerHeight]="50"
+    [rowHeight]="'auto'"
+    [externalPaging]="true"
+    [count]="page.totalElements"
+    [offset]="page.pageNumber"
+    [limit]="page.size"
+    (page)='setPage($event)'
+    >
+    <ngx-datatable-column name="Abilitazione" headerClass="col-2 custom-datatable-header" cellClass="col-2">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+            <mat-slide-toggle [checked]="!row.disabled" (change)="changeUserStatus(row)"></mat-slide-toggle>
+        </ng-template>
+    </ngx-datatable-column>
+      <ngx-datatable-column name="Nome e Cognome" headerClass="col-3 custom-datatable-header" cellClass="col-3">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row.userdata.name}} {{row.userdata.surname}}
+          </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="eMail" headerClass="col-3 custom-datatable-header" cellClass="col-3">
+          <ng-template let-row="row" ngx-datatable-cell-template >
+              {{row.userdata.email}}
+          </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Username" headerClass="col-2 custom-datatable-header" cellClass="col-2">
+          <ng-template let-row="row" ngx-datatable-cell-template >
+              {{row.username}}
+          </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Azioni" headerClass="col-2 custom-datatable-header" cellClass="col-2">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+              <a (click)="editProfile()"><mat-icon>person</mat-icon></a>
+              <a (click)="resetPassword()"><mat-icon>lock</mat-icon></a>
+          </ng-template>
+      </ngx-datatable-column>
+
+
+      <ngx-datatable-footer>
+          <ng-template
+            ngx-datatable-footer-template
+            let-rowCount="rowCount"
+            let-pageSize="pageSize"
+            let-selectedCount="selectedCount"
+            let-curPage="curPage"
+            let-offset="offset"
+            let-isVisible="isVisible">
+              <div class="page-count">
+                <span *ngIf="selectedMessage">
+                  {{selectedCount.toLocaleString()}} {{selectedMessage}} /
+                </span>
+                {{rowCount.toLocaleString()}} {{totalMessage}}
+              </div>
+
+              <div class="pager">
+                  <label>Item per Page: </label>
+                  <mat-form-field class="col-4">
+                      <mat-select [(ngModel)]="page.size" (change)='setPage(curPage)'>
+                          <mat-option [value]="10">10</mat-option>
+                          <mat-option [value]="20">20</mat-option>
+                          <mat-option [value]="30">30</mat-option>
+                          <mat-option [value]="40">40</mat-option>
+                          <mat-option [value]="50">50</mat-option>
+                      </mat-select>
+                  </mat-form-field>
+              </div>
+
+              <datatable-pager
+                  class="col-5"
+                  [pagerLeftArrowIcon]="'datatable-icon-left'"
+                  [pagerRightArrowIcon]="'datatable-icon-right'"
+                  [pagerPreviousIcon]="'datatable-icon-prev'"
+                  [pagerNextIcon]="'datatable-icon-skip'"
+                  [page]="curPage"
+                  [size]="pageSize"
+                  [count]="rowCount"
+                  [hidden]="!((rowCount / pageSize) > 1)"
+                  (change)="table.onFooterPage($event)">
+              </datatable-pager>
+          </ng-template>
+        </ngx-datatable-footer>
+
+
+  </ngx-datatable>
+
+
+</div>
