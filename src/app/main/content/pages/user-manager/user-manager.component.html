@@ -58,8 +58,8 @@
       </ngx-datatable-column>
       <ngx-datatable-column name="Azioni" headerClass="col-2 custom-datatable-header" cellClass="col-2">
           <ng-template let-row="row" ngx-datatable-cell-template>
-              <a (click)="editProfile()"><mat-icon>person</mat-icon></a>
-              <a (click)="resetPassword()"><mat-icon>lock</mat-icon></a>
+              <a (click)="editProfile(row)"><mat-icon>person</mat-icon></a>
+              <a (click)="resetPassword(row)"><mat-icon>lock</mat-icon></a>
           </ng-template>
       </ngx-datatable-column>
 

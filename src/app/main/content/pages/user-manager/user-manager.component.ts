@@ -3,6 +3,9 @@ import { Page } from '../../../../class/page';
 import { IUser } from '../../../../interfaces/i-user';
 import { ApiUserService } from '../../../services/api/api-user.service';
 import { NotificationsService } from 'angular2-notifications';
+import { MatDialog } from '@angular/material';
+import { DialogProfileComponent } from '../../../toolbar/dialog-component/profile/profile.component';
+import { DialogChangePassword } from '../../../toolbar/dialog-component/dialog-change-password.component';
 
 @Component({
   selector: 'fuse-user-manager',
@@ -20,6 +23,7 @@ export class UserManagerComponent implements OnInit {
   constructor(
     private apiUserService: ApiUserService,
     private toast: NotificationsService,
+    public dialog: MatDialog,
   ) {
     this.page.pageNumber = 0;
     this.page.size = 10;
@@ -58,6 +62,37 @@ export class UserManagerComponent implements OnInit {
     });
   }
 
-  public editProfile() {}
-  public resetPassword() {}
+  public editProfile(user: IUser) {
+
+    const dialogRef = this.dialog.open(DialogProfileComponent, {
+      maxWidth: '850px',
+      maxHeight: '600px',
+      hasBackdrop: true,
+      data: {
+          modalData: user
+      }
+  });
+
+  dialogRef
+      .afterClosed()
+      .filter((result) => !!result)
+      .flatMap((result) => this.apiUserService.apiChangeProfile(result))
+      .subscribe(user => {
+          this.toast.success('Aggiornamento Profilo', 'Profilo modificato con successo');
+      },
+          (err) => {
+              this.toast.error('Aggiornamento Profilo', 'Modifica Profilo fallita');
+          }
+      );
+  }
+
+  public resetPassword(user: IUser) {
+    const dialogRef = this.dialog.open(DialogChangePassword, {
+      maxWidth: '550px',
+      maxHeight: '370px',
+      data: {
+          modalData: user.id
+      }
+  });
+  }
 }
