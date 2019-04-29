@@ -38,7 +38,7 @@
     >
     <ngx-datatable-column name="Abilitazione" headerClass="col-2 custom-datatable-header" cellClass="col-2">
         <ng-template let-row="row" ngx-datatable-cell-template>
-            <mat-slide-toggle [checked]="!row.disabled" (change)="changeUserStatus(row)"></mat-slide-toggle>
+            <mat-slide-toggle [checked]="!row.disabled" (change)="changeUserStatus(row)" matTooltip="Attiva/Disattiva Utente"></mat-slide-toggle>
         </ng-template>
     </ngx-datatable-column>
       <ngx-datatable-column name="Nome e Cognome" headerClass="col-3 custom-datatable-header" cellClass="col-3">
@@ -58,8 +58,8 @@
       </ngx-datatable-column>
       <ngx-datatable-column name="Azioni" headerClass="col-2 custom-datatable-header" cellClass="col-2">
           <ng-template let-row="row" ngx-datatable-cell-template>
-              <a (click)="editProfile(row)"><mat-icon>person</mat-icon></a>
-              <a (click)="resetPassword(row)"><mat-icon>lock</mat-icon></a>
+              <a (click)="editProfile(row)" matTooltip="Modifica Profilo Utente"><mat-icon>person</mat-icon></a>
+              <a (click)="resetPassword(row)" matTooltip="Cambio Password Utente"><mat-icon>lock</mat-icon></a>
           </ng-template>
       </ngx-datatable-column>
 
