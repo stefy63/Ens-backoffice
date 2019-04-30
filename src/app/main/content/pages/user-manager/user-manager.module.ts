@@ -7,6 +7,7 @@ import { IsOperatorGuard } from '../../../../guard/is-operator.guard';
 import { SharedModule } from '../../../../core/modules/shared.module';
 import { SimpleNotificationsModule, NotificationsService } from 'angular2-notifications';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DialogProfileComponent } from './profile/profile.component';
 
 const routes: Routes = [
   {
@@ -25,12 +26,14 @@ const routes: Routes = [
     CommonModule
   ],
   declarations: [
-    UserManagerComponent
+    UserManagerComponent,
+    DialogProfileComponent
   ],
   exports     : [
       UserManagerComponent
   ],
   entryComponents: [
+    DialogProfileComponent
   ],
   providers: [
     NotificationsService,

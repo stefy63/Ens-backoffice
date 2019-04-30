@@ -4,11 +4,11 @@ import { IUser } from '../../../../interfaces/i-user';
 import { ApiUserService } from '../../../services/api/api-user.service';
 import { NotificationsService } from 'angular2-notifications';
 import { MatDialog } from '@angular/material';
-import { DialogProfileComponent } from '../../../toolbar/dialog-component/profile/profile.component';
 import { DialogChangePassword } from '../../../toolbar/dialog-component/dialog-change-password.component';
 import { FormControl } from '@angular/forms';
-import { debounceTime, mergeMap, tap } from 'rxjs/operators';
+import { debounceTime, mergeMap, tap, filter, flatMap } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { DialogProfileComponent } from './profile/profile.component';
 
 @Component({
   selector: 'fuse-user-manager',
@@ -84,27 +84,25 @@ export class UserManagerComponent implements OnInit {
   }
 
   public editProfile(user: IUser) {
-
-    const dialogRef = this.dialog.open(DialogProfileComponent, {
-      maxWidth: '850px',
-      maxHeight: '600px',
-      hasBackdrop: true,
-      data: {
-          modalData: user
-      }
-  });
-
-  dialogRef
-      .afterClosed()
-      .filter((result) => !!result)
-      .flatMap((result) => this.apiUserService.apiChangeProfile(result))
-      .subscribe(user => {
-          this.toast.success('Aggiornamento Profilo', 'Profilo modificato con successo');
-      },
-          (err) => {
-              this.toast.error('Aggiornamento Profilo', 'Modifica Profilo fallita');
-          }
-      );
+      this.dialog.open(DialogProfileComponent, {
+        hasBackdrop: true,
+        data: {
+            modalData: user
+        }
+    }).afterClosed().pipe(
+            filter((result) => !!result),
+            flatMap((result) => {
+                user.userdata = result;
+                return this.apiUserService.apiChangeProfile(user);
+            })
+        )
+        .subscribe(user => {
+            this.toast.success('Aggiornamento Profilo', 'Profilo modificato con successo');
+        },
+        (err) => {
+            this.toast.error('Aggiornamento Profilo', 'Modifica Profilo fallita');
+        }
+        );
   }
 
   public resetPassword(user: IUser) {
