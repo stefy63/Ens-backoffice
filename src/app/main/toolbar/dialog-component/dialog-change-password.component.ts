@@ -7,6 +7,7 @@ import { PasswordValidator } from '../../services/MaterialValidator/PasswordVali
 import { EmptyInputValidator } from '../../services/MaterialValidator/EmptyInputValidator';
 import { ApiUserService } from '../../services/api/api-user.service';
 import { NotificationsService } from 'angular2-notifications';
+import { LocalStorageService } from '../../services/local-storage/local-storage.service';
 
 @Component({
   selector: 'fuse-dialog-change-password',
@@ -18,13 +19,15 @@ export class DialogChangePassword implements OnInit {
 
   public modalData: IChangePassword;
   public formGroup: FormGroup;
+  public oldPasswordView: boolean = true;
 
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<DialogChangePassword>,
     private apiUserService: ApiUserService,
-    private toast: NotificationsService
+    private toast: NotificationsService,
+    private storage: LocalStorageService
   ) {
     this.modalData = {
       user_id: <number>this.data.modalData,
@@ -35,11 +38,20 @@ export class DialogChangePassword implements OnInit {
   }
 
   ngOnInit(): void {
-    this.formGroup = new FormGroup({
-      'old_password': new FormControl('', [Validators.required, EmptyInputValidator.whiteSpace]),
-      'new_password': new FormControl('', [Validators.required, EmptyInputValidator.whiteSpace]),
-      'confirm_password': new FormControl('', [Validators.required, PasswordValidator.match])
-    });
+
+    if (this.modalData.user_id !== this.storage.getItem('user').id) {
+      this.formGroup = new FormGroup({
+        'new_password': new FormControl('', [Validators.required, EmptyInputValidator.whiteSpace]),
+        'confirm_password': new FormControl('', [Validators.required, PasswordValidator.match])
+      });
+      this.oldPasswordView = false;
+    } else {
+      this.formGroup = new FormGroup({
+        'old_password': new FormControl('', [Validators.required, EmptyInputValidator.whiteSpace]),
+        'new_password': new FormControl('', [Validators.required, EmptyInputValidator.whiteSpace]),
+        'confirm_password': new FormControl('', [Validators.required, PasswordValidator.match])
+      });
+    }
   }
 
   onYesClick() {
@@ -53,7 +65,7 @@ export class DialogChangePassword implements OnInit {
           delete this.modalData.old_password;
           this.toast.error('Cambio Password', 'Vecchia password Errata!');
         } else {
-        this.toast.error('Cambio Password', 'Modifica password fallita!');
+          this.toast.error('Cambio Password', 'Modifica password fallita!');
         }
       }
     );
