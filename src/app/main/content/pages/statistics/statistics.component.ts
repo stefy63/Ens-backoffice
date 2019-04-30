@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { FusePerfectScrollbarDirective } from '../../../../core/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-statistics',
@@ -14,9 +15,12 @@ export class StatisticsComponent implements OnInit {
 
   @ViewChild(FusePerfectScrollbarDirective) directiveScroll: FusePerfectScrollbarDirective;
 
-  constructor() { }
+  constructor(
+    private spinner: NgxSpinnerService,
+  ) { }
 
   ngOnInit() {
+
   }
 
 }
