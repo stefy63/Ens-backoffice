@@ -16,7 +16,7 @@
 
   <div>
       <mat-form-field class="col-12">
-        <input matInput (keyup)="updateFilter($event.target.value)" placeholder="Filter">
+        <input matInput [formControl]="filterControl" placeholder="Filter...">
       </mat-form-field>
   </div>
 
@@ -36,27 +36,27 @@
     [limit]="page.size"
     (page)='setPage($event)'
     >
-    <ngx-datatable-column name="Abilitazione" headerClass="col-2 custom-datatable-header" cellClass="col-2">
+    <ngx-datatable-column name="Abilitazione" headerClass="col-2 custom-datatable-header" cellClass="col-2" [sortable]="false">
         <ng-template let-row="row" ngx-datatable-cell-template>
             <mat-slide-toggle [checked]="!row.disabled" (change)="changeUserStatus(row)" matTooltip="Attiva/Disattiva Utente"></mat-slide-toggle>
         </ng-template>
     </ngx-datatable-column>
-      <ngx-datatable-column name="Nome e Cognome" headerClass="col-3 custom-datatable-header" cellClass="col-3">
+      <ngx-datatable-column name="Nome e Cognome" headerClass="col-3 custom-datatable-header" cellClass="col-3" [sortable]="false">
           <ng-template let-row="row" ngx-datatable-cell-template>
               {{row.userdata.name}} {{row.userdata.surname}}
           </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="eMail" headerClass="col-3 custom-datatable-header" cellClass="col-3">
+      <ngx-datatable-column name="eMail" headerClass="col-3 custom-datatable-header" cellClass="col-3" [sortable]="false">
           <ng-template let-row="row" ngx-datatable-cell-template >
               {{row.userdata.email}}
           </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="Username" headerClass="col-2 custom-datatable-header" cellClass="col-2">
+      <ngx-datatable-column name="Username" headerClass="col-2 custom-datatable-header" cellClass="col-2" [sortable]="false">
           <ng-template let-row="row" ngx-datatable-cell-template >
               {{row.username}}
           </ng-template>
       </ngx-datatable-column>
-      <ngx-datatable-column name="Azioni" headerClass="col-2 custom-datatable-header" cellClass="col-2">
+      <ngx-datatable-column name="Azioni" headerClass="col-2 custom-datatable-header" cellClass="col-2" [sortable]="false">
           <ng-template let-row="row" ngx-datatable-cell-template>
               <a (click)="editProfile(row)" matTooltip="Modifica Profilo Utente"><mat-icon>person</mat-icon></a>
               <a (click)="resetPassword(row)" matTooltip="Cambio Password Utente"><mat-icon>lock</mat-icon></a>
@@ -83,12 +83,12 @@
               <div class="pager">
                   <label>Item per Page: </label>
                   <mat-form-field class="col-4">
-                      <mat-select [(ngModel)]="page.size" (change)='setPage(curPage)'>
-                          <mat-option [value]="10">10</mat-option>
-                          <mat-option [value]="20">20</mat-option>
-                          <mat-option [value]="30">30</mat-option>
-                          <mat-option [value]="40">40</mat-option>
-                          <mat-option [value]="50">50</mat-option>
+                      <mat-select [formControl]="pageSizeControl" [(ngModel)]="page.size">
+                          <mat-option value="10">10</mat-option>
+                          <mat-option value="20">20</mat-option>
+                          <mat-option value="30">30</mat-option>
+                          <mat-option value="40">40</mat-option>
+                          <mat-option value="50">50</mat-option>
                       </mat-select>
                   </mat-form-field>
               </div>

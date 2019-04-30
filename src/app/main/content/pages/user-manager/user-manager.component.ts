@@ -6,6 +6,8 @@ import { NotificationsService } from 'angular2-notifications';
 import { MatDialog } from '@angular/material';
 import { DialogProfileComponent } from '../../../toolbar/dialog-component/profile/profile.component';
 import { DialogChangePassword } from '../../../toolbar/dialog-component/dialog-change-password.component';
+import { FormControl } from '@angular/forms';
+import { debounceTime, mergeMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'fuse-user-manager',
@@ -20,6 +22,10 @@ export class UserManagerComponent implements OnInit {
 
   @ViewChild('myTable') table;
 
+  private filterControl: FormControl;
+  private pageSizeControl: FormControl;
+  private debounce: number = 1000;
+
   constructor(
     private apiUserService: ApiUserService,
     private toast: NotificationsService,
@@ -30,21 +36,29 @@ export class UserManagerComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.setPage({ offset: 0 });
+    this.setPage();
+    this.filterControl = new FormControl;
+    this.pageSizeControl = new FormControl(10);
+    this.filterControl.valueChanges
+      .pipe(
+        debounceTime(this.debounce),
+        tap(data => {
+          this.filter = data.toLowerCase();
+          this.page.filter = this.filter;
+        }),
+        mergeMap(data => this.apiUserService.apiGetUserList(this.page))
+      )
+      .subscribe( pagedData => {
+          this.page = pagedData.page;
+          this.rows = pagedData.data;
+      });
+      this.pageSizeControl.valueChanges.subscribe(data => {
+        this.setPage();
+      });
   }
 
-  setPage(pageInfo){
-    this.page.pageNumber = pageInfo.offset;
+  setPage(){
     this.page.filter = this.filter || '';
-    this.apiUserService.apiGetUserList(this.page).subscribe(pagedData => {
-      this.page = pagedData.page;
-      this.rows = pagedData.data;
-    });
-  }
-
-  public updateFilter(value) {
-    this.filter = value.toLowerCase();
-    this.page.filter = this.filter;
     this.apiUserService.apiGetUserList(this.page).subscribe(pagedData => {
       this.page = pagedData.page;
       this.rows = pagedData.data;
