@@ -2,7 +2,6 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { FusePerfectScrollbarDirective } from '../../../../core/directives/fuse-perfect-scrollbar/fuse-perfect-scrollbar.directive';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { ICallStatistics } from '../../../../interfaces/i-call-statistics';
 import * as moment from 'moment';
 import { ApiStatisticsService } from '../../../services/api/api-statistics.service';
 
@@ -22,15 +21,15 @@ export class StatisticsComponent implements OnInit {
     private spinner: NgxSpinnerService,
     private statisticsService: ApiStatisticsService
   ) {
-    this.fromDate = new FormControl(moment('1/1/'+moment().year()).toDate());
+    this.fromDate = new FormControl(moment('1-1-2019', 'D-M-YYYY').toDate());
     this.toDate = new FormControl(moment().toDate());
    }
 
   ngOnInit() {
-
+    this.getResult();
   }
 
-  getResult(data: ICallStatistics) {
+  getResult() {
     this.statisticsService.get({fromDate: this.fromDate.value, toDate: this.toDate.value})
       .subscribe(data => {
         console.log(data);
