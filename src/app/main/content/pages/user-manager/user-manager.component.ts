@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Page } from '../../../../class/page';
 import { IUser } from '../../../../interfaces/i-user';
 import { ApiUserService } from '../../../services/api/api-user.service';
@@ -6,8 +6,9 @@ import { NotificationsService } from 'angular2-notifications';
 import { MatDialog } from '@angular/material';
 import { DialogChangePassword } from '../../../toolbar/dialog-component/dialog-change-password.component';
 import { FormControl } from '@angular/forms';
-import { debounceTime, mergeMap, tap, filter, flatMap } from 'rxjs/operators';
+import { debounceTime, mergeMap, tap, filter } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Subscription } from 'rxjs/Subscription';
 import { DialogProfileComponent } from './profile/profile.component';
 
 @Component({
@@ -15,7 +16,7 @@ import { DialogProfileComponent } from './profile/profile.component';
   templateUrl: './user-manager.component.html',
   styleUrls: ['./user-manager.component.scss']
 })
-export class UserManagerComponent implements OnInit {
+export class UserManagerComponent implements OnInit, OnDestroy {
 
   public page = new Page();
   public rows: IUser[];
@@ -25,7 +26,9 @@ export class UserManagerComponent implements OnInit {
 
   private filterControl: FormControl;
   private pageSizeControl: FormControl;
-  private debounce: number = 1000;
+  private debounce = 1000;
+  private filterControlSubscription: Subscription;
+  private pageSizeControlSubscription: Subscription;
 
   constructor(
     private apiUserService: ApiUserService,
@@ -41,13 +44,15 @@ export class UserManagerComponent implements OnInit {
     this.setPage({ offset: 0 });
     this.filterControl = new FormControl;
     this.pageSizeControl = new FormControl(10);
-    this.filterControl.valueChanges
+    this.filterControlSubscription = this.filterControl.valueChanges
       .pipe(
-        tap(data => this.spinner.show()),
         debounceTime(this.debounce),
+        filter((data) => this.filter !== data.toLowerCase()),
         tap(data => {
+          this.spinner.show();
           this.filter = data.toLowerCase();
           this.page.filter = this.filter;
+          this.page.pageNumber = 0;
         }),
         mergeMap(data => this.apiUserService.apiGetUserList(this.page))
       )
@@ -55,10 +60,19 @@ export class UserManagerComponent implements OnInit {
           this.page = pagedData.page;
           this.rows = pagedData.data;
           this.spinner.hide();
-      });
-      this.pageSizeControl.valueChanges.subscribe(data => {
+      }, () => this.spinner.hide());
+      this.pageSizeControlSubscription = this.pageSizeControl.valueChanges.subscribe(data => {
         this.setPage({ offset: 0 });
       });
+  }
+
+  ngOnDestroy(): void {
+    if (this.filterControlSubscription) {
+      this.filterControlSubscription.unsubscribe();
+    }
+    if (this.pageSizeControlSubscription) {
+      this.pageSizeControlSubscription.unsubscribe();
+    }
   }
 
   setPage(pageInfo){
@@ -69,46 +83,40 @@ export class UserManagerComponent implements OnInit {
       this.page = pagedData.page;
       this.rows = pagedData.data;
       this.spinner.hide();
-    });
+    }, () => this.spinner.hide());
   }
 
   public changeUserStatus(user: IUser) {
-    console.log(user);
     user.disabled = !user.disabled;
     this.apiUserService.apiChangeProfile(user).subscribe(data => {
       this.toast.success('CONFERMA', 'Utente aggiornato con successo!');
     },
     err => {
-      this.toast.error('ERRORE', 'Impossibile aggirnare l\'utente!');
+      this.toast.error('ERRORE', 'Impossibile aggiornare l\'utente!');
     });
   }
 
   public editProfile(user: IUser) {
-      this.dialog.open(DialogProfileComponent, {
-        hasBackdrop: true,
-        data: {
-            modalData: user
-        }
-    }).afterClosed().pipe(
-            filter((result) => !!result),
-            flatMap((result) => {
-                user.userdata = result;
-                return this.apiUserService.apiChangeProfile(user);
-            })
-        )
-        .subscribe(user => {
-            this.toast.success('Aggiornamento Profilo', 'Profilo modificato con successo');
-        },
-        (err) => {
-            this.toast.error('Aggiornamento Profilo', 'Modifica Profilo fallita');
-        }
-        );
+    const dialogRef = this.dialog.open(DialogProfileComponent, {
+      hasBackdrop: true,
+      data: {
+          modalData: user
+      }
+  });
+
+  dialogRef
+      .afterClosed()
+      .filter((result) => !!result)
+      .flatMap((result) => this.apiUserService.apiChangeProfile(result))
+      .subscribe(() => {
+          this.toast.success('Aggiornamento Profilo', 'Profilo modificato con successo');
+      }, (err) => {
+              this.toast.error('Aggiornamento Profilo', 'Modifica Profilo fallita');
+      });
   }
 
   public resetPassword(user: IUser) {
-    const dialogRef = this.dialog.open(DialogChangePassword, {
-      maxWidth: '550px',
-      maxHeight: '370px',
+    this.dialog.open(DialogChangePassword, {
       data: {
           modalData: user.id
       }
