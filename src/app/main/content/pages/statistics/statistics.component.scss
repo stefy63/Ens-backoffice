@@ -1,0 +1,24 @@
+:host {
+  .container {
+    display: flex;
+    flex-direction: column;
+    mat-card {
+      margin: 10px;
+      mat-card-header {
+        justify-content: center;
+        mat-card-title {
+          font-size: 3rem;
+          font-weight: 500;
+        }
+      }
+      mat-form-field {
+        margin-right: 15px;
+        .time-choose {
+          display: flex;
+          flex-direction: row;
+          justify-content: center;
+        }
+      }
+    }
+  }
+}

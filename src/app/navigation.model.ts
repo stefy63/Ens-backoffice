@@ -37,7 +37,14 @@ export class NavigationModel {
                         'icon': 'accessibility_new',
                         'url': '/pages/user-manager',
                     },
-                ]
+                    {
+                        'id': 'statistics',
+                        'title': 'Statistiche',
+                        'type': 'item',
+                        'icon': 'bar_chart',
+                        'url': '/pages/statistics',
+                    },
+                ],
             },
         ];
     }

@@ -1,3 +1,67 @@
-<p>
-  statistics works!
-</p>
+<div class="container" fusePerfectScrollbar>
+  <!-- TIME CHOOSE -->
+  <mat-card>
+      <mat-card-header>
+        <mat-card-title>Scegli un Periodo di Tempo</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="time-choose">
+          <div>
+              <mat-form-field>
+                <input matInput [matDatepicker]="picker1" placeholder="Da" [formControl]="fromDate">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
+              <mat-form-field>
+                <input matInput [matDatepicker]="picker2" placeholder="A" [formControl]="toDate">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field>
+          </div>
+      </mat-card-content>
+  </mat-card>
+
+  <!-- OVERVIEW -->
+  <mat-card class="overview-channel">
+      <mat-card-header>
+        <mat-card-title>Overview Canali di Comunicazione - Tot. Ticket</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+          CONTENUTO
+      </mat-card-content>
+  </mat-card>
+
+  <!-- CHANNEL OFFICE -->
+  <mat-card class="channel-office">
+      <mat-card-header>
+        <mat-card-title>Canali Soddisfatti da ciascuna sede</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+          CONTENUTO
+      </mat-card-content>
+  </mat-card>
+
+  <!-- DISTRIBUTION OFFICE -->
+  <mat-card class="service-office">
+      <mat-card-header>
+        <mat-card-title>Distribuzione servizio per sedi</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+          CONTENUTO
+      </mat-card-content>
+  </mat-card>
+
+  <!-- DISTRIBUTION OPERATOR -->
+  <mat-card class="service-operator">
+      <mat-card-header>
+        <mat-card-title>Operatori</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+          CONTENUTO
+      </mat-card-content>
+  </mat-card>
+
+
+
+
+
+</div>
