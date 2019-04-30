@@ -30,6 +30,13 @@ export class NavigationModel {
                         'icon': 'send',
                         'url': '/pages/sending-sms',
                     },
+                    {
+                        'id': 'user_manager',
+                        'title': 'Gestione Utenti',
+                        'type': 'item',
+                        'icon': 'accessibility_new',
+                        'url': '/pages/user-manager',
+                    },
                 ]
             },
         ];
