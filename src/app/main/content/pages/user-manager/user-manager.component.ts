@@ -8,6 +8,7 @@ import { DialogProfileComponent } from '../../../toolbar/dialog-component/profil
 import { DialogChangePassword } from '../../../toolbar/dialog-component/dialog-change-password.component';
 import { FormControl } from '@angular/forms';
 import { debounceTime, mergeMap, tap } from 'rxjs/operators';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'fuse-user-manager',
@@ -30,17 +31,19 @@ export class UserManagerComponent implements OnInit {
     private apiUserService: ApiUserService,
     private toast: NotificationsService,
     public dialog: MatDialog,
+    private spinner: NgxSpinnerService,
   ) {
     this.page.pageNumber = 0;
     this.page.size = 10;
   }
 
   ngOnInit() {
-    this.setPage();
+    this.setPage({ offset: 0 });
     this.filterControl = new FormControl;
     this.pageSizeControl = new FormControl(10);
     this.filterControl.valueChanges
       .pipe(
+        tap(data => this.spinner.show()),
         debounceTime(this.debounce),
         tap(data => {
           this.filter = data.toLowerCase();
@@ -51,17 +54,21 @@ export class UserManagerComponent implements OnInit {
       .subscribe( pagedData => {
           this.page = pagedData.page;
           this.rows = pagedData.data;
+          this.spinner.hide();
       });
       this.pageSizeControl.valueChanges.subscribe(data => {
-        this.setPage();
+        this.setPage({ offset: 0 });
       });
   }
 
-  setPage(){
+  setPage(pageInfo){
+    this.spinner.show();
+    this.page.pageNumber = pageInfo.offset;
     this.page.filter = this.filter || '';
     this.apiUserService.apiGetUserList(this.page).subscribe(pagedData => {
       this.page = pagedData.page;
       this.rows = pagedData.data;
+      this.spinner.hide();
     });
   }
 
