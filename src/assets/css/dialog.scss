@@ -1,12 +1,8 @@
-    
+
     form {
         display: flex;
         flex-direction: column;
         flex-grow: 1;
-        .dialog-input {
-            font-size: 1em;
-            margin-left: 10px;
-        }
         a {
             color: #039be5 !important;
             cursor: pointer;

@@ -21,6 +21,27 @@
       mat-form-field {
         margin-right: 15px;
       }
+      .overview-content {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+      }
+      .fuse-card {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        min-width: 150px;
+        .card-left {
+          mat-icon {
+            width: 20%;
+            font-size: 5rem;
+          }
+        }
+        .card-right {
+          .card-title {}
+          .card-result {}
+        }
+      }
     }
   }
 }

@@ -11,19 +11,8 @@ import { NumericOnlyValidator } from '../../../services/MaterialValidator/Numeri
 import { EmailCustomValidator } from '../../../services/MaterialValidator/EmailCustomValidator';
 import { FiscalCodeValidator } from '../../../services/MaterialValidator/FiscalCodeValidator';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
+import { MY_FORMATS } from '../../../../type/date-format';
 
-
-export const MY_FORMATS = {
-  parse: {
-      dateInput: 'DD/MM/YYYY',
-  },
-  display: {
-      dateInput: 'DD/MM/YYYY',
-      monthYearLabel: 'MMM YYYY',
-      dateA11yLabel: 'LL',
-      monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
 
 @Component({
   selector: 'fuse-dialog-profile',

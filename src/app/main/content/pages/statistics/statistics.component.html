@@ -7,15 +7,19 @@
       <mat-card-content class="time-choose">
           <div>
               <mat-form-field>
-                <input matInput [matDatepicker]="picker1" placeholder="Da" [formControl]="fromDate">
+                <input matInput [matDatepicker]="picker1" placeholder="Da" [formControl]="fromDate" required (dateInput)="addEvent('input', $event)" >
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
+                <mat-error class="error-message" *ngIf="fromDate.hasError('required')">La data di inizio è obbligatoria</mat-error>
+                <mat-error class="error-message" *ngIf="fromDate.hasError('date')">Data non valida, usare (GG/MM/YYYY)</mat-error>
               </mat-form-field>
 
               <mat-form-field>
-                <input matInput [matDatepicker]="picker2" placeholder="A" [formControl]="toDate">
+                <input matInput [matDatepicker]="picker2" placeholder="A" [formControl]="toDate" required (dateInput)="addEvent('input', $event)">
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
+                <mat-error class="error-message" *ngIf="toDate.hasError('required')">La data di fine è obbligatoria</mat-error>
+                <mat-error class="error-message" *ngIf="toDate.hasError('date')">Data non valida, usare (GG/MM/YYYY)</mat-error>
               </mat-form-field>
           </div>
       </mat-card-content>
@@ -26,9 +30,91 @@
       <mat-card-header>
         <mat-card-title>Overview Canali di Comunicazione - Tot. Ticket</mat-card-title>
       </mat-card-header>
-      <mat-card-content>
-          CONTENUTO
-      </mat-card-content>
+
+      <div class="overview-content">
+
+        <mat-card-content class="overview-card">
+          <div class="fuse-card">
+            <div class="card-left">
+              <mat-icon>forum</mat-icon>
+            </div>
+            <div class="card-right">
+              <div class="card-title">
+                Chat
+              </div>
+              <div class="card-result">
+                  1523
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+
+        <mat-card-content class="overview-card">
+            <div class="fuse-card">
+              <div class="card-left">
+                <mat-icon>forum</mat-icon>
+              </div>
+              <div class="card-right">
+                <div class="card-title">
+                  Chat
+                </div>
+                <div class="card-result">
+                    1523
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+
+        <mat-card-content class="overview-card">
+            <div class="fuse-card">
+              <div class="card-left">
+                <mat-icon>forum</mat-icon>
+              </div>
+              <div class="card-right">
+                <div class="card-title">
+                  Chat
+                </div>
+                <div class="card-result">
+                    1523
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+
+        <mat-card-content class="overview-card">
+            <div class="fuse-card">
+              <div class="card-left">
+                <mat-icon>forum</mat-icon>
+              </div>
+              <div class="card-right">
+                <div class="card-title">
+                  Chat
+                </div>
+                <div class="card-result">
+                    1523
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+
+        <mat-card-content class="overview-card">
+            <div class="fuse-card">
+              <div class="card-left">
+                <mat-icon>forum</mat-icon>
+              </div>
+              <div class="card-right">
+                <div class="card-title">
+                  Chat
+                </div>
+                <div class="card-result">
+                    1523
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+
+        </div>
+
   </mat-card>
 
   <!-- CHANNEL OFFICE -->

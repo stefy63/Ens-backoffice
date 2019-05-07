@@ -3,14 +3,14 @@
         <button mat-icon-button mat-dialog-close class="button-close--outlined" color="primary">
             <mat-icon>close</mat-icon>
         </button>
-    </div>  
+    </div>
     <h1 mat-dialog-title class="modal-title">Modifica Profilo</h1>
 </div>
 <form [formGroup]="formGroup" (ngSubmit)="onYesClick()">
     <mat-dialog-content>
         <div class="row">
             <mat-form-field class="col-md-6"  >
-                <input matInput class="dialog-input form-control" type="text" placeholder="Nome" formControlName="name"  required>
+                <input matInput type="text" placeholder="Nome" formControlName="name"  required>
                 <mat-icon matSuffix>face</mat-icon>
                 <mat-error class="error-message" *ngIf="formGroup.controls['name'].hasError('required')">Campo
                     obbligatorio</mat-error>
@@ -18,7 +18,7 @@
                     non permessi</mat-error>
             </mat-form-field>
             <mat-form-field class="col-md-6"  >
-                <input matInput class="dialog-input form-control" type="text" placeholder="Cognome"  formControlName="surname"  required>
+                <input matInput type="text" placeholder="Cognome"  formControlName="surname"  required>
                 <mat-icon matSuffix>face</mat-icon>
                 <mat-error class="error-message" *ngIf="formGroup.controls['surname'].hasError('required')">Campo
                     obbligatorio</mat-error>
@@ -29,13 +29,13 @@
 
         <div class="row">
             <mat-form-field class="col-md-6"  >
-                <input matInput class="dialog-input form-control" type="text" placeholder="Indirizzo e-mail"  formControlName="email" required>
+                <input matInput type="text" placeholder="Indirizzo e-mail"  formControlName="email" required>
                 <mat-icon matSuffix>mail_outline</mat-icon>
                 <mat-error class="error-message" *ngIf="formGroup.controls['email'].hasError('required')">Campo obbligatorio</mat-error>
                 <mat-error class="error-message" *ngIf="formGroup.controls['email'].hasError('email_custom')">Formato Mail errato</mat-error>
             </mat-form-field>
             <mat-form-field class="col-md-6"  >
-                <input matInput class="dialog-input form-control" type="text" placeholder="Telefono"  formControlName="phone" required>
+                <input matInput type="text" placeholder="Telefono"  formControlName="phone" required>
                 <mat-icon matSuffix>local_phone</mat-icon>
                 <mat-error class="error-message" *ngIf="formGroup.controls['phone'].hasError('required')">Campo  obbligatorio</mat-error>
                 <mat-error class="error-message" *ngIf="formGroup.controls['phone'].hasError('numericOnly')">Lettere non permesse</mat-error>
@@ -52,7 +52,7 @@
                 <mat-error class="error-message" *ngIf="formGroup.controls['gender'].hasError('required')">Campo obbligatorio</mat-error>
             </mat-form-field>
             <mat-form-field class="col-md-6">
-                <input matInput class="dialog-input form-control" type="text" placeholder="Numero di Carta ENS" formControlName="card_number">
+                <input matInput type="text" placeholder="Numero di Carta ENS" formControlName="card_number">
                 <mat-icon matSuffix>card_membership</mat-icon>
             </mat-form-field>
         </div>
