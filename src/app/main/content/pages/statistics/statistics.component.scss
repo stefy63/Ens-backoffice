@@ -2,6 +2,7 @@
   .container {
     display: flex;
     flex-direction: column;
+    overflow-x: scroll;
     mat-card {
       margin: 10px;
       .time-choose {
@@ -14,34 +15,105 @@
         justify-content: center;
         mat-card-title {
           font-size: 3rem;
-          font-weight: 500;
+          font-weight: bold;
         }
       }
 
       mat-form-field {
         margin-right: 15px;
       }
-      .overview-content {
-        display: flex;
-        flex-direction: row;
-        justify-content: space-around;
+    }
+      .overview-channel {
+        .overview-number {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+
+          .chat {
+            .card-left {
+              background-color: #d03a31;
+            }
+            .card-title {
+              color: #d03a31;
+            }
+          }
+
+          .sms {
+            .card-left {
+              background-color: #e58600;
+            }
+            .card-title {
+              color: #e58600;
+            }
+          }
+
+          .mail {
+            .card-left {
+              background-color: #145936;
+            }
+            .card-title {
+              color: #145936;
+            }
+          }
+
+          .videochat {
+            .card-left {
+              background-color:  #1e4c9c;
+            }
+            .card-title {
+              color: #1e4c9c;
+            }
+          }
+
+          .telegram {
+            .card-left {
+              background-color: #4fa7e4;
+              padding-top: 25px;
+              span {
+                width: 20%;
+                font-size: 3rem;
+                color: white;
+                padding: 13px;
+              }
+            }
+            .card-title {
+              color: #4fa7e4;
+            }
+          }
+
+        }
+        .overview-chart {
+          display: grid;
+          height: 35vh;
+          padding: 20px;
+        }
       }
+
       .fuse-card {
         display: flex;
         flex-direction: row;
-        justify-content: space-around;
         min-width: 150px;
         .card-left {
+          margin-right: 10px;
+          padding-top: 15px;
           mat-icon {
             width: 20%;
-            font-size: 5rem;
+            font-size: 4rem;
+            color: white;
+            padding: 10px 13px 10px 10px;
           }
         }
         .card-right {
-          .card-title {}
-          .card-result {}
+          .card-title {
+            font-size: 1rem;
+            font-weight: bold;
+            text-align-last: center;
+          }
+          .card-result {
+            font-size: 3rem;
+            font-weight: bold;
+          }
         }
       }
     }
-  }
 }

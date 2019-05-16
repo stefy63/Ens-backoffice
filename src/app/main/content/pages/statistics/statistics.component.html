@@ -1,4 +1,4 @@
-<div class="container" fusePerfectScrollbar>
+<div class="container" >
   <!-- TIME CHOOSE -->
   <mat-card>
       <mat-card-header>
@@ -31,10 +31,11 @@
         <mat-card-title>Overview Canali di Comunicazione - Tot. Ticket</mat-card-title>
       </mat-card-header>
 
-      <div class="overview-content">
+      <div class="overview-number">
+        <!-- CARDS -->
 
         <mat-card-content class="overview-card">
-          <div class="fuse-card">
+          <div class="fuse-card chat">
             <div class="card-left">
               <mat-icon>forum</mat-icon>
             </div>
@@ -43,77 +44,104 @@
                 Chat
               </div>
               <div class="card-result">
-                  1523
+                {{(sumServices)?sumServices.CHAT.value:''}}
               </div>
             </div>
           </div>
         </mat-card-content>
 
         <mat-card-content class="overview-card">
-            <div class="fuse-card">
+            <div class="fuse-card sms">
               <div class="card-left">
-                <mat-icon>forum</mat-icon>
+                <mat-icon>textsms</mat-icon>
               </div>
               <div class="card-right">
                 <div class="card-title">
-                  Chat
+                  SMS
                 </div>
                 <div class="card-result">
-                    1523
+                  {{(sumServices)?sumServices.SMS.value:''}}
                 </div>
               </div>
             </div>
           </mat-card-content>
 
         <mat-card-content class="overview-card">
-            <div class="fuse-card">
+            <div class="fuse-card mail">
               <div class="card-left">
-                <mat-icon>forum</mat-icon>
+                <mat-icon>email</mat-icon>
               </div>
               <div class="card-right">
                 <div class="card-title">
-                  Chat
+                  E-mail
                 </div>
                 <div class="card-result">
-                    1523
+                  {{(sumServices)?sumServices.MAIL.value:''}}
                 </div>
               </div>
             </div>
           </mat-card-content>
 
         <mat-card-content class="overview-card">
-            <div class="fuse-card">
+            <div class="fuse-card videochat">
               <div class="card-left">
-                <mat-icon>forum</mat-icon>
+                <mat-icon>videocam</mat-icon>
               </div>
               <div class="card-right">
                 <div class="card-title">
-                  Chat
+                  Video Chat
                 </div>
                 <div class="card-result">
-                    1523
+                  {{(sumServices)?sumServices.VIDEOCHAT.value:''}}
                 </div>
               </div>
             </div>
           </mat-card-content>
 
         <mat-card-content class="overview-card">
-            <div class="fuse-card">
+            <div class="fuse-card telegram">
               <div class="card-left">
-                <mat-icon>forum</mat-icon>
+                <span class="icon-ermes-telegram"></span>
               </div>
               <div class="card-right">
                 <div class="card-title">
-                  Chat
+                  TELEGRAM
                 </div>
                 <div class="card-result">
-                    1523
+                  {{(sumServices)?sumServices.TELEGRAM.value:''}}
                 </div>
               </div>
             </div>
           </mat-card-content>
 
-        </div>
+          <!-- <mat-card-content class="overview-card">
+            <ngx-charts-number-card
+              [view]="view"
+              [scheme]="colorScheme"
+              [results]="sumServices"
+              >
+            </ngx-charts-number-card>
+          </mat-card-content> -->
+
+          <!-- GRAPHICS -->
+      </div>
+      <div class="overview-chart">
+
+        <ngx-charts-line-chart
+          [scheme]="colorScheme"
+          [results]="sumMonthAndServices"
+          [gradient]="gradient"
+          [xAxis]="showXAxis"
+          [yAxis]="showYAxis"
+          [legend]="showLegend"
+          [showXAxisLabel]="showXAxisLabel"
+          [showYAxisLabel]="showYAxisLabel"
+          [xAxisLabel]="xAxisLabel"
+          [yAxisLabel]="yAxisLabel"
+          [autoScale]="autoScale"
+        ></ngx-charts-line-chart>
+
+      </div>
 
   </mat-card>
 
@@ -123,7 +151,19 @@
         <mat-card-title>Canali Soddisfatti da ciascuna sede</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-          CONTENUTO
+          <div class="channel-office-content">
+              <ngx-charts-pie-chart
+                [view]="view"
+                [scheme]="colorScheme"
+                [results]="single"
+                [legend]="showLegend"
+                [explodeSlices]="explodeSlices"
+                [labels]="showLabels"
+                [doughnut]="doughnut"
+                [gradient]="gradient"
+                >
+            </ngx-charts-pie-chart>
+          </div>
       </mat-card-content>
   </mat-card>
 

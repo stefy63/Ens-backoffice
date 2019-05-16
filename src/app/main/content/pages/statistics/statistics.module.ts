@@ -7,6 +7,10 @@ import { IsOperatorGuard } from '../../../../guard/is-operator.guard';
 import { SharedModule } from '../../../../core/modules/shared.module';
 import { SimpleNotificationsModule, NotificationsService } from 'angular2-notifications';
 import { ReactiveFormsModule } from '@angular/forms';
+import { DataAggregationsService } from '../../../services/helper/data-aggregations.service';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {  NgxChartsModule } from '@swimlane/ngx-charts';
 
 const routes: Routes = [
   {
@@ -22,7 +26,10 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SimpleNotificationsModule,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    NgxChartsModule
   ],
   declarations: [
     StatisticsComponent
@@ -34,6 +41,7 @@ const routes: Routes = [
   ],
   providers: [
     NotificationsService,
+    DataAggregationsService
   ]
 })
 export class StatisticsModule { }
