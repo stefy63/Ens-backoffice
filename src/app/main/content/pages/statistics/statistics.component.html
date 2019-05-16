@@ -150,21 +150,22 @@
       <mat-card-header>
         <mat-card-title>Canali Soddisfatti da ciascuna sede</mat-card-title>
       </mat-card-header>
-      <mat-card-content>
-          <div class="channel-office-content">
-              <ngx-charts-pie-chart
-                [view]="view"
-                [scheme]="colorScheme"
-                [results]="single"
-                [legend]="showLegend"
-                [explodeSlices]="explodeSlices"
-                [labels]="showLabels"
-                [doughnut]="doughnut"
-                [gradient]="gradient"
-                >
-            </ngx-charts-pie-chart>
+      <div class="channel-office-content">
+          <div *ngFor="let item of sumOfficeAndServices" class="channel-pie-content">
+            <h1 class="channel-pie-title">{{item.name}}</h1>
+            <h2 class="channel-pie-title">Tot. Ticket</h2>
+            <h2 class="channel-pie-title">{{sumPieTicket(item)}}</h2>
+            <ngx-charts-pie-chart
+              [scheme]="colorScheme"
+              [results]="item.series"
+              [legend]="showLegend"
+              [explodeSlices]="explodeSlices"
+              [labels]="showLabels"
+              [doughnut]="doughnut"
+              [gradient]="gradient"
+            ></ngx-charts-pie-chart>
           </div>
-      </mat-card-content>
+      </div>
   </mat-card>
 
   <!-- DISTRIBUTION OFFICE -->

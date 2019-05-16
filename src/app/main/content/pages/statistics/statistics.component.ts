@@ -8,6 +8,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MY_FORMATS } from '../../../../type/date-format';
 import { DateValidator } from '../../../services/MaterialValidator/DateValidator';
 import { DataAggregationsService } from '../../../services/helper/data-aggregations.service';
+import { sumBy, map} from 'lodash';
 
 @Component({
   selector: 'app-statistics',
@@ -40,6 +41,10 @@ export class StatisticsComponent implements OnInit {
   yAxisLabel = 'Servizi';
   timeline = true;
   autoScale = true;
+  // pie
+  showLabels = true;
+  explodeSlices = false;
+  doughnut = false;
 
   colorScheme = {
     domain: ['#d03a31', '#e58600', '#145936', '#4fa7e4', '#1e4c9c']
@@ -79,6 +84,11 @@ export class StatisticsComponent implements OnInit {
         console.log(data);
         this.spinner.hide();
       });
+  }
+
+
+  sumPieTicket(item) {
+    return sumBy(item.series, (channel) => parseInt(channel.value)).toString();
   }
 
 

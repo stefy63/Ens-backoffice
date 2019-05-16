@@ -66,7 +66,18 @@ export class DataAggregationsService {
           const retSumByService = this.sumByServices(values);
           return {
             'name': `${values[0].ticket_office_name}`,
-            'value': map(retSumByService, val => val.value)[0]
+            'series': map(retSumByService, item => {
+              return {
+                'name': item.name,
+                'value': item.value
+              }
+            })
+          }
+        })
+        .map((item, key) => {
+          return {
+            'name': key,
+            'series': item.series
           }
         })
         .value();
