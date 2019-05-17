@@ -93,13 +93,22 @@
       .channel-office {
         .channel-office-content{
           display: flex;
-          // flex-direction: row;
           flex-wrap: wrap;
+          // justify-content: space-around;
           height: -webkit-fill-available;
           .channel-pie-content {
-            width: 300px;
-            height: 200px;
+            width: 33%;
+            height: 250px;
+            p {
+              margin: 0;
+              padding: 0;
+            }
             .channel-pie-title {
+              text-align: center;
+              font-weight: bold;
+              font-size: 3rem;
+            }
+            .channel-pie-subtitle {
               text-align: center;
               font-weight: bold;
             }

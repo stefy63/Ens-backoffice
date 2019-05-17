@@ -8,7 +8,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MY_FORMATS } from '../../../../type/date-format';
 import { DateValidator } from '../../../services/MaterialValidator/DateValidator';
 import { DataAggregationsService } from '../../../services/helper/data-aggregations.service';
-import { sumBy, map} from 'lodash';
+import { sumBy } from 'lodash';
 
 @Component({
   selector: 'app-statistics',
@@ -29,7 +29,6 @@ export class StatisticsComponent implements OnInit {
   public sumServicesAndOffice = [];
   public sumServicesAndOperator = [];
 
-  view: any[] = [,400];
   // options
   showXAxis = true;
   showYAxis = true;
@@ -46,10 +45,24 @@ export class StatisticsComponent implements OnInit {
   explodeSlices = false;
   doughnut = false;
 
-  colorScheme = {
-    domain: ['#d03a31', '#e58600', '#145936', '#4fa7e4', '#1e4c9c']
-  };
-
+  customColorScheme = [
+    {
+      name: 'CHAT',
+      value: '#d03a31'
+    }, {
+      name: 'SMS',
+      value: '#e58600',
+    }, {
+      name: 'MAIL',
+      value: '#145936',
+    }, {
+      name: 'VIDEOCHAT',
+      value: '#1e4c9c'
+    },{
+      name: 'TELEGRAM',
+      value: '#4fa7e4',
+    }
+  ];
 
   constructor(
     private spinner: NgxSpinnerService,

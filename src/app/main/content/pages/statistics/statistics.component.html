@@ -128,7 +128,6 @@
       <div class="overview-chart">
 
         <ngx-charts-line-chart
-          [scheme]="colorScheme"
           [results]="sumMonthAndServices"
           [gradient]="gradient"
           [xAxis]="showXAxis"
@@ -139,6 +138,7 @@
           [xAxisLabel]="xAxisLabel"
           [yAxisLabel]="yAxisLabel"
           [autoScale]="autoScale"
+          [customColors]="customColorScheme"
         ></ngx-charts-line-chart>
 
       </div>
@@ -152,17 +152,17 @@
       </mat-card-header>
       <div class="channel-office-content">
           <div *ngFor="let item of sumOfficeAndServices" class="channel-pie-content">
-            <h1 class="channel-pie-title">{{item.name}}</h1>
-            <h2 class="channel-pie-title">Tot. Ticket</h2>
-            <h2 class="channel-pie-title">{{sumPieTicket(item)}}</h2>
+            <p class="channel-pie-title">{{item.name}}</p>
+            <p class="channel-pie-subtitle">Tot. Ticket</p>
+            <p class="channel-pie-subtitle">{{sumPieTicket(item)}}</p>
             <ngx-charts-pie-chart
-              [scheme]="colorScheme"
               [results]="item.series"
               [legend]="showLegend"
               [explodeSlices]="explodeSlices"
               [labels]="showLabels"
               [doughnut]="doughnut"
               [gradient]="gradient"
+              [customColors]="customColorScheme"
             ></ngx-charts-pie-chart>
           </div>
       </div>
