@@ -84,7 +84,8 @@ export class DialogProfileComponent implements OnInit {
 
   onYesClick(): void {
     const updatedModalData = assign({}, this.modalData, ...map(this.formGroup.controls, (control, key) => ({[key] : control.value})));
-    this.dialogRef.close(updatedModalData);
+    this.data.modalData.userdata = updatedModalData;
+    this.dialogRef.close(this.data.modalData);
   }
 
 }
