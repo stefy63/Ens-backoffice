@@ -8,7 +8,9 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MY_FORMATS } from '../../../../type/date-format';
 import { DateValidator } from '../../../services/MaterialValidator/DateValidator';
 import { DataAggregationsService } from '../../../services/helper/data-aggregations.service';
-import { sumBy } from 'lodash';
+import { sumBy, get } from 'lodash';
+import { ServiceColorEnum } from '../../../../enums/service-color.enum';
+import { ServiceNameEnum } from '../../../../enums/service-name.enum';
 
 @Component({
   selector: 'app-statistics',
@@ -45,7 +47,33 @@ export class StatisticsComponent implements OnInit {
   explodeSlices = false;
   doughnut = false;
 
-  customColorScheme = [
+
+  customColorSchemeOffice = [
+    {
+      name: 'PIEMONTE',
+      value: '#2b5d65',
+    }, {
+      name: 'TOSCANA',
+      value: '#7db1b0',
+    }, {
+      name: 'UMBRIA',
+      value: '#8c2765'
+    },{
+      name: 'ABRUZZO',
+      value: '#d16f2f',
+    }, {
+      name: 'CAMPANIA',
+      value: '#A69392',
+    }, {
+      name: 'BASILICATA',
+      value: '#7f1718'
+    },{
+      name: 'CALL CENTER',
+      value: '#28395F',
+    }
+  ];
+
+  customColorSchemeService = [
     {
       name: 'CHAT',
       value: '#d03a31'
@@ -102,6 +130,14 @@ export class StatisticsComponent implements OnInit {
 
   sumPieTicket(item) {
     return sumBy(item.series, (channel) => parseInt(channel.value)).toString();
+  }
+
+  getStyleColor(service: string) {
+    return get(ServiceColorEnum, service);
+  }
+
+  getServiceName(name: string) {
+    return get(ServiceNameEnum, name);
   }
 
 

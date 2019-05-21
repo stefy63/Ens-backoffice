@@ -65,7 +65,7 @@ export class DataAggregationsService {
         .mapValues(values => {
           const retSumByService = this.sumByServices(values);
           return {
-            'name': `${values[0].ticket_office_name}`,
+            'name': `${values[0].ticket_office_name.toUpperCase()}`,
             'series': map(retSumByService, item => {
               return {
                 'name': item.name,
@@ -76,7 +76,7 @@ export class DataAggregationsService {
         })
         .map((item, key) => {
           return {
-            'name': key,
+            'name': key.toUpperCase(),
             'series': item.series
           }
         })
@@ -120,7 +120,7 @@ export class DataAggregationsService {
                     .groupBy(item => item.ticket_office_name)
                     .mapValues(values => {
                       return {
-                        'name': values[0].ticket_office_name,
+                        'name': values[0].ticket_office_name.toUpperCase(),
                         'value': sumBy(values, (value) => parseInt(value.ticket_sub_total))
                       }
                     })
