@@ -8,7 +8,7 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MY_FORMATS } from '../../../../type/date-format';
 import { DateValidator } from '../../../services/MaterialValidator/DateValidator';
 import { DataAggregationsService } from '../../../services/helper/data-aggregations.service';
-import { sumBy, get } from 'lodash';
+import { sumBy, get, find } from 'lodash';
 import { ServiceColorEnum } from '../../../../enums/service-color.enum';
 import { ServiceNameEnum } from '../../../../enums/service-name.enum';
 
@@ -51,22 +51,22 @@ export class StatisticsComponent implements OnInit {
   customColorSchemeOffice = [
     {
       name: 'PIEMONTE',
-      value: '#2b5d65',
+      value: 'cornflowerblue',
     }, {
       name: 'TOSCANA',
-      value: '#7db1b0',
+      value: 'darkcyan',
     }, {
       name: 'UMBRIA',
-      value: '#8c2765'
+      value: 'mediumvioletred'
     },{
       name: 'ABRUZZO',
-      value: '#d16f2f',
+      value: 'gold',
     }, {
       name: 'CAMPANIA',
       value: '#A69392',
     }, {
       name: 'BASILICATA',
-      value: '#7f1718'
+      value: '#CC636F'
     },{
       name: 'CALL CENTER',
       value: '#28395F',
@@ -102,7 +102,6 @@ export class StatisticsComponent implements OnInit {
    }
 
    addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
-      console.log(`${type}: ${event.value}`);
       if(type === 'input' && moment(event.value).isValid() ) {
         this.getResult();
       }
@@ -117,12 +116,10 @@ export class StatisticsComponent implements OnInit {
     this.statisticsService.get({fromDate: this.fromDate.value, toDate: this.toDate.value})
       .subscribe(data => {
         this.sumServices = this.dataAggregationsService.sumByServices(data);
-        console.log('sumServices---> ', this.sumServices);
         this.sumMonthAndServices = this.dataAggregationsService.sumByMonthAndServices(data);
         this.sumOfficeAndServices = this.dataAggregationsService.sumByOfficeAndServices(data);
         this.sumServicesAndOffice = this.dataAggregationsService.sumByServicesAndOffice(data);
         this.sumServicesAndOperator = this.dataAggregationsService.sumByServicesAndOperator(data);
-        console.log(data);
         this.spinner.hide();
       });
   }
@@ -140,5 +137,12 @@ export class StatisticsComponent implements OnInit {
     return get(ServiceNameEnum, name);
   }
 
+  getServiceValue(items: any, service: string) {
+    return (find(items, {'name': service})) ? find(items, {'name': service}).value : 0;
+  }
+
+  getSumByOperator(items: any) {
+    return sumBy(items, (channel) => parseInt(channel.value)).toString();
+  }
 
 }

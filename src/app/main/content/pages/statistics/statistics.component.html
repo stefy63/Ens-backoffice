@@ -138,7 +138,7 @@
           [xAxisLabel]="xAxisLabel"
           [yAxisLabel]="yAxisLabel"
           [autoScale]="autoScale"
-          [customColors]="customColorScheme"
+          [customColors]="customColorSchemeService"
         ></ngx-charts-line-chart>
 
       </div>
@@ -195,7 +195,32 @@
         <mat-card-title>Operatori</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-          CONTENUTO
+          <table>
+            <thead>
+              <tr>
+                <td></td>
+                <td>Sede</td>
+                <td [ngStyle]="{'color': getStyleColor('CHAT')}">{{getServiceName('CHAT')}}</td>
+                <td [ngStyle]="{'color': getStyleColor('SMS')}">{{getServiceName('SMS')}}</td>
+                <td [ngStyle]="{'color': getStyleColor('EMAIL')}">{{getServiceName('MAIL')}}</td>
+                <td [ngStyle]="{'color': getStyleColor('VIDEOCHAT')}">{{getServiceName('VIDEOCHAT')}}</td>
+                <td [ngStyle]="{'color': getStyleColor('TELEGRAM')}">{{getServiceName('TELEGRAM')}}</td>
+                <td>Totale</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr  *ngFor="let item of sumServicesAndOperator" >
+                  <td>{{item.name}}</td>
+                  <td>{{item.office}}</td>
+                  <td >{{getServiceValue(item.series, 'CHAT')}}</td>
+                  <td >{{getServiceValue(item.series, 'SMS')}}</td>
+                  <td >{{getServiceValue(item.series, 'MAIL')}}</td>
+                  <td >{{getServiceValue(item.series, 'VIDEOCHAT')}}</td>
+                  <td >{{getServiceValue(item.series, 'TELEGRAM')}}</td>
+                  <td>{{getSumByOperator(item.series)}}</td>
+              </tr>
+            </tbody>
+          </table>
       </mat-card-content>
   </mat-card>
 

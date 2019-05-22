@@ -117,7 +117,25 @@
         }
       }
 
+      .service-operator {
+        table {
+          width: 100%;
+          thead {
+            td {
+              font-size: 1.8rem;
+              font-weight: bold;
+              padding-bottom: 10px;
+            }
+          }
+          tbody {
+            td {
+              font-size: 1.5rem;
+              padding-bottom: 5px;
+            }
+          }
 
+        }
+      }
 
 
 

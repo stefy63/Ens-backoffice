@@ -6,22 +6,6 @@ import { validateBasis } from '@angular/flex-layout';
 @Injectable()
 export class DataAggregationsService {
 
-  private retSumByMonthAndService = [
-    {
-      'name': 'CHAT',
-      'series': [
-        {
-          'name': '2019/01',
-          'value': 8989898
-        }
-      ]
-    },
-    // .
-    // .
-    // .
-
-  ]
-
   constructor() { }
 
 
@@ -81,7 +65,6 @@ export class DataAggregationsService {
           }
         })
         .value();
-    console.log('sumByOfficeAndServices--->', result);
     return result;
   }
 
@@ -101,16 +84,33 @@ export class DataAggregationsService {
           }
         })
         .value();
-    console.log('sumByServicesAndOffice--->', result);
     return result;
   }
 
   sumByServicesAndOperator(data) {
     const result = chain(data)
-        .groupBy(item => `[${item.ticket_operator}] ${item.ticket_operator_surname} ${item.ticket_operator_name}`)
-        .mapValues(values => this.sumByServices(values))
+        .groupBy(item => item.ticket_operator)
+        .mapValues(values => {
+          const retSumByService = this.sumByServices(values);
+          return {
+            'name': `[${values[0].ticket_operator}] ${values[0].ticket_operator_surname} ${values[0].ticket_operator_name}`,
+            'office': values[0].ticket_office_name.toUpperCase(),
+            'series': map(retSumByService, item => {
+              return {
+                'name': item.name.toUpperCase(),
+                'value': item.value
+              }
+            })
+          }
+        })
+        .map((item) => {
+          return {
+            'name': item.name,
+            'office': item.office,
+            'series': item.series
+          }
+        })
         .value();
-    console.log('sumByServicesAndOperator--->', result);
     return result;
   }
 
