@@ -43,6 +43,7 @@ export class NavigationModel {
                         'type': 'item',
                         'icon': 'bar_chart',
                         'url': '/pages/statistics',
+                        'permission': ['statistics.view']
                     },
                 ],
             },

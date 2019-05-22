@@ -11,12 +11,14 @@ import { DataAggregationsService } from '../../../services/helper/data-aggregati
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {  NgxChartsModule } from '@swimlane/ngx-charts';
+import { HasPermissionGuard } from '../../../../guard/has-permission.guard';
 
 const routes: Routes = [
   {
       path     : 'pages/statistics',
-      canActivate: [AuthGuard, IsOperatorGuard],
-      component: StatisticsComponent
+      component: StatisticsComponent,
+      canActivate: [AuthGuard, IsOperatorGuard, HasPermissionGuard],
+      data: {roles: ['statistics.view']}
   }
 ];
 
