@@ -15,11 +15,12 @@ export class FuseNavVerticalItemComponent implements OnInit
     {
     }
 
-    public canActive(permission: string[]) {
-      if (!permission) {
-        return true;
+    public canActive(permission: string[] = undefined) {
+      let retVal = true;
+      if (!!permission) {
+        retVal = !!this.authService.hasPermission(permission);
       }
-      return !!this.authService.hasPermission(permission);
+      return retVal;
     }
 
 

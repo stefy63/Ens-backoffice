@@ -29,9 +29,13 @@ export class AuthService {
   public hasPermission(permissions: string[]): boolean {
     const user: IUser = this.storage.getItem('user');
     let retValue = false;
-    forEach(permissions, (permission) => {
-      retValue = !!find(user.role.permissions, {'action': permission});
-    });
+    if (!!user) {
+      forEach(permissions, (permission) => {
+        if(!!find(user.role.permissions, {'action': permission})) {
+          retValue = true;
+        }
+      });
+    }
     return retValue;
   }
 }
