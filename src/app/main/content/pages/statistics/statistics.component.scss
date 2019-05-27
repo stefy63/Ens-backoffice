@@ -28,6 +28,12 @@
           display: flex;
           flex-direction: row;
           justify-content: space-around;
+          .card-left {
+            padding-top: 5px;
+          }
+          .card-title {
+
+          }
 
           .chat {
             .card-left {
@@ -68,12 +74,12 @@
           .telegram {
             .card-left {
               background-color: #4fa7e4;
-              padding-top: 25px;
+              padding-top: 20px;
               span {
                 width: 20%;
-                font-size: 3rem;
+                font-size: 2.9rem;
                 color: white;
-                padding: 13px;
+                padding: 15px;
               }
             }
             .card-title {
