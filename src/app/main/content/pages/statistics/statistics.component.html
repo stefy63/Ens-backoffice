@@ -194,36 +194,70 @@
       <mat-card-header>
         <mat-card-title>Operatori</mat-card-title>
       </mat-card-header>
+
       <mat-card-content>
-          <table>
-            <thead>
-              <tr>
-                <td></td>
-                <td>Sede</td>
-                <td [ngStyle]="{'color': getStyleColor('CHAT')}">{{getServiceName('CHAT')}}</td>
-                <td [ngStyle]="{'color': getStyleColor('SMS')}">{{getServiceName('SMS')}}</td>
-                <td [ngStyle]="{'color': getStyleColor('EMAIL')}">{{getServiceName('MAIL')}}</td>
-                <td [ngStyle]="{'color': getStyleColor('VIDEOCHAT')}">{{getServiceName('VIDEOCHAT')}}</td>
-                <td [ngStyle]="{'color': getStyleColor('TELEGRAM')}">{{getServiceName('TELEGRAM')}}</td>
-                <td>Totale</td>
-              </tr>
-            </thead>
-            <tbody>
-              <tr  *ngFor="let item of sumServicesAndOperator" >
-                  <td>{{item.name}}</td>
-                  <td>{{item.office}}</td>
-                  <td >{{getServiceValue(item.series, 'CHAT')}}</td>
-                  <td >{{getServiceValue(item.series, 'SMS')}}</td>
-                  <td >{{getServiceValue(item.series, 'MAIL')}}</td>
-                  <td >{{getServiceValue(item.series, 'VIDEOCHAT')}}</td>
-                  <td >{{getServiceValue(item.series, 'TELEGRAM')}}</td>
-                  <td>{{getSumByOperator(item.series)}}</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="filter-header">
+          <mat-form-field>
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+          </mat-form-field>
+        </div>
+
+        <mat-table #table [dataSource]="dataSource" matSort class="col-12">
+
+          <!-- name Column -->
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef  mat-sort-header class="col-3">Nome</mat-header-cell>
+            <mat-cell *matCellDef="let element" class="col-3"> {{element.name}} </mat-cell>
+          </ng-container>
+
+          <!-- Office Column -->
+          <ng-container matColumnDef="office" >
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="col-2"> Sede </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="col-2"> {{element.office}} </mat-cell>
+          </ng-container>
+
+          <!-- CHAT Column -->
+          <ng-container matColumnDef="CHAT">
+            <mat-header-cell *matHeaderCellDef [ngStyle]="{'color': getStyleColor('CHAT')}" mat-sort-header class="col-1"> {{getServiceName('CHAT')}}  </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="col-1"> {{getServiceValue(element.series, 'CHAT')}} </mat-cell>
+          </ng-container>
+
+          <!-- SMS Column -->
+          <ng-container matColumnDef="SMS">
+            <mat-header-cell *matHeaderCellDef [ngStyle]="{'color': getStyleColor('SMS')}" mat-sort-header class="col-1"> {{getServiceName('SMS')}}  </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="col-1"> {{getServiceValue(element.series, 'SMS')}}</mat-cell>
+          </ng-container>
+
+          <!-- MAIL Column -->
+          <ng-container matColumnDef="MAIL">
+            <mat-header-cell *matHeaderCellDef [ngStyle]="{'color': getStyleColor('MAIL')}" mat-sort-header class="col-1"> {{getServiceName('MAIL')}}  </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="col-1"> {{getServiceValue(element.series, 'MAIL')}} </mat-cell>
+          </ng-container>
+
+          <!-- VIDEOCHAT Column -->
+          <ng-container matColumnDef="VIDEOCHAT">
+            <mat-header-cell *matHeaderCellDef [ngStyle]="{'color': getStyleColor('VIDEOCHAT')}" mat-sort-header class="col-1"> {{getServiceName('VIDEOCHAT')}}  </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="col-1"> {{getServiceValue(element.series, 'VIDEOCHAT')}} </mat-cell>
+          </ng-container>
+
+          <!-- TELEGRAM Column -->
+          <ng-container matColumnDef="TELEGRAM">
+            <mat-header-cell *matHeaderCellDef [ngStyle]="{'color': getStyleColor('TELEGRAM')}" mat-sort-header class="col-2"> {{getServiceName('TELEGRAM')}}  </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="col-2"> {{getServiceValue(element.series, 'TELEGRAM')}} </mat-cell>
+          </ng-container>
+
+          <!-- TOTALE Column -->
+          <ng-container matColumnDef="TOTALE">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="col-1"> Totale  </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="col-1"> {{getSumByOperator(element.series)}} </mat-cell>
+          </ng-container>
+
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
       </mat-card-content>
   </mat-card>
-
 
 
 

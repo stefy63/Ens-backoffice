@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import * as moment from 'moment';
 import { ApiStatisticsService } from '../../../services/api/api-statistics.service';
-import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS, MatDatepickerInputEvent } from '@angular/material';
+import { DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS, MatDatepickerInputEvent, MatTableDataSource, MatSort } from '@angular/material';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { MY_FORMATS } from '../../../../type/date-format';
 import { DateValidator } from '../../../services/MaterialValidator/DateValidator';
@@ -11,6 +11,8 @@ import { DataAggregationsService } from '../../../services/helper/data-aggregati
 import { sumBy, get, find } from 'lodash';
 import { ServiceColorEnum } from '../../../../enums/service-color.enum';
 import { ServiceNameEnum } from '../../../../enums/service-name.enum';
+import { iElement } from '../../../../interfaces/i-sum-service-operator';
+
 
 @Component({
   selector: 'app-statistics',
@@ -29,7 +31,9 @@ export class StatisticsComponent implements OnInit {
   public sumMonthAndServices = [];
   public sumOfficeAndServices = [];
   public sumServicesAndOffice = [];
-  public sumServicesAndOperator = [];
+
+  public dataSource: MatTableDataSource<iElement>;
+  @ViewChild(MatSort) sort: MatSort;
 
   // options
   showXAxis = true;
@@ -92,6 +96,10 @@ export class StatisticsComponent implements OnInit {
     }
   ];
 
+
+  displayedColumns = ['name', 'office', 'CHAT', 'SMS', 'MAIL', 'VIDEOCHAT', 'TELEGRAM', 'TOTALE'];
+
+
   constructor(
     private spinner: NgxSpinnerService,
     private statisticsService: ApiStatisticsService,
@@ -110,6 +118,9 @@ export class StatisticsComponent implements OnInit {
   ngOnInit() {
     this.getResult();
   }
+  // ngAfterViewInit() {
+  //   this.dataSource.sort = this.sort;
+  // }
 
   getResult() {
     this.spinner.show();
@@ -119,7 +130,8 @@ export class StatisticsComponent implements OnInit {
         this.sumMonthAndServices = this.dataAggregationsService.sumByMonthAndServices(data);
         this.sumOfficeAndServices = this.dataAggregationsService.sumByOfficeAndServices(data);
         this.sumServicesAndOffice = this.dataAggregationsService.sumByServicesAndOffice(data);
-        this.sumServicesAndOperator = this.dataAggregationsService.sumByServicesAndOperator(data);
+        this.dataSource  = new MatTableDataSource(this.dataAggregationsService.sumByServicesAndOperator(data));
+        this.dataSource.sort = this.sort;
         this.spinner.hide();
       });
   }
@@ -143,6 +155,12 @@ export class StatisticsComponent implements OnInit {
 
   getSumByOperator(items: any) {
     return sumBy(items, (channel) => parseInt(channel.value)).toString();
+  }
+
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    filterValue = filterValue.toLowerCase(); // MatTableDataSource defaults to lowercase matches
+    this.dataSource.filter = filterValue;
   }
 
 }
