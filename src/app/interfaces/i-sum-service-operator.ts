@@ -1,10 +1,11 @@
 export interface iSeries {
   name: string;
+  value: number;
 }
 
 export interface iElement {
   name: string;
-  office: number;
+  office: string;
   series: iSeries[];
 }
 

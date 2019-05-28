@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Services } from '../../../enums/ticket-services.enum';
-import { chain, groupBy, sumBy, mapValues, map} from 'lodash';
-import { validateBasis } from '@angular/flex-layout';
+import { chain, sumBy, map} from 'lodash';
 
 @Injectable()
 export class DataAggregationsService {
@@ -98,7 +96,7 @@ export class DataAggregationsService {
             'series': map(retSumByService, item => {
               return {
                 'name': item.name.toUpperCase(),
-                'value': item.value
+                'value': parseInt(item.value)
               }
             })
           }
@@ -127,7 +125,7 @@ export class DataAggregationsService {
                     .map(item => {
                       return {
                         'name': item.name,
-                        'value': item.value
+                        'value': parseInt(item.value)
                       }
                     })
                     .value();
@@ -147,7 +145,7 @@ export class DataAggregationsService {
                     .map(item => {
                       return {
                         'name': item.name,
-                        'value': item.value
+                        'value': parseInt(item.value)
                       }
                     })
                     .value();

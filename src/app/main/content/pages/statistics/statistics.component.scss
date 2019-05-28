@@ -1,10 +1,13 @@
 :host {
   .container {
+    max-width: 100%;
     display: flex;
     flex-direction: column;
     overflow-x: scroll;
     mat-card {
       margin: 10px;
+      border-radius: 15px;
+      box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.6);
       .time-choose {
         display: flex;
         flex-direction: row;
@@ -31,10 +34,6 @@
           .card-left {
             padding-top: 5px;
           }
-          .card-title {
-
-          }
-
           .chat {
             .card-left {
               background-color: #d03a31;
@@ -101,7 +100,6 @@
         .channel-office-content{
           display: flex;
           flex-wrap: wrap;
-          // justify-content: space-around;
           height: -webkit-fill-available;
           .channel-pie-content {
             width: 33%;
@@ -138,15 +136,49 @@
           font-size: 1.5rem;
           padding-bottom: 5px;
         }
+        .mat-row {
+          border-bottom-width: 0;
+          border-bottom-style: none;
+          min-height: 0;
+          padding: 0;
+        }
+        .mat-header-row {
+          margin-bottom: 20px;
+        }
+        .table__totale {
+          display: flex;
+          justify-content: flex-end;
+        }
+
+        table {
+          width: 100%;
+          thead {
+            td {
+              font-size: 1.8rem;
+              font-weight: bold;
+              padding-bottom: 10px;
+            }
+          }
+          tbody {
+            td {
+              font-size: 1.5rem;
+              padding-bottom: 5px;
+            }
+          }
+
+        }
       }
 
       .fuse-card {
         display: flex;
         flex-direction: row;
-        min-width: 150px;
+        min-width: 13vw;
+        border-radius: 8px;
+        box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.6);
         .card-left {
           margin-right: 10px;
           padding-top: 15px;
+          border-radius: 8px 0 0 8px;
           mat-icon {
             width: 20%;
             font-size: 4rem;
