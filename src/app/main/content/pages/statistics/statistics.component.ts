@@ -27,7 +27,7 @@ export class StatisticsComponent implements OnInit {
 
   public fromDate: FormControl;
   public toDate: FormControl;
-  public sumServices;
+  public sumServices = [];
   public sumMonthAndServices = [];
   public sumOfficeAndServices = [];
   public sumServicesAndOffice = [];

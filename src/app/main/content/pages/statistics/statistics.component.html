@@ -44,7 +44,7 @@
                 Chat
               </div>
               <div class="card-result">
-                {{(sumServices)?sumServices.CHAT.value:''}}
+                {{(sumServices && sumServices.CHAT)?sumServices.CHAT.value:0}}
               </div>
             </div>
           </div>
@@ -60,7 +60,7 @@
                   SMS
                 </div>
                 <div class="card-result">
-                  {{(sumServices)?sumServices.SMS.value:''}}
+                  {{(sumServices && sumServices.SMS)?sumServices.SMS.value:0}}
                 </div>
               </div>
             </div>
@@ -76,7 +76,7 @@
                   E-mail
                 </div>
                 <div class="card-result">
-                  {{(sumServices)?sumServices.MAIL.value:''}}
+                  {{(sumServices && sumServices.MAIL)?sumServices.MAIL.value:0}}
                 </div>
               </div>
             </div>
@@ -92,7 +92,7 @@
                   Video Chat
                 </div>
                 <div class="card-result">
-                  {{(sumServices)?sumServices.VIDEOCHAT.value:''}}
+                  {{(sumServices && sumServices.VIDEOCHAT)?sumServices.VIDEOCHAT.value:0}}
                 </div>
               </div>
             </div>
@@ -108,7 +108,7 @@
                 TELEGRAM
               </div>
               <div class="card-result">
-                {{(sumServices)?sumServices.TELEGRAM.value:''}}
+                {{(sumServices && sumServices.TELEGRAM)?sumServices.TELEGRAM.value:0}}
               </div>
             </div>
           </div>
