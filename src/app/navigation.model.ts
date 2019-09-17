@@ -45,6 +45,14 @@ export class NavigationModel {
                         'url': '/pages/statistics',
                         'permission': ['statistics.view']
                     },
+                    {
+                        'id': 'operator',
+                        'title': 'Operatori',
+                        'type': 'item',
+                        'icon': 'cloud_download',
+                        'url': '/pages/operator',
+                        'permission': ['operator.export']
+                    },
                 ],
             },
         ];

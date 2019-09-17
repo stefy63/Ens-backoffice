@@ -1,5 +1,5 @@
+import { OperatorModule } from './operator/operator.module';
 import { NgModule } from '@angular/core';
-
 import { Login2Module } from './authentication/login-2/login-2.module';
 import { DashboardModule } from './dashboard/dashboard.module';
 import {TicketDetailModule} from './ticket-detail/ticket-detail.module';
@@ -14,7 +14,8 @@ import { StatisticsModule } from './statistics/statistics.module';
       TicketDetailModule,
       SendingSmsModule,
       UserManagerModule,
-      StatisticsModule
+      StatisticsModule,
+      OperatorModule
     ],
     declarations: []
 })
