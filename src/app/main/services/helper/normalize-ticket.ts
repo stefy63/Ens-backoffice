@@ -28,6 +28,7 @@ export class NormalizeTicket {
                 user_name: (item.user) ? item.user.userdata.name : (item.userUnknown) ? 'UNKNOWN' : '',
                 // tslint:disable-next-line:max-line-length
                 user_surname: (item.user) ? item.user.userdata.surname : (item.userUnknown) ? (item.userUnknown.email) ? `(${item.userUnknown.email})` : `(${item.userUnknown.phone})` : '',
+                user_privacy: (item.user) ? item.user.userdata.privacyaccept : 0,
                 category: (item.category) ? item.category.category : 'UNCATEGORIZED',
                 date_time: item.date_time, // moment(item.date_time).format('DD/MM/YYYY HH:mm'),
                 historys: item.historys,
