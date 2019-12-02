@@ -1,3 +1,4 @@
+import { environment } from './../../../../../../environments/environment.prod';
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import { Observable } from 'rxjs/Observable';
@@ -23,7 +24,7 @@ export class TicketRedirectVideochatComponent implements OnInit, OnDestroy {
     this.ticketSubscription = this.data.subscribe((item: ITicket) => {
       this.ticket = item;
       this.videochatRunnable = !_.includes([Status.REFUSED, Status.CLOSED], this.ticket.id_status);
-      this.showRoom = 'https://appear.in/comunicaens_op' + item.id_operator;
+      this.showRoom = environment.videoChat_service_url + item.id_operator;
     }, (err) => {
       console.error(err);
     });
