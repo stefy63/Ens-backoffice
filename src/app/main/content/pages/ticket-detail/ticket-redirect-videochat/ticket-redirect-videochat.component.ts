@@ -1,4 +1,4 @@
-import { environment } from './../../../../../../environments/environment.prod';
+import { environment } from './../../../../../../environments/environment';
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import { Observable } from 'rxjs/Observable';
