@@ -139,8 +139,8 @@
       <mat-card-header>
         <mat-card-title>Canali Soddisfatti da ciascuna sede</mat-card-title>
       </mat-card-header>
-      <div class="channel-office-content">
-          <div *ngFor="let item of sumOfficeAndServices" class="channel-pie-content">
+      <div class="row channel-office-content">
+          <div *ngFor="let item of sumOfficeAndServices" class="col-4 channel-pie-content">
             <p class="channel-pie-title">{{item.name}}</p>
             <p class="channel-pie-subtitle">Tot. Ticket</p>
             <p class="channel-pie-subtitle">{{sumPieTicket(item)}}</p>
@@ -162,8 +162,8 @@
       <mat-card-header>
         <mat-card-title>Distribuzione servizio per sedi</mat-card-title>
       </mat-card-header>
-      <div class="channel-office-content">
-        <div *ngFor="let item of sumServicesAndOffice" class="channel-pie-content">
+      <div class="row channel-office-content">
+        <div *ngFor="let item of sumServicesAndOffice" class="col-4 channel-pie-content">
           <p class="channel-pie-title" [ngStyle]="{'color': getStyleColor(item.name)}" >{{getServiceName(item.name)}}</p>
           <ngx-charts-pie-chart
             [results]="item.series"
