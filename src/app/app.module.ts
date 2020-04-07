@@ -28,6 +28,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RollbarErrorHandler } from './main/services/errors/RollbarErrorHandler.service';
 import { ApiTicketReportService } from './main/services/api/api-ticket-report.service';
 import { ExportmanagerComponent } from '../app/main/content/pages/exportmanager/exportmanager.component';
+import { ApiStatisticsService } from './main/services/api/api-statistics.service';
+import { HasPermissionGuard } from './guard/has-permission.guard';
 
 const appRoutes: Routes = [
     {
@@ -86,11 +88,13 @@ const config: SocketIoConfig = { url: environment.ws_url + wssPort, options: opt
         ApiLoginService,
         AuthService,
         AuthGuard,
+        HasPermissionGuard,
         IsOperatorGuard,
         LocalStorageService,
         ApiTicketHistoryService,
         { provide: ErrorHandler, useClass: RollbarErrorHandler },
-        ApiTicketReportService
+        ApiTicketReportService,
+        ApiStatisticsService
     ],
     bootstrap: [
         AppComponent

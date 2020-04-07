@@ -1,4 +1,4 @@
-<a class="nav-link" *ngIf="item.url" [routerLink]="[item.url]" routerLinkActive="active"
+<a class="nav-link" *ngIf="item.url && canActive(item.permission)" [routerLink]="[item.url]" routerLinkActive="active"
    [routerLinkActiveOptions]="{exact: item.exactMatch || false}" matRipple>
     <mat-icon class="nav-link-icon" *ngIf="item.icon">{{item.icon}}</mat-icon>
     <span class="nav-link-title">{{item.title}}</span>
@@ -8,7 +8,7 @@
     </span>
 </a>
 
-<span class="nav-link" *ngIf="item.function" (click)="item.function()" matRipple>
+<span class="nav-link" *ngIf="item.function && canActive(item.permission)" (click)="item.function()" matRipple>
     <mat-icon class="nav-link-icon" *ngIf="item.icon">{{item.icon}}</mat-icon>
     <span class="nav-link-title">{{item.title}}</span>
     <span class="nav-link-badge" *ngIf="item.badge"

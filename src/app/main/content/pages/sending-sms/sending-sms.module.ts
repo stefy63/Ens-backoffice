@@ -27,7 +27,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SimpleNotificationsModule,
     ReactiveFormsModule,
-    SharedModule
   ],
   declarations: [
     SendingSmsFormComponent,

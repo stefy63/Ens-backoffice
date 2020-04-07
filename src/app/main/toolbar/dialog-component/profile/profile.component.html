@@ -8,7 +8,7 @@
     <mat-dialog-content>
         <div class="row mb-3">
             <mat-form-field class="col-md-6">
-                <input matInput class="dialog-input form-control" type="text" formControlName="name" [(ngModel)]="modalData.userdata.name"
+                <input matInput type="text" formControlName="name" [(ngModel)]="modalData.userdata.name"
                     required>
                 <mat-placeholder>Nome</mat-placeholder>
                 <mat-icon matSuffix>face</mat-icon>
@@ -18,7 +18,7 @@
                     non permessi</mat-error>
             </mat-form-field>
             <mat-form-field class="col-md-6">
-                <input matInput class="dialog-input form-control" type="text" formControlName="surname" [(ngModel)]="modalData.userdata.surname"
+                <input matInput type="text" formControlName="surname" [(ngModel)]="modalData.userdata.surname"
                     required>
                 <mat-placeholder>Cognome</mat-placeholder>
                 <mat-icon matSuffix>face</mat-icon>
@@ -30,7 +30,7 @@
         </div>
         <div class="row mb-3">
             <mat-form-field class="col-md-4">
-                <input matInput class="dialog-input form-control" [matDatepicker]="picker" formControlName="born_date"
+                <input matInput [matDatepicker]="picker" formControlName="born_date"
                     [(ngModel)]="modalData.userdata.born_date">
                 <mat-placeholder>Data di Nascita*</mat-placeholder>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
@@ -41,7 +41,7 @@
                     valida, usare (GG/MM/YYYY)</mat-error>
             </mat-form-field>
             <mat-form-field class="col-md-4">
-                <input matInput class="dialog-input form-control" type="text" formControlName="born_city" [(ngModel)]="modalData.userdata.born_city"
+                <input matInput type="text" formControlName="born_city" [(ngModel)]="modalData.userdata.born_city"
                     required>
                 <mat-placeholder>Citta di Nascita</mat-placeholder>
                 <mat-icon matSuffix>location_city</mat-icon>
@@ -63,7 +63,7 @@
         </div>
         <div class="row mb-3">
             <mat-form-field class="col-md-6">
-                <input matInput class="dialog-input form-control" type="text" formControlName="address" [(ngModel)]="modalData.userdata.address"
+                <input matInput type="text" formControlName="address" [(ngModel)]="modalData.userdata.address"
                     required>
                 <mat-placeholder>Indirizzo (Via, Numero)</mat-placeholder>
                 <mat-icon matSuffix>home</mat-icon>
@@ -71,7 +71,7 @@
                     obbligatorio</mat-error>
             </mat-form-field>
             <mat-form-field class="col-md-3">
-                <input matInput class="dialog-input form-control" type="text" formControlName="city" [(ngModel)]="modalData.userdata.city"
+                <input matInput type="text" formControlName="city" [(ngModel)]="modalData.userdata.city"
                     required>
                 <mat-placeholder>Città</mat-placeholder>
                 <mat-icon matSuffix>location_city</mat-icon>
@@ -103,7 +103,7 @@
                     obbligatorio</mat-error>
             </mat-form-field>
             <mat-form-field class="col-md-4">
-                <input matInput class="dialog-input form-control" type="text" formControlName="phone" [(ngModel)]="modalData.userdata.phone"
+                <input matInput type="text" formControlName="phone" [(ngModel)]="modalData.userdata.phone"
                     required>
                 <mat-placeholder>Telefono</mat-placeholder>
                 <mat-icon matSuffix>local_phone</mat-icon>
@@ -113,14 +113,14 @@
                     non permesse</mat-error>
             </mat-form-field>
             <mat-form-field class="col-md-4">
-                <input matInput class="dialog-input form-control" type="text" formControlName="card_number" [(ngModel)]="modalData.userdata.card_number">
+                <input matInput type="text" formControlName="card_number" [(ngModel)]="modalData.userdata.card_number">
                 <mat-placeholder>Numero di Carta ENS</mat-placeholder>
                 <mat-icon matSuffix>desktop_mac</mat-icon>
             </mat-form-field>
         </div>
         <div class="row mb-3">
             <mat-form-field class="col-md-6">
-                <input matInput class="dialog-input form-control" type="text" formControlName="email" [(ngModel)]="modalData.userdata.email"
+                <input matInput type="text" formControlName="email" [(ngModel)]="modalData.userdata.email"
                     required>
                 <mat-placeholder>Indirizzo e-mail</mat-placeholder>
                 <mat-icon matSuffix>mail_outline</mat-icon>
@@ -130,7 +130,7 @@
                     Mail errato</mat-error>
             </mat-form-field>
             <mat-form-field class="col-md-6">
-                <input matInput class="dialog-input form-control" type="text" #fiscalCode [value]="fiscalCode.value.toUpperCase()"
+                <input matInput type="text" #fiscalCode [value]="fiscalCode.value.toUpperCase()"
                     formControlName="fiscalcode" [(ngModel)]="modalData.userdata.fiscalcode" required>
                 <mat-placeholder>Codice Fiscale</mat-placeholder>
                 <mat-icon matSuffix>credit_card</mat-icon>

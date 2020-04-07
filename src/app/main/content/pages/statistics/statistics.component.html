@@ -1,0 +1,246 @@
+<div class="container" >
+  <!-- TIME CHOOSE -->
+  <mat-card>
+      <mat-card-header>
+        <mat-card-title>Scegli un Periodo di Tempo</mat-card-title>
+      </mat-card-header>
+      <mat-card-content class="time-choose">
+          <div>
+              <mat-form-field>
+                <input matInput [matDatepicker]="picker1" placeholder="Da" [formControl]="fromDate" required (dateInput)="addEvent('input', $event)" >
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+                <mat-error class="error-message" *ngIf="fromDate.hasError('required')">La data di inizio è obbligatoria</mat-error>
+                <mat-error class="error-message" *ngIf="fromDate.hasError('date')">Data non valida, usare (GG/MM/YYYY)</mat-error>
+              </mat-form-field>
+
+              <mat-form-field>
+                <input matInput [matDatepicker]="picker2" placeholder="A" [formControl]="toDate" required (dateInput)="addEvent('input', $event)">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+                <mat-error class="error-message" *ngIf="toDate.hasError('required')">La data di fine è obbligatoria</mat-error>
+                <mat-error class="error-message" *ngIf="toDate.hasError('date')">Data non valida, usare (GG/MM/YYYY)</mat-error>
+              </mat-form-field>
+          </div>
+      </mat-card-content>
+  </mat-card>
+
+  <!-- OVERVIEW -->
+  <mat-card class="overview-channel">
+      <mat-card-header>
+        <mat-card-title>Overview Canali di Comunicazione - Tot. Ticket</mat-card-title>
+      </mat-card-header>
+
+      <div class="overview-number">
+        <!-- CARDS -->
+
+        <mat-card-content class="overview-card">
+          <div class="fuse-card chat ">
+            <div class="card-left">
+              <mat-icon>forum</mat-icon>
+            </div>
+            <div class="card-right">
+              <div class="card-title">
+                Chat
+              </div>
+              <div class="card-result">
+                {{(sumServices && sumServices.CHAT)?sumServices.CHAT.value:0}}
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+
+        <mat-card-content class="overview-card">
+            <div class="fuse-card sms">
+              <div class="card-left">
+                <mat-icon>textsms</mat-icon>
+              </div>
+              <div class="card-right">
+                <div class="card-title">
+                  SMS
+                </div>
+                <div class="card-result">
+                  {{(sumServices && sumServices.SMS)?sumServices.SMS.value:0}}
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+
+        <mat-card-content class="overview-card">
+            <div class="fuse-card mail">
+              <div class="card-left">
+                <mat-icon>email</mat-icon>
+              </div>
+              <div class="card-right">
+                <div class="card-title">
+                  E-mail
+                </div>
+                <div class="card-result">
+                  {{(sumServices && sumServices.MAIL)?sumServices.MAIL.value:0}}
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+
+        <mat-card-content class="overview-card">
+            <div class="fuse-card videochat">
+              <div class="card-left">
+                <mat-icon>videocam</mat-icon>
+              </div>
+              <div class="card-right">
+                <div class="card-title">
+                  Video Chat
+                </div>
+                <div class="card-result">
+                  {{(sumServices && sumServices.VIDEOCHAT)?sumServices.VIDEOCHAT.value:0}}
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+
+        <mat-card-content class="overview-card">
+          <div class="fuse-card telegram">
+            <div class="card-left">
+              <span class="icon-ermes-telegram"></span>
+            </div>
+            <div class="card-right">
+              <div class="card-title">
+                TELEGRAM
+              </div>
+              <div class="card-result">
+                {{(sumServices && sumServices.TELEGRAM)?sumServices.TELEGRAM.value:0}}
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </div>
+      <div class="overview-chart">
+
+        <ngx-charts-line-chart
+          [results]="sumMonthAndServices"
+          [gradient]="gradient"
+          [xAxis]="showXAxis"
+          [yAxis]="showYAxis"
+          [legend]="showLegend"
+          [showXAxisLabel]="showXAxisLabel"
+          [showYAxisLabel]="showYAxisLabel"
+          [xAxisLabel]="xAxisLabel"
+          [yAxisLabel]="yAxisLabel"
+          [autoScale]="autoScale"
+          [customColors]="customColorSchemeService"
+        ></ngx-charts-line-chart>
+
+      </div>
+
+  </mat-card>
+
+  <!-- CHANNEL OFFICE -->
+  <mat-card class="channel-office">
+      <mat-card-header>
+        <mat-card-title>Canali Soddisfatti da ciascuna sede</mat-card-title>
+      </mat-card-header>
+      <div class="row channel-office-content">
+          <div *ngFor="let item of sumOfficeAndServices" class="col-4 channel-pie-content">
+            <p class="channel-pie-title">{{item.name}}</p>
+            <p class="channel-pie-subtitle">Tot. Ticket</p>
+            <p class="channel-pie-subtitle">{{sumPieTicket(item)}}</p>
+            <ngx-charts-pie-chart
+              [results]="item.series"
+              [legend]="showLegend"
+              [explodeSlices]="explodeSlices"
+              [labels]="showLabels"
+              [doughnut]="doughnut"
+              [gradient]="gradient"
+              [customColors]="customColorSchemeService"
+            ></ngx-charts-pie-chart>
+          </div>
+      </div>
+  </mat-card>
+
+  <!-- DISTRIBUTION OFFICE -->
+  <mat-card class="service-office">
+      <mat-card-header>
+        <mat-card-title>Distribuzione servizio per sedi</mat-card-title>
+      </mat-card-header>
+      <div class="row channel-office-content">
+        <div *ngFor="let item of sumServicesAndOffice" class="col-4 channel-pie-content">
+          <p class="channel-pie-title" [ngStyle]="{'color': getStyleColor(item.name)}" >{{getServiceName(item.name)}}</p>
+          <ngx-charts-pie-chart
+            [results]="item.series"
+            [legend]="showLegend"
+            [explodeSlices]="explodeSlices"
+            [labels]="showLabels"
+            [doughnut]="doughnut"
+            [gradient]="gradient"
+            [customColors]="customColorSchemeOffice"
+          ></ngx-charts-pie-chart>
+        </div>
+    </div>
+  </mat-card>
+
+  <!-- DISTRIBUTION OPERATOR -->
+  <mat-card class="service-operator">
+      <mat-card-header>
+        <mat-card-title>Operatori</mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="filter-header">
+          <mat-form-field>
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+          </mat-form-field>
+        </div>
+
+        <mat-table #table [dataSource]="dataSource" matSort class="col-12" (matSortChange)="sortData($event)">
+
+          <ng-container matColumnDef="name">
+            <mat-header-cell *matHeaderCellDef  mat-sort-header class="col-3">Nome</mat-header-cell>
+            <mat-cell *matCellDef="let element" class="col-3"> {{element.name}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="office" >
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="col-2"> Sede </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="col-2"> {{element.office}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="CHAT">
+            <mat-header-cell *matHeaderCellDef [ngStyle]="{'color': getStyleColor('CHAT')}" mat-sort-header class="col-1"> {{getServiceName('CHAT')}}  </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="col-1"> {{getServiceValue(element.series, 'CHAT')}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="SMS">
+            <mat-header-cell *matHeaderCellDef [ngStyle]="{'color': getStyleColor('SMS')}" mat-sort-header class="col-1"> {{getServiceName('SMS')}}  </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="col-1"> {{getServiceValue(element.series, 'SMS')}}</mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="MAIL">
+            <mat-header-cell *matHeaderCellDef [ngStyle]="{'color': getStyleColor('MAIL')}" mat-sort-header class="col-1"> {{getServiceName('MAIL')}}  </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="col-1"> {{getServiceValue(element.series, 'MAIL')}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="VIDEOCHAT">
+            <mat-header-cell *matHeaderCellDef [ngStyle]="{'color': getStyleColor('VIDEOCHAT')}" mat-sort-header class="col-1"> {{getServiceName('VIDEOCHAT')}}  </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="col-1"> {{getServiceValue(element.series, 'VIDEOCHAT')}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="TELEGRAM">
+            <mat-header-cell *matHeaderCellDef [ngStyle]="{'color': getStyleColor('TELEGRAM')}" mat-sort-header class="col-1"> {{getServiceName('TELEGRAM')}}  </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="col-1"> {{getServiceValue(element.series, 'TELEGRAM')}} </mat-cell>
+          </ng-container>
+
+          <ng-container matColumnDef="TOTALE">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="col-2 table__totale"> Totale  </mat-header-cell>
+            <mat-cell *matCellDef="let element" class="col-2 table__totale"> {{getSumByOperator(element.series)}} </mat-cell>
+          </ng-container>
+
+
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+        </mat-table>
+      </mat-card-content>
+  </mat-card>
+
+
+
+
+</div>

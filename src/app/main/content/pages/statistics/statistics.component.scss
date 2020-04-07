@@ -1,0 +1,197 @@
+:host {
+  .container {
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-x: scroll;
+    mat-card {
+      margin: 10px;
+      // border-radius: 15px;
+      // box-shadow: 0px 0px 6px 0px rgba(0,0,0,0.6);
+      .time-choose {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+      }
+
+      mat-card-header {
+        justify-content: center;
+        mat-card-title {
+          font-size: 3rem;
+          font-weight: bold;
+        }
+      }
+
+      mat-form-field {
+        margin-right: 15px;
+      }
+    }
+      .overview-channel {
+        .overview-number {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-around;
+          .card-left {
+            padding-top: 5px;
+          }
+          .chat {
+            .card-left {
+              background-color: #d03a31;
+            }
+            .card-title {
+              color: #d03a31;
+            }
+          }
+
+          .sms {
+            .card-left {
+              background-color: #e58600;
+            }
+            .card-title {
+              color: #e58600;
+            }
+          }
+
+          .mail {
+            .card-left {
+              background-color: #145936;
+            }
+            .card-title {
+              color: #145936;
+            }
+          }
+
+          .videochat {
+            .card-left {
+              background-color:  #1e4c9c;
+            }
+            .card-title {
+              color: #1e4c9c;
+            }
+          }
+
+          .telegram {
+            .card-left {
+              background-color: #4fa7e4;
+              padding-top: 20px;
+              span {
+                width: 20%;
+                font-size: 2.9rem;
+                color: white;
+                padding: 15px;
+              }
+            }
+            .card-title {
+              color: #4fa7e4;
+            }
+          }
+
+        }
+        .overview-chart {
+          display: grid;
+          height: 35vh;
+          padding: 20px;
+        }
+      }
+
+
+      .channel-office,
+      .service-office {
+        .channel-office-content{
+          .channel-pie-content {
+            p {
+              margin: 0;
+              padding: 0;
+            }
+            .channel-pie-title {
+              text-align: center;
+              font-weight: bold;
+              font-size: 3rem;
+            }
+            .channel-pie-subtitle {
+              text-align: center;
+              font-weight: bold;
+            }
+          }
+        }
+      }
+
+      .service-operator {
+        .filter-header {
+          .mat-form-field {
+            width: 100%;
+          }
+        }
+        .mat-header-cell {
+          font-size: 1.6rem;
+          font-weight: bold;
+          padding-bottom: 10px;
+        }
+        .mat-cell {
+          font-size: 1.5rem;
+          padding-bottom: 5px;
+        }
+        .mat-row {
+          border-bottom-width: 0;
+          border-bottom-style: none;
+          min-height: 0;
+          padding: 0;
+        }
+        .mat-header-row {
+          margin-bottom: 20px;
+        }
+        .table__totale {
+          display: flex;
+          justify-content: flex-end;
+        }
+
+        table {
+          width: 100%;
+          thead {
+            td {
+              font-size: 1.8rem;
+              font-weight: bold;
+              padding-bottom: 10px;
+            }
+          }
+          tbody {
+            td {
+              font-size: 1.5rem;
+              padding-bottom: 5px;
+            }
+          }
+
+        }
+      }
+
+      .fuse-card {
+        display: flex;
+        flex-direction: row;
+        min-width: 13vw;
+        .card-left {
+          margin-right: 10px;
+          padding-top: 15px;
+          mat-icon {
+            width: 20%;
+            font-size: 4rem;
+            color: white;
+            padding: 10px 13px 10px 10px;
+          }
+        }
+        .card-right {
+          width: 100%;
+          padding-right: 10px;
+          .card-title {
+            font-size: 1rem;
+            font-weight: bold;
+            text-align: center;
+          }
+          .card-result {
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+          }
+        }
+      }
+    }
+}

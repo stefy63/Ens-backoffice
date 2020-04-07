@@ -4,5 +4,5 @@ export enum Services {
     MAIL = 3,
     SOCIAL = 4,
     VIDEOCHAT = 5,
-    TELEGRAM = 6,
+    TELEGRAM = 6
 }

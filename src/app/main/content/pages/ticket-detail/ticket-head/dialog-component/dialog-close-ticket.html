@@ -17,7 +17,7 @@
               <mat-error *ngIf="formGroup.controls['callType' + item.uuid].hasError('required')">Selezionare il Tipo Di Chiamata</mat-error>
             </mat-form-field>
             <mat-form-field  class="col" >
-              <input hintLabel="Inserire solo numeri" matInput type="text" class="dialog-input" placeholder="N° Chiamato" [value]="item.number" [(ngModel)]="item.number" [formControlName]=" 'number' + item.uuid" required phone>
+              <input hintLabel="Inserire solo numeri" matInput type="text" placeholder="N° Chiamato" [value]="item.number" [(ngModel)]="item.number" [formControlName]=" 'number' + item.uuid" required phone>
               <mat-error *ngIf="formGroup.controls['number' + item.uuid].hasError('required')">Inserire un numero di telefono</mat-error>
               <mat-error *ngIf="formGroup.controls['number' + item.uuid].hasError('PhoneValidator')">Inserire solo numeri</mat-error>
             </mat-form-field>

@@ -23,8 +23,8 @@
                 <tr>
                   <td class="table__ticket__detail" [ngClass]="{'blink': (isOpen) }">{{ticket.status}}</td>
                   <td class="table__ticket__detail">{{ticket.category}}</td>
-                  <td class="table__ticket__detail">{{ticket.user_name}}</td>
-                  <td class="table__ticket__detail">{{ticket.user_surname}}</td>
+                  <td class="table__ticket__detail" [ngClass]="{table__ticket__detail__user_red: ticket.user_privacy == 0}">{{ticket.user_name}}</td>
+                  <td class="table__ticket__detail" [ngClass]="{table__ticket__detail__user_red: ticket.user_privacy == 0}">{{ticket.user_surname}}</td>
                   <td class="table__ticket__detail" [ngClass]="{
                         table__service__chat: ticket.id_service == 1,
                         table__service__sms: ticket.id_service == 2,

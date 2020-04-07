@@ -30,7 +30,30 @@ export class NavigationModel {
                         'icon': 'send',
                         'url': '/pages/sending-sms',
                     },
-                ]
+                    {
+                        'id': 'user_manager',
+                        'title': 'Gestione Utenti',
+                        'type': 'item',
+                        'icon': 'accessibility_new',
+                        'url': '/pages/user-manager',
+                    },
+                    {
+                        'id': 'statistics',
+                        'title': 'Statistiche',
+                        'type': 'item',
+                        'icon': 'bar_chart',
+                        'url': '/pages/statistics',
+                        'permission': ['statistics.view']
+                    },
+                    {
+                        'id': 'operator',
+                        'title': 'Operatori',
+                        'type': 'item',
+                        'icon': 'cloud_download',
+                        'url': '/pages/operator',
+                        'permission': ['operator.export']
+                    },
+                ],
             },
         ];
     }
