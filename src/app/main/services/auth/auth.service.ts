@@ -4,6 +4,7 @@ import { ITokenSession } from '../../../interfaces/i-token-session';
 import { LocalStorageService } from '../local-storage/local-storage.service';
 import { IUser } from '../../../interfaces/i-user';
 import { find, forEach } from 'lodash';
+import {RoleType} from '../../../type/user-roles';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +24,12 @@ export class AuthService {
   public isOperator(): boolean {
     const user: IUser = this.storage.getItem('user');
     return user.isOperator;
+
+  }
+
+  public isAdmin(): boolean {
+    const user: IUser = this.storage.getItem('user');
+    return user.id_role == RoleType.ADMINISTRATOR;
 
   }
 

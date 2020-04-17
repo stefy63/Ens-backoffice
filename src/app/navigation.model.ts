@@ -36,6 +36,7 @@ export class NavigationModel {
                         'type': 'item',
                         'icon': 'accessibility_new',
                         'url': '/pages/user-manager',
+                        'permission': ['user.update.all']
                     },
                     {
                         'id': 'statistics',
