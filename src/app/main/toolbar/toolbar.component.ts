@@ -157,6 +157,10 @@ export class FuseToolbarComponent implements OnInit, OnDestroy {
             (_user) => {
                 this.storage.setItem('user', _user);
                 this.user = _user;
+                this.toast.success('Modifica Stato','Stato cambiato con successo!');
+            }, (err) => {
+              this.toast.error('Modifica Stato','Errore in validazione utente!');
+              event.source.checked = !event.checked;
             }
         );
     }
