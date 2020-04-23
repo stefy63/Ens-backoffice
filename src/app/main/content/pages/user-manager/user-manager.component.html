@@ -1,11 +1,16 @@
 <div class="tab-container col-md-12 p-24" fusePerfectScrollbar>
     <div class="row">
-        <mat-form-field class="col-10">
+        <mat-form-field class="col-8">
             <input matInput [formControl]="filterControl" placeholder="Filter...">
         </mat-form-field>
-        <div class="col-2">
+        <div class="col-2 text-center">
           <button mat-raised-button class="btn btn-warning" (click)="exportFile()" matTooltip="Download elenco filtrato">
               <mat-icon>get_app</mat-icon>
+          </button>
+        </div>
+        <div class="col-2 text-center">
+          <button mat-raised-button class="btn btn-primary" (click)="Registration()" matTooltip="Aggiungi un nuovo utente">
+              <mat-icon>add_circle_outline</mat-icon>
           </button>
         </div>
     </div>

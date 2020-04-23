@@ -9,6 +9,7 @@ import { SharedModule } from '../../../../core/modules/shared.module';
 import { SimpleNotificationsModule, NotificationsService } from 'angular2-notifications';
 import { ReactiveFormsModule } from '@angular/forms';
 import { DialogProfileComponent } from './profile/profile.component';
+import {DialogRegistrationComponent} from './registration/regstration.component'
 
 const routes: Routes = [
   {
@@ -28,13 +29,15 @@ const routes: Routes = [
   ],
   declarations: [
     UserManagerComponent,
-    DialogProfileComponent
+    DialogProfileComponent,
+    DialogRegistrationComponent
   ],
   exports     : [
       UserManagerComponent
   ],
   entryComponents: [
-    DialogProfileComponent
+    DialogProfileComponent,
+    DialogRegistrationComponent
   ],
   providers: [
     NotificationsService,

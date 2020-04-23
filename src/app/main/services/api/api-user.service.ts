@@ -21,6 +21,11 @@ export class ApiUserService {
     private http: HttpClient,
   ) { }
 
+
+  public apiCreateUser(user: IUser): Observable<any> {
+    return this.http.post(this.baseUrl + '/user', user);
+  }
+
   public apiChangePassword(user: IChangePassword): Observable<any> {
     return this.http.put(this.baseUrl + '/user/password/' + user.user_id, user);
   }

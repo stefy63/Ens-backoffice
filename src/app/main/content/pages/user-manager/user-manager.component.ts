@@ -10,6 +10,7 @@ import { debounceTime, mergeMap, tap, filter } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs/Subscription';
 import { DialogProfileComponent } from './profile/profile.component';
+import { DialogRegistrationComponent } from './registration/regstration.component';
 
 @Component({
   selector: 'fuse-user-manager',
@@ -140,5 +141,9 @@ export class UserManagerComponent implements OnInit, OnDestroy {
       this.toast.error('Download File!', 'Operazione Fallita!');
     });
     return;
+  }
+
+  Registration(): void {
+    this.dialog.open(DialogRegistrationComponent);
   }
 }
