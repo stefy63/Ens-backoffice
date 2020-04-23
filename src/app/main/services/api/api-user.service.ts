@@ -48,4 +48,23 @@ export class ApiUserService {
         return blob ;
       });
   }
+
+
+  public apiGetUserFile(request: any): Observable<any> {
+    const  headers = new HttpHeaders({ 'Accept':  'text/csv' });
+    console.log('-------------------->  ',request);
+    return this.http.get(this.baseUrl + '/user/user-export' , {
+      observe: 'response',
+      params: {filter: request},
+      responseType: 'blob'
+    })
+    .map((data) => {
+      const blob = {
+        file: new Blob([data.body], { type: data.headers.get('Content-Type') }),
+        filename: data.headers.get('File-Name')
+      };
+
+      return blob ;
+    });
+  }
 }

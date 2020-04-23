@@ -1,8 +1,13 @@
 <div class="tab-container col-md-12 p-24" fusePerfectScrollbar>
-    <div>
-        <mat-form-field class="col-12">
+    <div class="row">
+        <mat-form-field class="col-10">
             <input matInput [formControl]="filterControl" placeholder="Filter...">
         </mat-form-field>
+        <div class="col-2">
+          <button class="btn btn-warning" (click)="exportFile()" matTooltip="Download elenco filtrato">
+              <mat-icon>get_app</mat-icon>
+          </button>
+        </div>
     </div>
 
     <ngx-datatable #myTable [rows]="rows" class="material striped" [loadingIndicator]="isLoading" [scrollbarV]="auto"
