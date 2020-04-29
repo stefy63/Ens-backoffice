@@ -84,6 +84,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     });
 
     this.updatingTicketSubscription = this.socketService.getMessage(WsEvents.ticket.updated).subscribe((ticket: ITicket) => {
+      this.beep.pause();
       if (ticket.id_operator !== this.idOperator && this.currentTabIndex === this.MINE_TICKETS_TAB) {
         return;
       }
@@ -92,6 +93,8 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnDestroy(): void {
+    this.beep.pause();
+    this.beep = null;
     if (this.newTicketSubscription) {
       this.newTicketSubscription.unsubscribe();
     }
@@ -135,5 +138,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
       id_status: this.currentStatus.toString()
     });
   }
+
+
 
 }

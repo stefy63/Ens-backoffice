@@ -1,8 +1,8 @@
 <div class="tab-container col-md-12 p-24" fusePerfectScrollbar>
-  <mat-tab-group #tabGroup class="mat-elevation-z24" (selectedTabChange)="tabChanged($event)">
+  <mat-tab-group #tabGroup class="mat-elevation-z24">
     <mat-tab label="Nuove">
       <mat-list>
-        <fuse-ticket-item [allTicket]="tableTickets"></fuse-ticket-item>
+        <fuse-ticket-item [allTicket]="tableTickets" (play-sound)="playSound($event)"></fuse-ticket-item>
       </mat-list>
     </mat-tab>
     <mat-tab label="In Carico">
