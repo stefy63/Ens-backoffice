@@ -3,6 +3,7 @@ export const environment = {
     hmr: true,
     nav_title: 'Ermes',
     login_title: 'Benvenuti in Ermes!',
+    beep_alarm : 'telefono_squillo.wav',
 
 
     // Socket.io configuration url

@@ -47,7 +47,7 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ) {
     this.idOperator = this.storage.getItem('user').id;
-    this.beep = new Audio('../../../../assets/audio/beep.wav');
+    this.beep = new Audio('/assets/audio/' + environment.beep_alarm);
   }
 
   ngOnInit() {
@@ -124,14 +124,14 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     this.currentStatus = tabsToStatus[statusId];
     if (statusId === this.MINE_TICKETS_TAB) {
       return this.apiTicket.getWithCriterias({
-        mapped: environment.APP_TICKET_RETENTION_DAY.toString(), 
-        id_status: this.currentStatus.toString(), 
+        mapped: environment.APP_TICKET_RETENTION_DAY.toString(),
+        id_status: this.currentStatus.toString(),
         id_user: this.idOperator.toString()
       });
     }
 
     return this.apiTicket.getWithCriterias({
-      mapped: environment.APP_TICKET_RETENTION_DAY.toString(), 
+      mapped: environment.APP_TICKET_RETENTION_DAY.toString(),
       id_status: this.currentStatus.toString()
     });
   }
