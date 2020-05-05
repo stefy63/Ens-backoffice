@@ -3,13 +3,13 @@
         <mat-form-field class="col-8">
             <input matInput [formControl]="filterControl" placeholder="Filter...">
         </mat-form-field>
-        <div class="col-2 text-center">
-          <button mat-raised-button class="btn btn-warning" (click)="exportFile()" matTooltip="Download elenco filtrato">
+        <div class="col-2 text-center table_header--input">
+          <button mat-raised-button class="btn btn-warning" (click)="exportFile()" matTooltip="Download elenco filtrato" style="width: 100%;">
               <mat-icon>get_app</mat-icon>
           </button>
         </div>
-        <div class="col-2 text-center">
-          <button mat-raised-button class="btn btn-primary" (click)="Registration()" matTooltip="Aggiungi un nuovo utente">
+        <div class="col-2 text-center table_header--input">
+          <button mat-raised-button class="btn btn-primary" (click)="Registration()" matTooltip="Aggiungi un nuovo utente" style="width: 100%;">
               <mat-icon>add_circle_outline</mat-icon>
           </button>
         </div>
