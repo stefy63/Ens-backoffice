@@ -1,0 +1,103 @@
+<div class="dialog-header">
+    <div class="close-dialog">
+            <button mat-icon-button mat-dialog-close class="button-close--outlined" color="primary">
+                <mat-icon>close</mat-icon>
+            </button>
+    </div>  
+    <h1 mat-dialog-title class="modal-title">Registrazione</h1>
+</div>
+<form [formGroup]="formGroup" class="mat-dialog-content" (ngSubmit)="onYesClick()">
+    <div class="dialog-content__container">
+        <div class="row">
+            <mat-form-field class="col-md-6"  >
+                <input matInput  type="text" placeholder="Username" formControlName="username"  required>
+                <mat-icon matSuffix>face</mat-icon>
+                <!-- TODO USERNAME ERROR -->
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field class="col-md-6"  >
+                <input matInput  type="password" placeholder="Password"  formControlName="new_password"  required>
+                <mat-icon matSuffix>vpn_key</mat-icon>
+                <mat-error class="error-message" *ngIf="formGroup.controls['new_password'].hasError('policyNotMatch')">Lunga 10 con una minuscola, una maiuscola, un numero e un simbolo</mat-error>
+                <mat-error class="error-message" *ngIf="formGroup.controls['new_password'].hasError('required')">La nuova password è obbligatoria</mat-error>
+                <mat-error class="error-message" *ngIf="formGroup.controls['new_password'].hasError('whiteSpace')">Gli spazi non sono ammessi</mat-error>
+                <mat-error class="error-message" *ngIf="formGroup.controls['new_password'].hasError('passwordMatch')">Le password devono corrispondere</mat-error>
+            </mat-form-field>
+            <mat-form-field  class="col-md-6">
+                <input matInput type="password"  placeholder="Conferma Nuova Password" formControlName="confirm_password" required>
+                <mat-icon matSuffix>vpn_key</mat-icon>
+                <mat-error class="error-message" *ngIf="formGroup.controls['confirm_password'].hasError('required')">La conferma della password è obbligatoria</mat-error>
+                <mat-error class="error-message" *ngIf="formGroup.controls['confirm_password'].hasError('passwordMatch')">Le password devono corrispondere</mat-error>
+              </mat-form-field>
+        </div>
+    
+        <div class="row">
+            <mat-form-field class="col-md-6"  >
+                <input matInput  type="text" placeholder="Nome" formControlName="name"  required>
+                <mat-icon matSuffix>face</mat-icon>
+                <mat-error class="error-message" *ngIf="formGroup.controls['name'].hasError('required')">Campo
+                    obbligatorio</mat-error>
+                <mat-error class="error-message" *ngIf="formGroup.controls['name'].hasError('alphabeticOnly')">Numeri
+                    non permessi</mat-error>
+            </mat-form-field>
+            <mat-form-field class="col-md-6"  >
+                <input matInput  type="text" placeholder="Cognome"  formControlName="surname"  required>
+                <mat-icon matSuffix>face</mat-icon>
+                <mat-error class="error-message" *ngIf="formGroup.controls['surname'].hasError('required')">Campo
+                    obbligatorio</mat-error>
+                <mat-error class="error-message" *ngIf="formGroup.controls['surname'].hasError('alphabeticOnly')">Numeri
+                    non permessi</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field class="col-md-6"  >
+                <input matInput  type="text" placeholder="Indirizzo e-mail"  formControlName="email" required>
+                <mat-icon matSuffix>mail_outline</mat-icon>
+                <mat-error class="error-message" *ngIf="formGroup.controls['email'].hasError('required')">Campo obbligatorio</mat-error>
+                <mat-error class="error-message" *ngIf="formGroup.controls['email'].hasError('email_custom')">Formato Mail errato</mat-error>
+            </mat-form-field>
+            <mat-form-field class="col-md-6"  >
+                <input matInput  type="text" placeholder="Telefono"  formControlName="phone" required>
+                <mat-icon matSuffix>local_phone</mat-icon>
+                <mat-error class="error-message" *ngIf="formGroup.controls['phone'].hasError('required')">Campo  obbligatorio</mat-error>
+                <mat-error class="error-message" *ngIf="formGroup.controls['phone'].hasError('numericOnly')">Lettere non permesse</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div class="row">
+            <mat-form-field class="col-md-6"   >
+                <mat-select formControlName="gender" placeholder="Sesso" required>
+                    <mat-option *ngFor="let sex of gender" [value]="sex.id">
+                        {{sex.name}}
+                    </mat-option>
+                </mat-select>
+                <mat-error class="error-message" *ngIf="formGroup.controls['gender'].hasError('required')">Campo obbligatorio</mat-error>
+            </mat-form-field>
+            <mat-form-field class="col-md-6"  >
+                <input matInput  type="text" formControlName="card_number"  placeholder="Numero di Carta ENS">
+                <mat-icon matSuffix>card_membership</mat-icon>
+            </mat-form-field>
+        </div>
+
+        <mat-checkbox formControlName="privacyaccept">
+            <span class="mat-caption col-md-12">Accetto le condizioni della privacy*</span>
+        </mat-checkbox><br>
+        <mat-error class="error-message" *ngIf="formGroup.controls['privacyaccept'].hasError('required')">Campo obbligatorio</mat-error>
+        <mat-checkbox formControlName="newsletteraccept">
+            <span class="mat-caption col-md-12">Iscrizione alla Newsletter</span>
+        </mat-checkbox><br>
+        <mat-checkbox formControlName="becontacted" >
+            <span class="mat-caption col-md-12">Acconsento ad essere contattato</span>
+        </mat-checkbox>
+    </div>
+
+    <div class="form__footer">
+        <button mat-raised-button class="col-md-6" type="submit" color="accent" [disabled]="!formGroup.valid">
+            Procedi
+        </button>
+    </div>
+</form>
+

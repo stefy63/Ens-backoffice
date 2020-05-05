@@ -4,5 +4,6 @@ export interface ITicketService {
 
     id: number;
     service: service;
+    description: string;
     deleted: boolean;
 }

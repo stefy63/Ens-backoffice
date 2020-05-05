@@ -21,6 +21,11 @@ export class ApiUserService {
     private http: HttpClient,
   ) { }
 
+
+  public apiCreateUser(user: IUser): Observable<any> {
+    return this.http.post(this.baseUrl + '/user', user);
+  }
+
   public apiChangePassword(user: IChangePassword): Observable<any> {
     return this.http.put(this.baseUrl + '/user/password/' + user.user_id, user);
   }
@@ -47,5 +52,24 @@ export class ApiUserService {
 
         return blob ;
       });
+  }
+
+
+  public apiGetUserFile(request: any): Observable<any> {
+    const  headers = new HttpHeaders({ 'Accept':  'text/csv' });
+    console.log('-------------------->  ',request);
+    return this.http.get(this.baseUrl + '/user/user-export' , {
+      observe: 'response',
+      params: {filter: request},
+      responseType: 'blob'
+    })
+    .map((data) => {
+      const blob = {
+        file: new Blob([data.body], { type: data.headers.get('Content-Type') }),
+        filename: data.headers.get('File-Name')
+      };
+
+      return blob ;
+    });
   }
 }

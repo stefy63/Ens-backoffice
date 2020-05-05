@@ -1,0 +1,60 @@
+    .cdk-overlay-pane {
+        min-width: 100% !important;        
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        a {
+            color: #039be5 !important;
+            cursor: pointer;
+        }
+        .row {
+            margin-left: 0;
+            margin-right: 0;
+        }
+    }
+    .form__body {
+        flex-grow: 1;
+        display: block;
+    }
+    .form__footer {
+        display: block;
+        text-align: center;
+    }
+    .dialog-header {
+        position: relative;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 20px;
+    }
+    .modal-title {
+        font-size: 2.0em;
+        font-weight: bold;
+        color: #6195CC;
+    }
+    .close-dialog {
+        text-align: right;
+    }
+    .button-close--outlined {
+        outline: 0;
+    }
+    .action-container {
+        justify-content: center;
+    }
+    .form__container {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    .dialog-content__container {
+        flex-grow: 1;
+        overflow: auto;
+        padding-bottom: 10px;
+    }
+
+    .mat-dialog-title {
+        margin: 0;
+    }

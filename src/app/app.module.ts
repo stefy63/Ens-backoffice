@@ -21,6 +21,7 @@ import { ApiLoginService } from './main/services/api/api-login.service';
 import { AuthService } from './main/services/auth/auth.service';
 import { LocalStorageService } from './main/services/local-storage/local-storage.service';
 import { AuthGuard } from './guard/auth.guard';
+import { IsAdminGuard } from './guard/is-admin.guard';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { ApiTicketHistoryService } from './main/services/api/api-ticket-history.service';
 import { IsOperatorGuard } from './guard/is-operator.guard';
@@ -90,6 +91,7 @@ const config: SocketIoConfig = { url: environment.ws_url + wssPort, options: opt
         AuthGuard,
         HasPermissionGuard,
         IsOperatorGuard,
+        IsAdminGuard,
         LocalStorageService,
         ApiTicketHistoryService,
         { provide: ErrorHandler, useClass: RollbarErrorHandler },

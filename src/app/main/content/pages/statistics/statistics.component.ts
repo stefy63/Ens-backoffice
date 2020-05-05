@@ -12,6 +12,7 @@ import { sumBy, get, find } from 'lodash';
 import { ServiceColorEnum } from '../../../../enums/service-color.enum';
 import { ServiceNameEnum } from '../../../../enums/service-name.enum';
 import { iElement } from '../../../../interfaces/i-sum-service-operator';
+import { NotificationsService } from 'angular2-notifications';
 
 
 @Component({
@@ -104,11 +105,11 @@ export class StatisticsComponent implements OnInit {
   constructor(
     private spinner: NgxSpinnerService,
     private statisticsService: ApiStatisticsService,
+    private toast: NotificationsService,
     private dataAggregationsService: DataAggregationsService
   ) {
-    this.fromDate = new FormControl(moment('1-1-' + moment().year().toString(), 'D-M-YYYY').toDate(), [Validators.required, DateValidator.date]);
-    this.toDate = new FormControl(moment(new Date(), 'D-M-YYYY').toDate(), [Validators.required, DateValidator.date]);
-   }
+    this._setDefaultDate();
+  }
 
    addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
       if(type === 'input' && moment(event.value).isValid() ) {
@@ -130,9 +131,17 @@ export class StatisticsComponent implements OnInit {
         this.sumServicesAndOffice = this.dataAggregationsService.sumByServicesAndOffice(data);
         this.dataSource  = new MatTableDataSource(this.dataAggregationsService.sumByServicesAndOperator(data));
         this.spinner.hide();
+      }, (err) => {
+        this.toast.error('Statistiche', 'Date ERRATE!');
+        this._setDefaultDate();
+        this.spinner.hide();
       });
   }
 
+  private _setDefaultDate() {
+    this.fromDate = new FormControl(moment('1-1-' + moment().year().toString(), 'D-M-YYYY').toDate(), [Validators.required, DateValidator.date]);
+    this.toDate = new FormControl(moment(new Date(), 'D-M-YYYY').toDate(), [Validators.required, DateValidator.date]);
+  }
 
   sumPieTicket(item): number {
     return parseInt(sumBy(item.series, (channel) => channel.value));

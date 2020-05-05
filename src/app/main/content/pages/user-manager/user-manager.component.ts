@@ -10,6 +10,7 @@ import { debounceTime, mergeMap, tap, filter } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs/Subscription';
 import { DialogProfileComponent } from './profile/profile.component';
+import { DialogRegistrationComponent } from './registration/regstration.component';
 
 @Component({
   selector: 'fuse-user-manager',
@@ -20,7 +21,7 @@ export class UserManagerComponent implements OnInit, OnDestroy {
 
   public page = new Page();
   public rows: IUser[];
-  public filter: string;
+  public filter: string = '';
 
   @ViewChild('myTable') table;
 
@@ -121,5 +122,28 @@ export class UserManagerComponent implements OnInit, OnDestroy {
           modalData: user.id
       }
   });
+  }
+
+  exportFile() {
+    this.spinner.show();
+    this.apiUserService.apiGetUserFile(this.filter)
+      .subscribe( data => {
+        const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+        a.href = window.URL.createObjectURL(data.file);
+        a.download = data.filename;
+        document.body.appendChild(a);
+        a.click();
+        this.spinner.hide();
+        this.toast.success('Download File!', 'Operazione conclusa!');
+    }, () => this.spinner.hide());
+    this.pageSizeControlSubscription = this.pageSizeControl.valueChanges.subscribe(data => {
+      this.spinner.hide();
+      this.toast.error('Download File!', 'Operazione Fallita!');
+    });
+    return;
+  }
+
+  Registration(): void {
+    this.dialog.open(DialogRegistrationComponent);
   }
 }
