@@ -3,17 +3,17 @@ export const environment = {
     hmr: false,
     nav_title: 'Ermes',
     login_title: 'Benvenuti in Ermes!',
-    beep_alarm : 'telefono_squillo.wav',
+    beep_alarm : 'beep.wav',
 
 
     // Socket.io configuration url
-    ws_url: 'https://preprodttms.3punto6.com',
+    ws_url: 'http://localhost',
     ws_path: '/wss',
-    ws_port: null,
+    ws_port: 9000,
 
     // API configuration url
-    api_url: 'https://preprodttms.3punto6.com',
-    api_port: null,
+    api_url: 'http://localhost',
+    api_port: 3030,
     api_suffix: '/api',
 
   // VideoChat Config
