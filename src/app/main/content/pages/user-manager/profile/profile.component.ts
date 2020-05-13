@@ -75,7 +75,6 @@ export class DialogProfileComponent implements OnInit {
       'phone': new FormControl(this.modalData.phone, [
         Validators.required, NumericOnlyValidator.numericOnly
       ]),
-      'card_number': new FormControl(this.modalData.card_number, []),
       'privacyaccept': new FormControl({value: this.modalData.privacyaccept, disabled: true}),
       'newsletteraccept': new FormControl(this.modalData.newsletteraccept),
       'becontacted': new FormControl(this.modalData.becontacted),

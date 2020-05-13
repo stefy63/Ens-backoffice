@@ -92,7 +92,7 @@
             </mat-form-field>
         </div>
         <div class="row mb-3">
-            <mat-form-field class="col-md-4">
+            <mat-form-field class="col-md-6">
                 <mat-select formControlName="gender" [(ngModel)]="modalData.userdata.gender" required>
                     <mat-option *ngFor="let sex of gender" [value]="sex.id">
                         {{sex.name}}
@@ -102,7 +102,7 @@
                 <mat-error class="error-message" *ngIf="formGroup.controls['gender'].hasError('required')">Campo
                     obbligatorio</mat-error>
             </mat-form-field>
-            <mat-form-field class="col-md-4">
+            <mat-form-field class="col-md-6">
                 <input matInput type="text" formControlName="phone" [(ngModel)]="modalData.userdata.phone"
                     required>
                 <mat-placeholder>Telefono</mat-placeholder>
@@ -111,11 +111,6 @@
                     obbligatorio</mat-error>
                 <mat-error class="error-message" *ngIf="formGroup.controls['phone'].hasError('numericOnly')">Lettere
                     non permesse</mat-error>
-            </mat-form-field>
-            <mat-form-field class="col-md-4">
-                <input matInput type="text" formControlName="card_number" [(ngModel)]="modalData.userdata.card_number">
-                <mat-placeholder>Numero di Carta ENS</mat-placeholder>
-                <mat-icon matSuffix>desktop_mac</mat-icon>
             </mat-form-field>
         </div>
         <div class="row mb-3">
