@@ -51,10 +51,6 @@
                 </mat-select>
                 <mat-error class="error-message" *ngIf="formGroup.controls['gender'].hasError('required')">Campo obbligatorio</mat-error>
             </mat-form-field>
-            <mat-form-field class="col-md-6">
-                <input matInput type="text" placeholder="Numero di Carta ENS" formControlName="card_number">
-                <mat-icon matSuffix>card_membership</mat-icon>
-            </mat-form-field>
         </div>
 
         <mat-checkbox formControlName="privacyaccept">

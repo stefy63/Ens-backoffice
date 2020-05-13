@@ -79,7 +79,6 @@ export class DialogProfileComponent implements OnInit {
       'phone': new FormControl('', [
         Validators.required, NumericOnlyValidator.numericOnly
       ]),
-      'card_number': new FormControl('', []),
       'fiscalcode': new FormControl('', [
         Validators.required,
         FiscalCodeValidator.fiscalCode
