@@ -60,6 +60,10 @@ export class DialogProfileComponent implements OnInit {
     this.modalData = this.data.modalData.userdata as IUserData;
     this.modalData.privacyaccept = this.modalData.privacyaccept || true;
     this.formGroup = new FormGroup({
+      'username': new FormControl(this.data.modalData.username, [
+        Validators.required,
+        Validators.pattern('[a-zA-Z0-9]{8,16}')
+      ]),
       'name': new FormControl(this.modalData.name, [
         Validators.required,
         AlphabeticOnlyValidator.alphabeticOnly
@@ -83,7 +87,9 @@ export class DialogProfileComponent implements OnInit {
 
   onYesClick(): void {
     const updatedModalData = assign({}, this.modalData, ...map(this.formGroup.controls, (control, key) => ({[key] : control.value})));
+
     this.data.modalData.userdata = updatedModalData;
+    this.data.modalData.username = this.formGroup.controls['username'].value;
     this.dialogRef.close(this.data.modalData);
   }
 

@@ -39,7 +39,8 @@ export class UserManagerComponent implements OnInit, OnDestroy {
   ) {
     this.page.pageNumber = 0;
     this.page.size = 10;
-  }
+   }
+
 
   ngOnInit() {
     this.setPage({ offset: 0 });
