@@ -11,6 +11,7 @@ import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs/Subscription';
 import { DialogProfileComponent } from './profile/profile.component';
 import { DialogRegistrationComponent } from './registration/regstration.component';
+import {cloneDeep} from 'lodash';
 
 @Component({
   selector: 'fuse-user-manager',
@@ -21,12 +22,13 @@ export class UserManagerComponent implements OnInit, OnDestroy {
 
   public page = new Page();
   public rows: IUser[];
-  public filter: string = '';
+  private editedUser: IUser;
+  public filter = '';
 
   @ViewChild('myTable') table;
 
-  private filterControl: FormControl;
-  private pageSizeControl: FormControl;
+  public filterControl: FormControl;
+  public pageSizeControl: FormControl;
   private debounce = 1000;
   private filterControlSubscription: Subscription;
   private pageSizeControlSubscription: Subscription;
@@ -85,6 +87,7 @@ export class UserManagerComponent implements OnInit, OnDestroy {
       this.page = pagedData.page;
       this.rows = pagedData.data;
       this.spinner.hide();
+      document.querySelector('.tab-container').scrollTop = 0;
     }, () => this.spinner.hide());
   }
 
@@ -99,6 +102,7 @@ export class UserManagerComponent implements OnInit, OnDestroy {
   }
 
   public editProfile(user: IUser) {
+    this.editedUser = cloneDeep(user);
     const dialogRef = this.dialog.open(DialogProfileComponent, {
       hasBackdrop: true,
       data: {
@@ -113,7 +117,23 @@ export class UserManagerComponent implements OnInit, OnDestroy {
       .subscribe(() => {
           this.toast.success('Aggiornamento Profilo', 'Profilo modificato con successo');
       }, (err) => {
-              this.toast.error('Aggiornamento Profilo', 'Modifica Profilo fallita');
+        const rowIndex = this.table.bodyComponent.getRowIndex(user);
+        this.rows[rowIndex] = this.editedUser;
+        let msg: string;
+        switch (err.error.message) {
+          case 'EMAIL_ALREDY_EXIST': {
+            msg = 'Email esistente!';
+            break;
+          }
+          case 'USER_ALREDY_EXIST': {
+            msg = 'Username esistente';
+            break;
+          }
+          default: {
+            msg = 'Modifica Profilo fallita';
+          }
+        }
+        this.toast.error('Aggiornamento Profilo', msg);
       });
   }
 
