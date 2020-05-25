@@ -134,6 +134,7 @@ export class UserManagerComponent implements OnInit, OnDestroy {
           }
         }
         this.toast.error('Aggiornamento Profilo', msg);
+        this.editProfile(this.rows[rowIndex]);
       });
   }
 
