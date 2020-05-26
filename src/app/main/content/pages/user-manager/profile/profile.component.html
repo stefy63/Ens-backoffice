@@ -56,7 +56,7 @@
               <input matInput type="text" placeholder="Username"  formControlName="username" required>
               <mat-icon matSuffix>face</mat-icon>
               <mat-error class="error-message" *ngIf="formGroup.controls['username'].hasError('required')">Campo  obbligatorio</mat-error>
-              <mat-error class="error-message" *ngIf="formGroup.controls['username'].hasError('pattern')">Solo lettere e/o numeri minimo 8 massimo 16 caratteri</mat-error>
+              <mat-error class="error-message" *ngIf="formGroup.controls['username'].hasError('pattern')">Spazi non ammessi.</mat-error>
             </mat-form-field>
         </div>
 

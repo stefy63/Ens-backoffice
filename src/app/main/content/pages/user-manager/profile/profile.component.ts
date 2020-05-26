@@ -62,7 +62,7 @@ export class DialogProfileComponent implements OnInit {
     this.formGroup = new FormGroup({
       'username': new FormControl(this.data.modalData.username, [
         Validators.required,
-        Validators.pattern('[a-zA-Z0-9]{8,16}')
+        Validators.pattern(/^\S*$/)
       ]),
       'name': new FormControl(this.modalData.name, [
         Validators.required,
