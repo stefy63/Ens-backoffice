@@ -32,7 +32,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   @Input('ticket') newTicket: Observable<ITicket>;
   @Output('open') open: EventEmitter<boolean> = new EventEmitter();
   public ticket: ITicket;
-  public ticketNotNormalized: any; 
+  public ticketNotNormalized: any;
   public ticketReason: string;
   public user;
   public badge = 0;
@@ -41,6 +41,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   public timeout = false;
   public phone: string;
   private ticketSubscription: Subscription;
+  private initTimeout: any;
 
 
   constructor(
@@ -55,6 +56,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.initTimeout = moment();
     this.ticketSubscription = this.newTicket.subscribe((data: ITicket) => {
       if (this.ticket && this.ticket.id_status === Status.NEW && data.id_status !== Status.NEW && !this.isOpen) {
         this.toastMessage.error('ATTENZIONE! TICKET GIA ACQUISITO', 'TICKET PRESO IN CARICO DA ALTRO OPERATORE');
@@ -69,8 +71,9 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
         this.open.next(true);
         this.isOpen = true;
         this.interval = setInterval(() => {
-          this.timeout = moment().isAfter(moment(data.date_time).add(15, 'm'));
-        }, 10000);
+          this.timeout = moment().isAfter(moment(this.initTimeout).add(15, 'm'));
+          console.log(this.initTimeout, this.timeout);
+        }, 30000);
       }
 
       this.msgAlert = (data.id_operator

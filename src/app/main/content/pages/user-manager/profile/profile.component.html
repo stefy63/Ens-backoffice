@@ -51,6 +51,13 @@
                 </mat-select>
                 <mat-error class="error-message" *ngIf="formGroup.controls['gender'].hasError('required')">Campo obbligatorio</mat-error>
             </mat-form-field>
+            <!-- username -->
+            <mat-form-field class="col-md-6">
+              <input matInput type="text" placeholder="Username"  formControlName="username" required>
+              <mat-icon matSuffix>face</mat-icon>
+              <mat-error class="error-message" *ngIf="formGroup.controls['username'].hasError('required')">Campo  obbligatorio</mat-error>
+              <mat-error class="error-message" *ngIf="formGroup.controls['username'].hasError('pattern')">Spazi non ammessi.</mat-error>
+            </mat-form-field>
         </div>
 
         <mat-checkbox formControlName="privacyaccept">

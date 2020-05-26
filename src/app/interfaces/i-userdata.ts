@@ -2,6 +2,7 @@
 export interface IUserData {
 
     id: number;
+    username: string;
     becontacted: boolean;
     card_number: string;
     city: string;

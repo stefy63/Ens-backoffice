@@ -15,7 +15,7 @@
         </div>
     </div>
 
-    <ngx-datatable #myTable [rows]="rows" class="material striped" [loadingIndicator]="isLoading" [scrollbarV]="auto"
+    <ngx-datatable #myTable [rows]="rows" class="material striped"
         [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [externalPaging]="true"
         [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size" (page)='setPage($event)'>
         <ngx-datatable-column name="Abilitazione" headerClass="col-2 custom-datatable-header" cellClass="col-2"
@@ -60,10 +60,7 @@
             <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
                 let-selectedCount="selectedCount" let-curPage="curPage" let-offset="offset" let-isVisible="isVisible">
                 <div class="page-count">
-                    <span *ngIf="selectedMessage">
-                        {{selectedCount.toLocaleString()}} {{selectedMessage}} /
-                    </span>
-                    {{rowCount.toLocaleString()}} {{totalMessage}}
+                    {{rowCount.toLocaleString()}}
                 </div>
 
                 <div class="pager">
