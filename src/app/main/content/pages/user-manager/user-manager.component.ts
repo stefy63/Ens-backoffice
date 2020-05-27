@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { DialogProfileComponent } from './profile/profile.component';
 import { DialogRegistrationComponent } from './registration/regstration.component';
 import {cloneDeep} from 'lodash';
+import { ErrorMessageTranslatorService } from '../../../services/error-message-translator.service';
 
 @Component({
   selector: 'fuse-user-manager',
@@ -38,6 +39,7 @@ export class UserManagerComponent implements OnInit, OnDestroy {
     private toast: NotificationsService,
     public dialog: MatDialog,
     private spinner: NgxSpinnerService,
+    private errorTranslator: ErrorMessageTranslatorService
   ) {
     this.page.pageNumber = 0;
     this.page.size = 10;
@@ -119,21 +121,7 @@ export class UserManagerComponent implements OnInit, OnDestroy {
       }, (err) => {
         const rowIndex = this.table.bodyComponent.getRowIndex(user);
         this.rows[rowIndex] = this.editedUser;
-        let msg: string;
-        switch (err.error.message) {
-          case 'EMAIL_ALREDY_EXIST': {
-            msg = 'Email esistente!';
-            break;
-          }
-          case 'USER_ALREDY_EXIST': {
-            msg = 'Username esistente';
-            break;
-          }
-          default: {
-            msg = 'Modifica Profilo fallita';
-          }
-        }
-        this.toast.error('Aggiornamento Profilo', msg);
+        this.toast.error('Aggiornamento Profilo', this.errorTranslator.Translate(err.error.message));
         this.editProfile(this.rows[rowIndex]);
       });
   }

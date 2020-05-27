@@ -9,7 +9,7 @@ import swal from 'sweetalert2';
 import { ApiTicketHistoryService } from '../../../../services/api/api-ticket-history.service';
 import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
 import { Observable } from 'rxjs/Observable';
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 import { NormalizeTicket } from '../../../../services/helper/normalize-ticket';
 import { HistoryTypes } from '../../../../../enums/ticket-history-type.enum';
 import { MatDialog} from '@angular/material';
@@ -65,15 +65,19 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
 
       this.ticketNotNormalized = data;
       this.ticket = NormalizeTicket.normalizeItems([data])[0];
-      const initMessage = find(data.historys, item => item.type.type === 'INITIAL');
+      const initMessage = find(data.historys, item => item.id_type === HistoryTypes.INITIAL);
       this.ticketReason = (initMessage) ? initMessage.action : '';
       if (data.id_status === Status.ONLINE && data.id_operator === this.user.id) {
         this.open.next(true);
         this.isOpen = true;
+        const date_acquisition: ITicketHistory = _.chain(data.historys)
+                .filter(elem => elem.id_type === HistoryTypes.SYSTEM && elem.action.includes('Acquisito'))
+                .orderBy(['date_time'], ['ASC'])
+                .findLast()
+                .value() || '';
         this.interval = setInterval(() => {
-          this.timeout = moment().isAfter(moment(this.initTimeout).add(15, 'm'));
-          console.log(this.initTimeout, this.timeout);
-        }, 30000);
+          this.timeout = moment().tz('Europe/Rome').isAfter(moment(date_acquisition.date_time).add(15, 'm'));
+        }, 10000);
       }
 
       this.msgAlert = (data.id_operator
@@ -212,7 +216,6 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
 
     if (close) {
       dialogRef.afterClosed().subscribe(result => {
-        console.log('The dialog was closed', result);
         if (!!result) {
           this.closeChat();
         }

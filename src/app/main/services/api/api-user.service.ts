@@ -57,7 +57,6 @@ export class ApiUserService {
 
   public apiGetUserFile(request: any): Observable<any> {
     const  headers = new HttpHeaders({ 'Accept':  'text/csv' });
-    console.log('-------------------->  ',request);
     return this.http.get(this.baseUrl + '/user/user-export' , {
       observe: 'response',
       params: {filter: request},

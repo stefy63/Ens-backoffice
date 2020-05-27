@@ -29,10 +29,10 @@ export class AppComponent
         this.translate.addLangs(['en', 'tr']);
 
         // Set the default language
-        this.translate.setDefaultLang('en');
+        this.translate.setDefaultLang('it');
 
         // Use a language
-        this.translate.use('en');
+        this.translate.use('it');
 
         if (this.authService.isAuthenticated()) {
           const token = this.storage.getItem('token');
