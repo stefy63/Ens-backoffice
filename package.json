@@ -45,7 +45,7 @@
     "intl": "1.2.5",
     "lodash": "4.17.5",
     "moment": "2.22.2",
-    "moment-timezone": "0.5.31",
+    "moment-timezone": "0.5.28",
     "ng-socket-io": "0.2.4",
     "ngx-color-picker": "4.4.0",
     "ngx-cookie-service": "1.0.9",
@@ -68,7 +68,7 @@
     "@types/jasmine": "2.5.54",
     "@types/jasminewd2": "2.0.3",
     "@types/moment": "2.13.0",
-    "@types/moment-timezone": "0.5.13",
+    "@types/moment-timezone": "0.5.7",
     "@types/node": "6.0.90",
     "codelyzer": "3.2.2",
     "jasmine-core": "2.6.4",
@@ -81,7 +81,7 @@
     "karma-jasmine-html-reporter": "0.2.2",
     "protractor": "5.4.1",
     "ts-node": "3.2.2",
-    "tslint": "5.7.0",
+    "tslint": "6.1.2",
     "typescript": "2.4.2"
   }
 }
