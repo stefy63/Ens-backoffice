@@ -8,6 +8,9 @@
 </div>
 <form [formGroup]="formGroup" (ngSubmit)="onYesClick()">
     <mat-dialog-content>
+    <mat-tab-group>
+      <mat-tab label="Anagrafica Utente">
+        <div class="user-mat-tab">
         <div class="row">
             <mat-form-field class="col-md-6"  >
                 <input matInput type="text" placeholder="Nome" formControlName="name"  required>
@@ -60,6 +63,10 @@
             </mat-form-field>
         </div>
 
+        <div class="row  justify-content-end" [hidden]="!hasOperatorPermission">
+            <mat-slide-toggle class="col-md-4" [formControl]="onlyOperator" (change)="modalUser.isOperator = $event.checked">Operatore</mat-slide-toggle>
+        </div><br>
+
         <mat-checkbox formControlName="privacyaccept">
             <span class="mat-caption col-md-12">Accetto le condizioni generali per la privacy*</span>
         </mat-checkbox><br>
@@ -70,6 +77,14 @@
         <mat-checkbox formControlName="becontacted" >
             <span class="mat-caption col-md-12">Acconsento ad essere contattato</span>
         </mat-checkbox>
+      </div>
+      </mat-tab>
+      <mat-tab label="Servizi Operatore" class="operator-mat-tab">
+        <div class="operator-mat-tab">
+          Servizi Operatore
+        </div>
+      </mat-tab>
+    </mat-tab-group>
     </mat-dialog-content>
 
     <mat-dialog-actions class="form__footer">

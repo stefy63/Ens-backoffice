@@ -10,6 +10,9 @@ import { ApiItalyGeoService } from '../../../../services/api/api-italy-geo.servi
 import { AlphabeticOnlyValidator } from '../../../../services/MaterialValidator/AlphabeticOnlyValidator';
 import { EmailCustomValidator } from '../../../../services/MaterialValidator/EmailCustomValidator';
 import { NumericOnlyValidator } from '../../../../services/MaterialValidator/NumericOnlyValidator';
+import { ApiTicketService } from '../../../../services/api/api-ticket.service';
+import { IUser } from '../../../../../interfaces/i-user';
+import { AuthService } from '../../../../services/auth/auth.service';
 
 
 export const MY_FORMATS = {
@@ -37,8 +40,11 @@ export class DialogProfileComponent implements OnInit {
 
   public options = AlertToasterOptions;
   public modalData: IUserData;
+  public modalUser: IUser;
   public formGroup: FormGroup;
   public provinces: any[];
+  public hasOperatorPermission: boolean;
+  public onlyOperator: FormControl;
   public gender = [
     { id: 'male', name: 'Maschio'},
     { id: 'female', name: 'Femmina'}
@@ -48,16 +54,26 @@ export class DialogProfileComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<DialogProfileComponent>,
-    private httpItalyGeo: ApiItalyGeoService
+    private httpItalyGeo: ApiItalyGeoService,
+    private httpTicketService: ApiTicketService,
+    private authService: AuthService
     ) {
+      this.onlyOperator = new FormControl(false);
+      this.hasOperatorPermission = this.authService.hasPermission(['operator.get.all']);
       this.httpItalyGeo.apiGetAllProvince()
         .subscribe(provinces => {
           this.provinces = provinces;
         });
+
+      if (this.hasOperatorPermission) {
+
+      }
+
   }
 
   ngOnInit(): void {
     this.modalData = this.data.modalData.userdata as IUserData;
+    this.modalUser = this.data.modalData as IUser;
     this.modalData.privacyaccept = this.modalData.privacyaccept || true;
     this.formGroup = new FormGroup({
       'username': new FormControl(this.data.modalData.username, [
@@ -83,6 +99,7 @@ export class DialogProfileComponent implements OnInit {
       'newsletteraccept': new FormControl(this.modalData.newsletteraccept),
       'becontacted': new FormControl(this.modalData.becontacted),
     });
+    // this.formGroup.addControl('pippo', new FormControl());
   }
 
   onYesClick(): void {

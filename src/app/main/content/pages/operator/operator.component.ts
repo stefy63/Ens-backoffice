@@ -126,7 +126,7 @@ export class OperatorComponent implements OnInit {
       this.spinner.hide();
       this.toast.error('Download File!', 'Operazione Fallita!');
     }, 10000);
-    this.apiUserService.apiGetOperatorFile().subscribe(data => {
+    this.apiUserService.apiGetOperatorFile(filter).subscribe(data => {
       const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
       a.href = window.URL.createObjectURL(data.file);
       a.download = data.filename;

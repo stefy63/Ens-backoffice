@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs/Subscription';
 import { DialogProfileComponent } from './profile/profile.component';
 import { DialogProfileOperatorComponent } from './profile_operator/profileOperator.component';
 import { DialogRegistrationComponent } from './registration/regstration.component';
-import {cloneDeep} from 'lodash';
+import {cloneDeep, findIndex} from 'lodash';
 import { ErrorMessageTranslatorService } from '../../../services/error-message-translator.service';
 import { AuthService } from '../../../services/auth/auth.service';
 
@@ -111,36 +111,31 @@ export class UserManagerComponent implements OnInit, OnDestroy {
     });
   }
 
-  public editProfile(user: IUser) {
-    this.editedUser = cloneDeep(user);
-    let dialogRef;
-    if (user.isOperator) {
-      dialogRef = this.dialog.open(DialogProfileOperatorComponent, {
-        hasBackdrop: true,
-        data: {
-            modalData: user
-        }
-      });
-    } else {
-      dialogRef = this.dialog.open(DialogProfileComponent, {
-        hasBackdrop: true,
-        data: {
-            modalData: user
-        }
-      });
-    }
+  public async editProfile(user: IUser) {
+    // this.editedUser = cloneDeep(user);
+    this.apiUserService.apiGetUserById(user.id)
+      .subscribe(data => {
+        const dialogRef = this.dialog.open(DialogProfileComponent, {
+          hasBackdrop: true,
+          data: {
+              modalData: data
+          }
+        });
 
-  dialogRef
-      .afterClosed()
-      .filter((result) => !!result)
-      .flatMap((result) => this.apiUserService.apiChangeProfile(result))
-      .subscribe(() => {
-          this.toast.success('Aggiornamento Profilo', 'Profilo modificato con successo');
-      }, (err) => {
-        const rowIndex = this.table.bodyComponent.getRowIndex(user);
-        this.rows[rowIndex] = this.editedUser;
-        this.toast.error('Aggiornamento Profilo', this.errorTranslator.Translate(err.error.message));
-        this.editProfile(this.rows[rowIndex]);
+        dialogRef
+          .afterClosed()
+          .filter((result) => !!result)
+          .flatMap((result) => this.apiUserService.apiChangeProfile(result))
+          .subscribe((result) => {
+              const newUser = findIndex(this.rows, (item) => item.id === result.id);
+              this.rows[newUser] = result;
+              this.toast.success('Aggiornamento Profilo', 'Profilo modificato con successo');
+          }, (err) => {
+            const rowIndex = this.table.bodyComponent.getRowIndex(user);
+            this.rows[rowIndex] = this.editedUser;
+            this.toast.error('Aggiornamento Profilo', this.errorTranslator.Translate(err.error.message));
+            this.editProfile(this.rows[rowIndex]);
+          });
       });
   }
 
@@ -159,7 +154,6 @@ export class UserManagerComponent implements OnInit, OnDestroy {
 
   exportFile() {
     this.spinner.show();
-    console.log('------->', this.page.onlyOperator, typeof this.page.onlyOperator);
     if (this.page.onlyOperator) {
       this.exportOpertors();
     } else {
@@ -174,17 +168,18 @@ export class UserManagerComponent implements OnInit, OnDestroy {
       this.toast.error('Download File!', 'Operazione Fallita!');
       return;
     }, 10000);
-    this.apiUserService.apiGetOperatorFile().subscribe(data => {
-      const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
-      a.href = window.URL.createObjectURL(data.file);
-      a.download = data.filename;
-      document.body.appendChild(a);
-      clearTimeout(timeout);
-      a.click();
-      this.toast.success('Download File!', 'Operazione conclusa!');
-    }, () => {
-      this.toast.error('Download File!', 'Operazione Fallita!');
-    });
+    this.apiUserService.apiGetOperatorFile(this.filter)
+      .subscribe(data => {
+        const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+        a.href = window.URL.createObjectURL(data.file);
+        a.download = data.filename;
+        document.body.appendChild(a);
+        clearTimeout(timeout);
+        a.click();
+        this.toast.success('Download File!', 'Operazione conclusa!');
+      }, () => {
+        this.toast.error('Download File!', 'Operazione Fallita!');
+      });
     return;
   }
 
@@ -202,9 +197,9 @@ export class UserManagerComponent implements OnInit, OnDestroy {
         clearTimeout(timeout);
         a.click();
         this.toast.success('Download File!', 'Operazione conclusa!');
-    }, () => {
-      this.toast.error('Download File!', 'Operazione Fallita!');
-    });
+      }, () => {
+        this.toast.error('Download File!', 'Operazione Fallita!');
+      });
     return;
   }
 
