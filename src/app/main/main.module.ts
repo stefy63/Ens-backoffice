@@ -20,6 +20,7 @@ import { ApiUserService } from './services/api/api-user.service';
 import { DialogProfileComponent } from './toolbar/dialog-component/profile/profile.component';
 import { SimpleNotificationsModule } from 'angular2-notifications';
 import { ApiItalyGeoService } from './services/api/api-italy-geo.service';
+import { DialogProfileOperatorComponent } from './content/pages/user-manager/profile_operator/profileOperator.component';
 
 @NgModule({
     declarations: [
@@ -33,7 +34,8 @@ import { ApiItalyGeoService } from './services/api/api-italy-geo.service';
         FuseThemeOptionsComponent,
         FuseQuickPanelComponent,
         DialogChangePassword,
-        DialogProfileComponent
+        DialogProfileComponent,
+        DialogProfileOperatorComponent,
     ],
     imports     : [
         SharedModule,

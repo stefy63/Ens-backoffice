@@ -37,7 +37,10 @@ export class ApiUserService {
   public apiGetUserList(request: any): Observable<any> {
     return this.http.get(this.baseUrl + '/user', {
       params: request
-    }).pipe(map(data => data as IGetUserListRequest));
+    }).pipe(map((data: any) => {
+      data.page.onlyOperator = data.page.onlyOperator === 'true';
+      return data as IGetUserListRequest;
+    }));
   }
 
   public apiGetOperatorFile(): Observable<any> {

@@ -39,20 +39,20 @@ export class NavigationModel {
                         'permission': ['user.update.all']
                     },
                     {
+                        'id': 'operator',
+                        'title': 'Gestione Operatori',
+                        'type': 'item',
+                        'icon': 'cloud_download',
+                        'url': '/pages/operator',
+                        'permission': ['operator.get.all']
+                    },
+                    {
                         'id': 'statistics',
                         'title': 'Statistiche',
                         'type': 'item',
                         'icon': 'bar_chart',
                         'url': '/pages/statistics',
                         'permission': ['statistics.view']
-                    },
-                    {
-                        'id': 'operator',
-                        'title': 'Operatori',
-                        'type': 'item',
-                        'icon': 'cloud_download',
-                        'url': '/pages/operator',
-                        'permission': ['operator.export']
                     },
                 ],
             },

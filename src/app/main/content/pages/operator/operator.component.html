@@ -1,0 +1,97 @@
+<div class="tab-container col-md-12 p-24" fusePerfectScrollbar>
+  <div class="row">
+      <mat-form-field class="col-8">
+          <input matInput [formControl]="filterControl" placeholder="Filter...">
+      </mat-form-field>
+      <div class="col-2 text-center table_header--input">
+        <button mat-raised-button class="btn btn-warning" (click)="getResult()" matTooltip="Download elenco filtrato" style="width: 100%;">
+            <mat-icon>get_app</mat-icon>
+        </button>
+      </div>
+      <div class="col-2 text-center table_header--input">
+        <button mat-raised-button class="btn btn-primary" matTooltip="Aggiungi un nuovo utente" style="width: 100%;">
+            <mat-icon>add_circle_outline</mat-icon>
+        </button>
+      </div>
+  </div>
+
+  <ngx-datatable #myTable [rows]="rows" class="material striped"
+      [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [externalPaging]="true"
+      [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size" (page)='setPage($event)'>
+      <ngx-datatable-column name="Abilitazione" headerClass="col-1 custom-datatable-header" cellClass="col-1"
+          [sortable]="false">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+              <mat-slide-toggle [checked]="!row.disabled" (change)="changeUserStatus(row)"
+                  matTooltip="Attiva/Disattiva Utente"></mat-slide-toggle>
+          </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Nome e Cognome" headerClass="col-3 custom-datatable-header" cellClass="col-3"
+          [sortable]="false">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row.userdata.name}} {{row.userdata.surname}}
+          </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Telefono" headerClass="col-2 custom-datatable-header" cellClass="col-2"
+          [sortable]="false">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row.userdata.phone}}
+          </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="eMail" headerClass="col-2 custom-datatable-header" cellClass="col-2"
+          [sortable]="false">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+              <div matTooltip="{{row.userdata.email}}" matTooltipPosition="above">{{row.userdata.email}}</div>
+          </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Username" headerClass="col-2 custom-datatable-header" cellClass="col-2"
+          [sortable]="false">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+              {{row.username}}
+          </ng-template>
+      </ngx-datatable-column>
+      <ngx-datatable-column name="Azioni" headerClass="col-2 custom-datatable-header" cellClass="col-2"
+          [sortable]="false">
+          <ng-template let-row="row" ngx-datatable-cell-template>
+              <a (click)="editProfile(row)" matTooltip="Modifica Profilo Utente">
+                  <mat-icon>person</mat-icon>
+              </a>
+              <a (click)="resetPassword(row)" matTooltip="Cambio Password Utente">
+                  <mat-icon>lock</mat-icon>
+              </a>
+          </ng-template>
+      </ngx-datatable-column>
+
+
+      <ngx-datatable-footer>
+          <ng-template ngx-datatable-footer-template let-rowCount="rowCount" let-pageSize="pageSize"
+              let-selectedCount="selectedCount" let-curPage="curPage" let-offset="offset" let-isVisible="isVisible">
+              <div class="page-count">
+                  {{rowCount.toLocaleString()}}
+              </div>
+
+              <div class="pager">
+                  <label>Item per Page: </label>
+                  <mat-form-field class="col-4">
+                      <mat-select [formControl]="pageSizeControl" [(ngModel)]="page.size">
+                          <mat-option value="10">10</mat-option>
+                          <mat-option value="20">20</mat-option>
+                          <mat-option value="30">30</mat-option>
+                          <mat-option value="40">40</mat-option>
+                          <mat-option value="50">50</mat-option>
+                      </mat-select>
+                  </mat-form-field>
+              </div>
+
+              <datatable-pager class="col-5" [pagerLeftArrowIcon]="'datatable-icon-left'"
+                  [pagerRightArrowIcon]="'datatable-icon-right'" [pagerPreviousIcon]="'datatable-icon-prev'"
+                  [pagerNextIcon]="'datatable-icon-skip'" [page]="curPage" [size]="pageSize" [count]="rowCount"
+                  [hidden]="!((rowCount / pageSize) > 1)" (change)="table.onFooterPage($event)">
+              </datatable-pager>
+          </ng-template>
+      </ngx-datatable-footer>
+
+
+  </ngx-datatable>
+
+
+</div>

@@ -3,16 +3,18 @@ import { Page } from '../../../../class/page';
 import { IUser } from '../../../../interfaces/i-user';
 import { ApiUserService } from '../../../services/api/api-user.service';
 import { NotificationsService } from 'angular2-notifications';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatCheckboxChange, MatDialogRef } from '@angular/material';
 import { DialogChangePassword } from '../../../toolbar/dialog-component/dialog-change-password.component';
 import { FormControl } from '@angular/forms';
 import { debounceTime, mergeMap, tap, filter } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs/Subscription';
 import { DialogProfileComponent } from './profile/profile.component';
+import { DialogProfileOperatorComponent } from './profile_operator/profileOperator.component';
 import { DialogRegistrationComponent } from './registration/regstration.component';
 import {cloneDeep} from 'lodash';
 import { ErrorMessageTranslatorService } from '../../../services/error-message-translator.service';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @Component({
   selector: 'fuse-user-manager',
@@ -30,6 +32,8 @@ export class UserManagerComponent implements OnInit, OnDestroy {
 
   public filterControl: FormControl;
   public pageSizeControl: FormControl;
+  public onlyOperator: FormControl;
+  public hasOperatorPermission = false;
   private debounce = 1000;
   private filterControlSubscription: Subscription;
   private pageSizeControlSubscription: Subscription;
@@ -39,7 +43,8 @@ export class UserManagerComponent implements OnInit, OnDestroy {
     private toast: NotificationsService,
     public dialog: MatDialog,
     private spinner: NgxSpinnerService,
-    private errorTranslator: ErrorMessageTranslatorService
+    private errorTranslator: ErrorMessageTranslatorService,
+    private authService: AuthService
   ) {
     this.page.pageNumber = 0;
     this.page.size = 10;
@@ -48,8 +53,10 @@ export class UserManagerComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.setPage({ offset: 0 });
+    this.hasOperatorPermission = this.authService.hasPermission(['operator.get.all']);
     this.filterControl = new FormControl;
     this.pageSizeControl = new FormControl(10);
+    this.onlyOperator = new FormControl(false);
     this.filterControlSubscription = this.filterControl.valueChanges
       .pipe(
         debounceTime(this.debounce),
@@ -67,9 +74,10 @@ export class UserManagerComponent implements OnInit, OnDestroy {
           this.rows = pagedData.data;
           this.spinner.hide();
       }, () => this.spinner.hide());
-      this.pageSizeControlSubscription = this.pageSizeControl.valueChanges.subscribe(data => {
-        this.setPage({ offset: 0 });
-      });
+
+    this.pageSizeControlSubscription = this.pageSizeControl.valueChanges.subscribe(data => {
+      this.setPage({ offset: 0 });
+    });
   }
 
   ngOnDestroy(): void {
@@ -105,12 +113,22 @@ export class UserManagerComponent implements OnInit, OnDestroy {
 
   public editProfile(user: IUser) {
     this.editedUser = cloneDeep(user);
-    const dialogRef = this.dialog.open(DialogProfileComponent, {
-      hasBackdrop: true,
-      data: {
-          modalData: user
-      }
-  });
+    let dialogRef;
+    if (user.isOperator) {
+      dialogRef = this.dialog.open(DialogProfileOperatorComponent, {
+        hasBackdrop: true,
+        data: {
+            modalData: user
+        }
+      });
+    } else {
+      dialogRef = this.dialog.open(DialogProfileComponent, {
+        hasBackdrop: true,
+        data: {
+            modalData: user
+        }
+      });
+    }
 
   dialogRef
       .afterClosed()
@@ -134,20 +152,57 @@ export class UserManagerComponent implements OnInit, OnDestroy {
   });
   }
 
+  public setOnlyOperator(ev: MatCheckboxChange) {
+    this.page.onlyOperator = ev.checked;
+    this.setPage({ offset: 0 });
+  }
+
   exportFile() {
     this.spinner.show();
+    console.log('------->', this.page.onlyOperator, typeof this.page.onlyOperator);
+    if (this.page.onlyOperator) {
+      this.exportOpertors();
+    } else {
+      this.exportUsers();
+    }
+    this.spinner.hide();
+    return;
+  }
+
+  private exportOpertors() {
+    const timeout = setTimeout(() => {
+      this.toast.error('Download File!', 'Operazione Fallita!');
+      return;
+    }, 10000);
+    this.apiUserService.apiGetOperatorFile().subscribe(data => {
+      const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+      a.href = window.URL.createObjectURL(data.file);
+      a.download = data.filename;
+      document.body.appendChild(a);
+      clearTimeout(timeout);
+      a.click();
+      this.toast.success('Download File!', 'Operazione conclusa!');
+    }, () => {
+      this.toast.error('Download File!', 'Operazione Fallita!');
+    });
+    return;
+  }
+
+  private exportUsers() {
+    const timeout = setTimeout(() => {
+      this.toast.error('Download File!', 'Operazione Fallita!');
+      return;
+    }, 10000);
     this.apiUserService.apiGetUserFile(this.filter)
       .subscribe( data => {
         const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
         a.href = window.URL.createObjectURL(data.file);
         a.download = data.filename;
         document.body.appendChild(a);
+        clearTimeout(timeout);
         a.click();
-        this.spinner.hide();
         this.toast.success('Download File!', 'Operazione conclusa!');
-    }, () => this.spinner.hide());
-    this.pageSizeControlSubscription = this.pageSizeControl.valueChanges.subscribe(data => {
-      this.spinner.hide();
+    }, () => {
       this.toast.error('Download File!', 'Operazione Fallita!');
     });
     return;

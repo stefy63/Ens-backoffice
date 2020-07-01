@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from '../../../../../../environments/environment';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormGroup, Validators, FormControl } from '@angular/forms';
 import { FuseConfigService } from '../../../../../core/services/config.service';
 import { fuseAnimations } from '../../../../../core/animations';
 import { ApiLoginService } from '../../../../services/api/api-login.service';
@@ -11,9 +11,9 @@ import { Router } from '@angular/router';
 import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
 import { SocketService } from '../../../../services/socket/socket.service';
 import { NotificationsService } from 'angular2-notifications';
-import { ToastOptions } from '../../../../../type/toast-options';
 import { FuseNavigationService } from '../../../../../core/components/navigation/navigation.service';
 import { NavigationModel } from '../../../../../navigation.model';
+import { strictEqual } from 'assert';
 
 @Component({
   selector: 'fuse-login-2',
@@ -22,14 +22,12 @@ import { NavigationModel } from '../../../../../navigation.model';
   animations: fuseAnimations
 })
 export class FuseLogin2Component implements OnInit {
-  loginForm: FormGroup;
-  loginFormErrors: any;
+  public loginForm: FormGroup;
   public title = environment.login_title;
   public nav_title = environment.nav_title;
 
   constructor(
     private fuseConfig: FuseConfigService,
-    private formBuilder: FormBuilder,
     private apiLoginService: ApiLoginService,
     private authService: AuthService,
     private router: Router,
@@ -45,15 +43,10 @@ export class FuseLogin2Component implements OnInit {
         footer: 'none'
       }
     });
-
-    this.loginFormErrors = {
-      username: {},
-      password: {}
-    };
   }
 
-  private onSubmit() {
-    const isOperator = this.loginForm.value.operator;
+  onSubmit() {
+    // const isOperator = this.loginForm.value.operator;
     this.apiLoginService.apiLogin(this.loginForm.value as IDataLogin).subscribe(
       data => {
         this.storage.setItem('data', data);
@@ -77,32 +70,10 @@ export class FuseLogin2Component implements OnInit {
   }
 
   ngOnInit() {
-    this.loginForm = this.formBuilder.group({
-      username: ['', [Validators.required]],
-      password: ['', [Validators.required]],
+    this.loginForm = new FormGroup({
+      'username': new FormControl('', [Validators.required]),
+      'password': new FormControl('', [Validators.required])
     });
-
-    this.loginForm.valueChanges.subscribe(() => {
-      this.onLoginFormValuesChanged();
-    });
-  }
-
-  onLoginFormValuesChanged() {
-    for (const field in this.loginFormErrors) {
-      if (!this.loginFormErrors.hasOwnProperty(field)) {
-        continue;
-      }
-
-      // Clear previous errors
-      this.loginFormErrors[field] = {};
-
-      // Get the control
-      const control = this.loginForm.get(field);
-
-      if (control && control.dirty && !control.valid) {
-        this.loginFormErrors[field] = control.errors;
-      }
-    }
   }
 
   public bgSeason() {
