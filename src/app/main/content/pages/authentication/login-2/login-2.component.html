@@ -24,14 +24,14 @@
       <form name="loginForm" [formGroup]="loginForm" (ngSubmit)="onSubmit()" novalidate>
         <mat-form-field>
           <input matInput placeholder="Username" formControlName="username">
-          <mat-error *ngIf="loginFormErrors.username.required || loginFormErrors.username.minlength">
+          <mat-error *ngIf="loginFormErrors.username.required">
             Username &egrave; obbligatorio
           </mat-error>
         </mat-form-field>
 
         <mat-form-field>
           <input type="password" matInput placeholder="Password" formControlName="password">
-          <mat-error *ngIf="loginFormErrors.password.required || loginFormErrors.password.minlength">
+          <mat-error *ngIf="loginFormErrors.password.required">
             Password &egrave; obbligatoria
           </mat-error>
         </mat-form-field>
