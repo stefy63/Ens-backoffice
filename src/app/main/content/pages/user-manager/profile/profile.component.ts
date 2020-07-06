@@ -6,13 +6,16 @@ import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { map, assign } from 'lodash';
 import { AlertToasterOptions } from '../../../../../class/alert-toaster-options';
 import { IUserData } from '../../../../../interfaces/i-userdata';
-import { ApiItalyGeoService } from '../../../../services/api/api-italy-geo.service';
 import { AlphabeticOnlyValidator } from '../../../../services/MaterialValidator/AlphabeticOnlyValidator';
 import { EmailCustomValidator } from '../../../../services/MaterialValidator/EmailCustomValidator';
 import { NumericOnlyValidator } from '../../../../services/MaterialValidator/NumericOnlyValidator';
-import { ApiTicketService } from '../../../../services/api/api-ticket.service';
 import { IUser } from '../../../../../interfaces/i-user';
 import { AuthService } from '../../../../services/auth/auth.service';
+import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
+import { ITicketOffice } from '../../../../../interfaces/i-ticket-office';
+import { ITicketService } from '../../../../../interfaces/i-ticket-service';
+import { ApiRolesService } from '../../../../services/api/api-roles.service';
+import { IRoles } from '../../../../../interfaces/i-roles';
 
 
 export const MY_FORMATS = {
@@ -43,6 +46,9 @@ export class DialogProfileComponent implements OnInit {
   public modalUser: IUser;
   public formGroup: FormGroup;
   public provinces: any[];
+  public ticketService: ITicketService[];
+  public offices: ITicketOffice[];
+  public roles: IRoles[];
   public hasOperatorPermission: boolean;
   public onlyOperator: FormControl;
   public gender = [
@@ -54,29 +60,30 @@ export class DialogProfileComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<DialogProfileComponent>,
-    private httpItalyGeo: ApiItalyGeoService,
-    private httpTicketService: ApiTicketService,
-    private authService: AuthService
+    private authService: AuthService,
+    private localStorage: LocalStorageService,
+    private apiRoles: ApiRolesService
     ) {
       this.onlyOperator = new FormControl(false);
       this.hasOperatorPermission = this.authService.hasPermission(['operator.get.all']);
-      this.httpItalyGeo.apiGetAllProvince()
-        .subscribe(provinces => {
-          this.provinces = provinces;
-        });
 
       if (this.hasOperatorPermission) {
-
+        this.ticketService = this.localStorage.getItem('services');
+        this.offices = this.localStorage.getItem('offices');
+        this.apiRoles.apiGetAllRoles()
+          .subscribe(roles => {
+            this.roles = roles;
+          });
       }
+    }
 
-  }
-
-  ngOnInit(): void {
+  ngOnInit() {
     this.modalData = this.data.modalData.userdata as IUserData;
     this.modalUser = this.data.modalData as IUser;
     this.modalData.privacyaccept = this.modalData.privacyaccept || true;
+    console.log(this.ticketService, this.modalUser.services);
     this.formGroup = new FormGroup({
-      'username': new FormControl(this.data.modalData.username, [
+      'username': new FormControl(this.modalUser.username, [
         Validators.required,
         Validators.pattern(/^\S*$/)
       ]),
@@ -98,8 +105,19 @@ export class DialogProfileComponent implements OnInit {
       'privacyaccept': new FormControl({value: this.modalData.privacyaccept, disabled: true}),
       'newsletteraccept': new FormControl(this.modalData.newsletteraccept),
       'becontacted': new FormControl(this.modalData.becontacted),
+
     });
-    // this.formGroup.addControl('pippo', new FormControl());
+    if (this.hasOperatorPermission) {
+      this.formGroup.addControl('services', new FormControl(this.modalUser.services, [Validators.required]));
+      this.formGroup.addControl('office', new FormControl(this.modalUser.id_office, [Validators.required]));
+      this.formGroup.addControl('role', new FormControl(this.modalUser.id_role, [Validators.required]));
+
+    }
+
+  }
+
+  compareObjects(o1: any, o2: any): boolean {
+    return o1.id === o2.id;
   }
 
   onYesClick(): void {

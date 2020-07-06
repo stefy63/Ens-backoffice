@@ -38,14 +38,14 @@ export class NavigationModel {
                         'url': '/pages/user-manager',
                         'permission': ['user.update.all']
                     },
-                    {
-                        'id': 'operator',
-                        'title': 'Gestione Operatori',
-                        'type': 'item',
-                        'icon': 'cloud_download',
-                        'url': '/pages/operator',
-                        'permission': ['operator.get.all']
-                    },
+                    // {
+                    //     'id': 'operator',
+                    //     'title': 'Gestione Operatori',
+                    //     'type': 'item',
+                    //     'icon': 'cloud_download',
+                    //     'url': '/pages/operator',
+                    //     'permission': ['operator.get.all']
+                    // },
                     {
                         'id': 'statistics',
                         'title': 'Statistiche',

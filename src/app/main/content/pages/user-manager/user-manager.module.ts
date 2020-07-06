@@ -10,7 +10,6 @@ import { SimpleNotificationsModule, NotificationsService } from 'angular2-notifi
 import { ReactiveFormsModule } from '@angular/forms';
 import { DialogProfileComponent } from './profile/profile.component';
 import {DialogRegistrationComponent} from './registration/regstration.component'
-import { DialogProfileOperatorComponent } from './profile_operator/profileOperator.component';
 
 const routes: Routes = [
   {
@@ -39,7 +38,6 @@ const routes: Routes = [
   entryComponents: [
     DialogProfileComponent,
     DialogRegistrationComponent,
-    DialogProfileOperatorComponent
   ],
   providers: [
     NotificationsService,

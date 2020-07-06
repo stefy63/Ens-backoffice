@@ -10,9 +10,8 @@ import { debounceTime, mergeMap, tap, filter } from 'rxjs/operators';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { Subscription } from 'rxjs/Subscription';
 import { DialogProfileComponent } from './profile/profile.component';
-import { DialogProfileOperatorComponent } from './profile_operator/profileOperator.component';
 import { DialogRegistrationComponent } from './registration/regstration.component';
-import {cloneDeep, findIndex} from 'lodash';
+import {findIndex} from 'lodash';
 import { ErrorMessageTranslatorService } from '../../../services/error-message-translator.service';
 import { AuthService } from '../../../services/auth/auth.service';
 
@@ -111,7 +110,7 @@ export class UserManagerComponent implements OnInit, OnDestroy {
     });
   }
 
-  public async editProfile(user: IUser) {
+  public editProfile(user: IUser) {
     // this.editedUser = cloneDeep(user);
     this.apiUserService.apiGetUserById(user.id)
       .subscribe(data => {

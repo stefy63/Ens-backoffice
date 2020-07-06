@@ -63,7 +63,7 @@
             </mat-form-field>
         </div>
 
-        <div class="row  justify-content-end" [hidden]="!hasOperatorPermission">
+        <div class="row  justify-content-end" *ngIf="hasOperatorPermission">
             <mat-slide-toggle class="col-md-4" [formControl]="onlyOperator" (change)="modalUser.isOperator = $event.checked">Operatore</mat-slide-toggle>
         </div><br>
 
@@ -80,8 +80,35 @@
       </div>
       </mat-tab>
       <mat-tab label="Servizi Operatore" class="operator-mat-tab">
-        <div class="operator-mat-tab">
-          Servizi Operatore
+        <div class="operator-mat-tab" *ngIf="hasOperatorPermission">
+
+          <mat-form-field class="col-md-12">
+            <mat-select formControlName="services" [compareWith]="compareObjects" placeholder="Servizi.." required style="height: 25px" multiple>
+              <mat-option *ngFor="let service of ticketService" [value]="service" >
+                {{service.service}}
+              </mat-option>
+            </mat-select>
+            <mat-error class="error-message" *ngIf="formGroup.controls['services'].hasError('required')">Campo obbligatorio</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="col-md-12">
+            <mat-select formControlName="office" placeholder="Ufficio.." required style="height: 25px" >
+                <mat-option *ngFor="let office of offices" [value]="office.id">
+                    {{office.office}}
+                </mat-option>
+            </mat-select>
+            <mat-error class="error-message" *ngIf="formGroup.controls['office'].hasError('required')">Campo obbligatorio</mat-error>
+          </mat-form-field>
+
+          <mat-form-field class="col-md-12">
+            <mat-select formControlName="role" placeholder="Ruolo.." required style="height: 25px" >
+                <mat-option *ngFor="let role of roles" [value]="role.id">
+                    {{role.name}}
+                </mat-option>
+            </mat-select>
+            <mat-error class="error-message" *ngIf="formGroup.controls['role'].hasError('required')">Campo obbligatorio</mat-error>
+          </mat-form-field>
+
         </div>
       </mat-tab>
     </mat-tab-group>
