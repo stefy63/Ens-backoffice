@@ -1,9 +1,9 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef, MatSlideToggleChange } from '@angular/material';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { map, assign } from 'lodash';
+import { map, assign, assignIn } from 'lodash';
 import { AlertToasterOptions } from '../../../../../class/alert-toaster-options';
 import { IUserData } from '../../../../../interfaces/i-userdata';
 import { AlphabeticOnlyValidator } from '../../../../services/MaterialValidator/AlphabeticOnlyValidator';
@@ -16,6 +16,7 @@ import { ITicketOffice } from '../../../../../interfaces/i-ticket-office';
 import { ITicketService } from '../../../../../interfaces/i-ticket-service';
 import { ApiRolesService } from '../../../../services/api/api-roles.service';
 import { IRoles } from '../../../../../interfaces/i-roles';
+import { RoleType } from '../../../../../type/user-roles';
 
 
 export const MY_FORMATS = {
@@ -64,7 +65,6 @@ export class DialogProfileComponent implements OnInit {
     private localStorage: LocalStorageService,
     private apiRoles: ApiRolesService
     ) {
-      this.onlyOperator = new FormControl(false);
       this.hasOperatorPermission = this.authService.hasPermission(['operator.get.all']);
 
       if (this.hasOperatorPermission) {
@@ -81,7 +81,6 @@ export class DialogProfileComponent implements OnInit {
     this.modalData = this.data.modalData.userdata as IUserData;
     this.modalUser = this.data.modalData as IUser;
     this.modalData.privacyaccept = this.modalData.privacyaccept || true;
-    console.log(this.ticketService, this.modalUser.services);
     this.formGroup = new FormGroup({
       'username': new FormControl(this.modalUser.username, [
         Validators.required,
@@ -102,16 +101,16 @@ export class DialogProfileComponent implements OnInit {
       'phone': new FormControl(this.modalData.phone, [
         Validators.required, NumericOnlyValidator.numericOnly
       ]),
+      'isOperator': new FormControl(this.modalUser.isOperator),
       'privacyaccept': new FormControl({value: this.modalData.privacyaccept, disabled: true}),
       'newsletteraccept': new FormControl(this.modalData.newsletteraccept),
       'becontacted': new FormControl(this.modalData.becontacted),
 
     });
-    if (this.hasOperatorPermission) {
+    if (this.modalUser.isOperator) {
       this.formGroup.addControl('services', new FormControl(this.modalUser.services, [Validators.required]));
-      this.formGroup.addControl('office', new FormControl(this.modalUser.id_office, [Validators.required]));
-      this.formGroup.addControl('role', new FormControl(this.modalUser.id_role, [Validators.required]));
-
+      this.formGroup.addControl('office', new FormControl(this.modalUser.role, [Validators.required]));
+      this.formGroup.addControl('role', new FormControl(this.modalUser.role, [Validators.required]));
     }
 
   }
@@ -120,12 +119,28 @@ export class DialogProfileComponent implements OnInit {
     return o1.id === o2.id;
   }
 
-  onYesClick(): void {
-    const updatedModalData = assign({}, this.modalData, ...map(this.formGroup.controls, (control, key) => ({[key] : control.value})));
+  isOperatorChange(ev: MatSlideToggleChange) {
+    this.modalUser.isOperator = ev.checked;
+    if (ev.checked) {
+      this.formGroup.addControl('services', new FormControl(this.modalUser.services, [Validators.required]));
+      this.formGroup.addControl('office', new FormControl(this.modalUser.id_office, [Validators.required]));
+      this.formGroup.addControl('role', new FormControl(this.modalUser.id_role, [Validators.required]));
+    } else {
+      this.formGroup.removeControl('services');
+      this.formGroup.removeControl('office');
+      this.formGroup.removeControl('role');
+      this.modalUser.id_role = RoleType.USER;
+      this.modalUser.services = undefined;
+    }
+  }
 
-    this.data.modalData.userdata = updatedModalData;
-    this.data.modalData.username = this.formGroup.controls['username'].value;
-    this.dialogRef.close(this.data.modalData);
+
+  onYesClick(): void {
+    if (this.modalUser.isOperator) {
+      this.modalUser.id_office = this.modalUser.office.id;
+      this.modalUser.id_role = this.modalUser.role.id;
+    }
+    this.dialogRef.close(this.modalUser);
   }
 
 }

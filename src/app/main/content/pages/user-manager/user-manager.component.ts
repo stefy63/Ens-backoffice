@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
 import { Page } from '../../../../class/page';
 import { IUser } from '../../../../interfaces/i-user';
 import { ApiUserService } from '../../../services/api/api-user.service';
@@ -20,7 +20,7 @@ import { AuthService } from '../../../services/auth/auth.service';
   templateUrl: './user-manager.component.html',
   styleUrls: ['./user-manager.component.scss']
 })
-export class UserManagerComponent implements OnInit, OnDestroy {
+export class UserManagerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   public page = new Page();
   public rows: IUser[];
@@ -43,7 +43,8 @@ export class UserManagerComponent implements OnInit, OnDestroy {
     public dialog: MatDialog,
     private spinner: NgxSpinnerService,
     private errorTranslator: ErrorMessageTranslatorService,
-    private authService: AuthService
+    private authService: AuthService,
+    private cdRef: ChangeDetectorRef
   ) {
     this.page.pageNumber = 0;
     this.page.size = 10;
@@ -51,7 +52,6 @@ export class UserManagerComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this.setPage({ offset: 0 });
     this.hasOperatorPermission = this.authService.hasPermission(['operator.get.all']);
     this.filterControl = new FormControl;
     this.pageSizeControl = new FormControl(10);
@@ -65,6 +65,7 @@ export class UserManagerComponent implements OnInit, OnDestroy {
           this.filter = data.toLowerCase();
           this.page.filter = this.filter;
           this.page.pageNumber = 0;
+          this.page.onlyOperator = this.onlyOperator.value;
         }),
         mergeMap(data => this.apiUserService.apiGetUserList(this.page))
       )
@@ -77,6 +78,10 @@ export class UserManagerComponent implements OnInit, OnDestroy {
     this.pageSizeControlSubscription = this.pageSizeControl.valueChanges.subscribe(data => {
       this.setPage({ offset: 0 });
     });
+  }
+
+  ngAfterViewChecked() {
+    this.cdRef.detectChanges();
   }
 
   ngOnDestroy(): void {
