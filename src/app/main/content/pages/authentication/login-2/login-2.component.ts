@@ -46,7 +46,6 @@ export class FuseLogin2Component implements OnInit {
   }
 
   onSubmit() {
-    // const isOperator = this.loginForm.value.operator;
     this.apiLoginService.apiLogin(this.loginForm.value as IDataLogin).subscribe(
       data => {
         this.storage.setItem('data', data);

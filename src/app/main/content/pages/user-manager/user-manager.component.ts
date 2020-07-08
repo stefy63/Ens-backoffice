@@ -116,7 +116,6 @@ export class UserManagerComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   public editProfile(user: IUser) {
-    // this.editedUser = cloneDeep(user);
     this.apiUserService.apiGetUserById(user.id)
       .subscribe(data => {
         const dialogRef = this.dialog.open(DialogProfileComponent, {
@@ -156,55 +155,18 @@ export class UserManagerComponent implements OnInit, OnDestroy, AfterViewChecked
     this.setPage({ offset: 0 });
   }
 
-  exportFile() {
-    this.spinner.show();
-    if (this.page.onlyOperator) {
-      this.exportOpertors();
-    } else {
-      this.exportUsers();
-    }
-    this.spinner.hide();
-    return;
-  }
-
-  private exportOpertors() {
-    const timeout = setTimeout(() => {
-      this.toast.error('Download File!', 'Operazione Fallita!');
-      return;
-    }, 10000);
-    this.apiUserService.apiGetOperatorFile(this.filter)
-      .subscribe(data => {
-        const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
-        a.href = window.URL.createObjectURL(data.file);
-        a.download = data.filename;
-        document.body.appendChild(a);
-        clearTimeout(timeout);
-        a.click();
-        this.toast.success('Download File!', 'Operazione conclusa!');
-      }, () => {
-        this.toast.error('Download File!', 'Operazione Fallita!');
-      });
-    return;
-  }
-
-  private exportUsers() {
-    const timeout = setTimeout(() => {
-      this.toast.error('Download File!', 'Operazione Fallita!');
-      return;
-    }, 10000);
-    this.apiUserService.apiGetUserFile(this.filter)
-      .subscribe( data => {
-        const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
-        a.href = window.URL.createObjectURL(data.file);
-        a.download = data.filename;
-        document.body.appendChild(a);
-        clearTimeout(timeout);
-        a.click();
-        this.toast.success('Download File!', 'Operazione conclusa!');
-      }, () => {
-        this.toast.error('Download File!', 'Operazione Fallita!');
-      });
-    return;
+    exportFile() {
+      const exportSource = (this.page.onlyOperator) ? this.apiUserService.apiGetOperatorFile(this.filter) : this.apiUserService.apiGetUserFile(this.filter);
+       exportSource.subscribe(data => {
+            const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+            a.href = window.URL.createObjectURL(data.file);
+            a.download = data.filename;
+            document.body.appendChild(a);
+            a.click();
+            this.toast.success('Download File!', 'Operazione conclusa!');
+          }, () => {
+            this.toast.error('Download File!', 'Operazione Fallita!');
+          });
   }
 
   Registration(): void {
