@@ -6,7 +6,7 @@
     </div>
     <h1 mat-dialog-title class="modal-title">Modifica Profilo</h1>
 </div>
-<form [formGroup]="formGroup" (ngSubmit)="onYesClick()">
+<form [formGroup]="formGroup" (ngSubmit)="onYesClick()" novalidate>
     <mat-dialog-content>
     <mat-tab-group>
       <mat-tab label="Anagrafica Utente">
