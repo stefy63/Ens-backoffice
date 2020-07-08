@@ -120,7 +120,6 @@ export class DialogProfileComponent implements OnInit {
   }
 
   isOperatorChange(ev: MatSlideToggleChange) {
-    const userdataFormGroup = this.formGroup.get('userdata') as FormGroup;
     if (ev.checked) {
       this.formGroup.addControl('services', new FormControl(this.modalUser.services, [Validators.required]));
       this.formGroup.addControl('office', new FormControl(this.modalUser.office, [Validators.required]));

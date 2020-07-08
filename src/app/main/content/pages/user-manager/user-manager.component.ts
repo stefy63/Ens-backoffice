@@ -1,19 +1,18 @@
-import { Component, OnInit, ViewChild, OnDestroy, AfterViewChecked, ChangeDetectorRef } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatCheckboxChange, MatDialog } from '@angular/material';
+import { NotificationsService } from 'angular2-notifications';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { debounceTime, filter, mergeMap, tap } from 'rxjs/operators';
+import { Subscription } from 'rxjs/Subscription';
 import { Page } from '../../../../class/page';
 import { IUser } from '../../../../interfaces/i-user';
 import { ApiUserService } from '../../../services/api/api-user.service';
-import { NotificationsService } from 'angular2-notifications';
-import { MatDialog, MatCheckboxChange, MatDialogRef } from '@angular/material';
+import { AuthService } from '../../../services/auth/auth.service';
+import { ErrorMessageTranslatorService } from '../../../services/error-message-translator.service';
 import { DialogChangePassword } from '../../../toolbar/dialog-component/dialog-change-password.component';
-import { FormControl } from '@angular/forms';
-import { debounceTime, mergeMap, tap, filter } from 'rxjs/operators';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { Subscription } from 'rxjs/Subscription';
 import { DialogProfileComponent } from './profile/profile.component';
 import { DialogRegistrationComponent } from './registration/regstration.component';
-import {findIndex} from 'lodash';
-import { ErrorMessageTranslatorService } from '../../../services/error-message-translator.service';
-import { AuthService } from '../../../services/auth/auth.service';
 
 @Component({
   selector: 'fuse-user-manager',
@@ -97,6 +96,7 @@ export class UserManagerComponent implements OnInit, OnDestroy, AfterViewChecked
     this.spinner.show();
     this.page.pageNumber = pageInfo.offset;
     this.page.filter = this.filter || '';
+    this.page.onlyOperator = this.onlyOperator.value;
     this.apiUserService.apiGetUserList(this.page).subscribe(pagedData => {
       this.page = pagedData.page;
       this.rows = pagedData.data;
@@ -130,8 +130,7 @@ export class UserManagerComponent implements OnInit, OnDestroy, AfterViewChecked
           .filter((result) => !!result)
           .flatMap((result) => this.apiUserService.apiChangeProfile(result))
           .subscribe((result) => {
-              const newUser = findIndex(this.rows, (item) => item.id === result.id);
-              this.rows[newUser] = result;
+              this.setPage({ offset: this.page.pageNumber });
               this.toast.success('Aggiornamento Profilo', 'Profilo modificato con successo');
           }, (err) => {
             const rowIndex = this.table.bodyComponent.getRowIndex(user);

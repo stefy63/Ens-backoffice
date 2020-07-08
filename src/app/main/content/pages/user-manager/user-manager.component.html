@@ -15,7 +15,7 @@
         </div>
     </div>
     <div class="row justify-content-end" [hidden]="!hasOperatorPermission">
-      <mat-slide-toggle class="col-2" [formControl]="onlyOperator" (change)="setOnlyOperator($event)">Solo Operatori..</mat-slide-toggle>
+      <mat-slide-toggle style="margin-right: 15px; margin-bottom: 10px;" [formControl]="onlyOperator" (change)="setOnlyOperator($event)">Visualizza gli Operatori</mat-slide-toggle>
     </div>
 
     <ngx-datatable #myTable [rows]="rows" class="material striped"
