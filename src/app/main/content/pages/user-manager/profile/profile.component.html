@@ -13,7 +13,7 @@
         <div class="user-mat-tab">
         <div class="row">
             <mat-form-field class="col-md-6"  >
-                <input matInput type="text" placeholder="Nome" [(ngModel)]="modalData.name" formControlName="name"  required>
+                <input matInput type="text" placeholder="Nome" formControlName="name"  required>
                 <mat-icon matSuffix>face</mat-icon>
                 <mat-error class="error-message" *ngIf="formGroup.controls['name'].hasError('required')">Campo
                     obbligatorio</mat-error>
@@ -21,7 +21,7 @@
                     non permessi</mat-error>
             </mat-form-field>
             <mat-form-field class="col-md-6"  >
-                <input matInput type="text" placeholder="Cognome"  [(ngModel)]="modalData.surname" formControlName="surname"  required>
+                <input matInput type="text" placeholder="Cognome" formControlName="surname"  required>
                 <mat-icon matSuffix>face</mat-icon>
                 <mat-error class="error-message" *ngIf="formGroup.controls['surname'].hasError('required')">Campo
                     obbligatorio</mat-error>
@@ -32,13 +32,13 @@
 
         <div class="row">
             <mat-form-field class="col-md-6"  >
-                <input matInput type="text" placeholder="Indirizzo e-mail"  [(ngModel)]="modalData.email" formControlName="email" required>
+                <input matInput type="text" placeholder="Indirizzo e-mail" formControlName="email" required>
                 <mat-icon matSuffix>mail_outline</mat-icon>
                 <mat-error class="error-message" *ngIf="formGroup.controls['email'].hasError('required')">Campo obbligatorio</mat-error>
                 <mat-error class="error-message" *ngIf="formGroup.controls['email'].hasError('email_custom')">Formato Mail errato</mat-error>
             </mat-form-field>
             <mat-form-field class="col-md-6"  >
-                <input matInput type="text" placeholder="Telefono" [(ngModel)]="modalData.phone" [formControlName]="'phone'" required>
+                <input matInput type="text" placeholder="Telefono" [formControlName]="'phone'" required>
                 <mat-icon matSuffix>local_phone</mat-icon>
                 <mat-error class="error-message" *ngIf="formGroup.controls['phone'].hasError('required')">Campo  obbligatorio</mat-error>
                 <mat-error class="error-message" *ngIf="formGroup.controls['phone'].hasError('numericOnly')">Lettere non permesse</mat-error>
@@ -47,7 +47,7 @@
 
         <div class="row">
             <mat-form-field class="col-md-6">
-                <mat-select formControlName="gender" [(ngModel)]="modalData.gender" placeholder="Sesso" required style="height: 25px">
+                <mat-select formControlName="gender" placeholder="Sesso" required style="height: 25px">
                     <mat-option *ngFor="let sex of gender" [value]="sex.id">
                         {{sex.name}}
                     </mat-option>
@@ -56,7 +56,7 @@
             </mat-form-field>
             <!-- username -->
             <mat-form-field class="col-md-6">
-              <input matInput type="text" placeholder="Username" [(ngModel)]="modalUser.username" formControlName="username" required>
+              <input matInput type="text" placeholder="Username" formControlName="username" required>
               <mat-icon matSuffix>face</mat-icon>
               <mat-error class="error-message" *ngIf="formGroup.controls['username'].hasError('required')">Campo  obbligatorio</mat-error>
               <mat-error class="error-message" *ngIf="formGroup.controls['username'].hasError('pattern')">Spazi non ammessi.</mat-error>
@@ -64,17 +64,17 @@
         </div>
 
         <div class="row  justify-content-end" *ngIf="hasOperatorPermission">
-            <mat-slide-toggle class="col-md-4"[(ngModel)]="modalUser.isOperator"  formControlName="isOperator" (change)="isOperatorChange($event)">Operatore</mat-slide-toggle>
+            <mat-slide-toggle class="col-md-4" formControlName="isOperator" (change)="isOperatorChange($event)">Operatore</mat-slide-toggle>
         </div><br>
 
-        <mat-checkbox formControlName="privacyaccept" [(ngModel)]="modalData.privacyaccept" >
+        <mat-checkbox formControlName="privacyaccept" >
             <span class="mat-caption col-md-12">Accetto le condizioni generali per la privacy*</span>
         </mat-checkbox><br>
         <mat-error class="error-message" *ngIf="formGroup.controls['privacyaccept'].hasError('required')">Campo obbligatorio</mat-error>
-        <mat-checkbox formControlName="newsletteraccept" [(ngModel)]="modalData.newsletteraccept" >
+        <mat-checkbox formControlName="newsletteraccept" >
             <span class="mat-caption col-md-12">Iscrizione alla Newsletter</span>
         </mat-checkbox><br>
-        <mat-checkbox formControlName="becontacted" [(ngModel)]="modalData.becontacted" >
+        <mat-checkbox formControlName="becontacted" >
             <span class="mat-caption col-md-12">Acconsento ad essere contattato</span>
         </mat-checkbox>
       </div>
@@ -83,7 +83,7 @@
         <div class="operator-mat-tab" *ngIf="hasOperatorPermission">
 
           <mat-form-field class="col-md-12">
-            <mat-select formControlName="services" [(ngModel)]="modalUser.services"  [compareWith]="compareObjects" placeholder="Servizi.." required style="height: 25px" multiple>
+            <mat-select formControlName="services" [compareWith]="compareObjects" placeholder="Servizi.." required style="height: 25px" multiple>
               <mat-option *ngFor="let service of ticketService" [value]="service" >
                 {{service.service}}
               </mat-option>
@@ -92,7 +92,7 @@
           </mat-form-field>
 
           <mat-form-field class="col-md-12">
-            <mat-select formControlName="office" [(ngModel)]="modalUser.office" [compareWith]="compareObjects" placeholder="Ufficio.." required style="height: 25px" >
+            <mat-select formControlName="office" [compareWith]="compareObjects" placeholder="Ufficio.." required style="height: 25px" >
                 <mat-option *ngFor="let office of offices" [value]="office">
                     {{office.office}}
                 </mat-option>
@@ -101,7 +101,7 @@
           </mat-form-field>
 
           <mat-form-field class="col-md-12">
-            <mat-select formControlName="role" [(ngModel)]="modalUser.role" [compareWith]="compareObjects" placeholder="Ruolo.." required style="height: 25px" >
+            <mat-select formControlName="role" [compareWith]="compareObjects" placeholder="Ruolo.." required style="height: 25px" >
                 <mat-option *ngFor="let role of roles" [value]="role">
                     {{role.name}}
                 </mat-option>

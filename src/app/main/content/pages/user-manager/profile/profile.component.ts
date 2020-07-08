@@ -109,7 +109,7 @@ export class DialogProfileComponent implements OnInit {
     });
     if (this.modalUser.isOperator) {
       this.formGroup.addControl('services', new FormControl(this.modalUser.services, [Validators.required]));
-      this.formGroup.addControl('office', new FormControl(this.modalUser.role, [Validators.required]));
+      this.formGroup.addControl('office', new FormControl(this.modalUser.office, [Validators.required]));
       this.formGroup.addControl('role', new FormControl(this.modalUser.role, [Validators.required]));
     }
 
@@ -123,8 +123,8 @@ export class DialogProfileComponent implements OnInit {
     this.modalUser.isOperator = ev.checked;
     if (ev.checked) {
       this.formGroup.addControl('services', new FormControl(this.modalUser.services, [Validators.required]));
-      this.formGroup.addControl('office', new FormControl(this.modalUser.id_office, [Validators.required]));
-      this.formGroup.addControl('role', new FormControl(this.modalUser.id_role, [Validators.required]));
+      this.formGroup.addControl('office', new FormControl(this.modalUser.office, [Validators.required]));
+      this.formGroup.addControl('role', new FormControl(this.modalUser.role, [Validators.required]));
     } else {
       this.formGroup.removeControl('services');
       this.formGroup.removeControl('office');
@@ -136,11 +136,27 @@ export class DialogProfileComponent implements OnInit {
 
 
   onYesClick(): void {
-    if (this.modalUser.isOperator) {
-      this.modalUser.id_office = this.modalUser.office.id;
-      this.modalUser.id_role = this.modalUser.role.id;
-    }
-    this.dialogRef.close(this.modalUser);
+
+    const updatedModalUser = assign(this.modalUser, {
+      username: this.formGroup.controls.username.value,
+      isOperator: this.formGroup.controls.isOperator.value,
+      services: (this.modalUser.isOperator) ? this.formGroup.controls.services.value : this.modalUser.services,
+      id_office: (this.modalUser.isOperator) ? this.formGroup.controls.office.value.id : this.modalUser.id_office,
+      office: (this.modalUser.isOperator) ? this.formGroup.controls.office.value : this.modalUser.office,
+      id_role: (this.modalUser.isOperator) ? this.formGroup.controls.role.value.id : this.modalUser.id_role,
+      role: (this.modalUser.isOperator) ? this.formGroup.controls.role.value : this.modalUser.role,
+      userdata: {
+          name: this.formGroup.controls.name.value,
+          surname: this.formGroup.controls.surname.value,
+          email: this.formGroup.controls.email.value,
+          gender: this.formGroup.controls.gender.value,
+          phone: this.formGroup.controls.phone.value,
+          privacyaccept: !!this.formGroup.controls.privacyaccept.value,
+          newsletteraccept: !!this.formGroup.controls.newsletteraccept.value,
+          becontacted: !!this.formGroup.controls.becontacted.value
+      },
+    });
+    this.dialogRef.close(updatedModalUser);
   }
 
 }
