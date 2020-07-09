@@ -1,25 +1,25 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { AfterViewChecked, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FormControl } from '@angular/forms';
+import { MatCheckboxChange, MatDialog } from '@angular/material';
+import { NotificationsService } from 'angular2-notifications';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { debounceTime, filter, mergeMap, tap } from 'rxjs/operators';
+import { Subscription } from 'rxjs/Subscription';
 import { Page } from '../../../../class/page';
 import { IUser } from '../../../../interfaces/i-user';
 import { ApiUserService } from '../../../services/api/api-user.service';
-import { NotificationsService } from 'angular2-notifications';
-import { MatDialog } from '@angular/material';
+import { AuthService } from '../../../services/auth/auth.service';
+import { ErrorMessageTranslatorService } from '../../../services/error-message-translator.service';
 import { DialogChangePassword } from '../../../toolbar/dialog-component/dialog-change-password.component';
-import { FormControl } from '@angular/forms';
-import { debounceTime, mergeMap, tap, filter } from 'rxjs/operators';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { Subscription } from 'rxjs/Subscription';
 import { DialogProfileComponent } from './profile/profile.component';
 import { DialogRegistrationComponent } from './registration/regstration.component';
-import {cloneDeep} from 'lodash';
-import { ErrorMessageTranslatorService } from '../../../services/error-message-translator.service';
 
 @Component({
   selector: 'fuse-user-manager',
   templateUrl: './user-manager.component.html',
   styleUrls: ['./user-manager.component.scss']
 })
-export class UserManagerComponent implements OnInit, OnDestroy {
+export class UserManagerComponent implements OnInit, OnDestroy, AfterViewChecked {
 
   public page = new Page();
   public rows: IUser[];
@@ -30,6 +30,8 @@ export class UserManagerComponent implements OnInit, OnDestroy {
 
   public filterControl: FormControl;
   public pageSizeControl: FormControl;
+  public onlyOperator: FormControl;
+  public hasOperatorPermission = false;
   private debounce = 1000;
   private filterControlSubscription: Subscription;
   private pageSizeControlSubscription: Subscription;
@@ -39,7 +41,9 @@ export class UserManagerComponent implements OnInit, OnDestroy {
     private toast: NotificationsService,
     public dialog: MatDialog,
     private spinner: NgxSpinnerService,
-    private errorTranslator: ErrorMessageTranslatorService
+    private errorTranslator: ErrorMessageTranslatorService,
+    private authService: AuthService,
+    private cdRef: ChangeDetectorRef
   ) {
     this.page.pageNumber = 0;
     this.page.size = 10;
@@ -47,9 +51,10 @@ export class UserManagerComponent implements OnInit, OnDestroy {
 
 
   ngOnInit() {
-    this.setPage({ offset: 0 });
+    this.hasOperatorPermission = this.authService.hasPermission(['operator.get.all']);
     this.filterControl = new FormControl;
     this.pageSizeControl = new FormControl(10);
+    this.onlyOperator = new FormControl(false);
     this.filterControlSubscription = this.filterControl.valueChanges
       .pipe(
         debounceTime(this.debounce),
@@ -59,6 +64,7 @@ export class UserManagerComponent implements OnInit, OnDestroy {
           this.filter = data.toLowerCase();
           this.page.filter = this.filter;
           this.page.pageNumber = 0;
+          this.page.onlyOperator = this.onlyOperator.value;
         }),
         mergeMap(data => this.apiUserService.apiGetUserList(this.page))
       )
@@ -67,9 +73,14 @@ export class UserManagerComponent implements OnInit, OnDestroy {
           this.rows = pagedData.data;
           this.spinner.hide();
       }, () => this.spinner.hide());
-      this.pageSizeControlSubscription = this.pageSizeControl.valueChanges.subscribe(data => {
-        this.setPage({ offset: 0 });
-      });
+
+    this.pageSizeControlSubscription = this.pageSizeControl.valueChanges.subscribe(data => {
+      this.setPage({ offset: 0 });
+    });
+  }
+
+  ngAfterViewChecked() {
+    this.cdRef.detectChanges();
   }
 
   ngOnDestroy(): void {
@@ -85,6 +96,7 @@ export class UserManagerComponent implements OnInit, OnDestroy {
     this.spinner.show();
     this.page.pageNumber = pageInfo.offset;
     this.page.filter = this.filter || '';
+    this.page.onlyOperator = this.onlyOperator.value;
     this.apiUserService.apiGetUserList(this.page).subscribe(pagedData => {
       this.page = pagedData.page;
       this.rows = pagedData.data;
@@ -104,25 +116,28 @@ export class UserManagerComponent implements OnInit, OnDestroy {
   }
 
   public editProfile(user: IUser) {
-    this.editedUser = cloneDeep(user);
-    const dialogRef = this.dialog.open(DialogProfileComponent, {
-      hasBackdrop: true,
-      data: {
-          modalData: user
-      }
-  });
+    this.apiUserService.apiGetUserById(user.id)
+      .subscribe(data => {
+        const dialogRef = this.dialog.open(DialogProfileComponent, {
+          hasBackdrop: true,
+          data: {
+              modalData: data
+          }
+        });
 
-  dialogRef
-      .afterClosed()
-      .filter((result) => !!result)
-      .flatMap((result) => this.apiUserService.apiChangeProfile(result))
-      .subscribe(() => {
-          this.toast.success('Aggiornamento Profilo', 'Profilo modificato con successo');
-      }, (err) => {
-        const rowIndex = this.table.bodyComponent.getRowIndex(user);
-        this.rows[rowIndex] = this.editedUser;
-        this.toast.error('Aggiornamento Profilo', this.errorTranslator.Translate(err.error.message));
-        this.editProfile(this.rows[rowIndex]);
+        dialogRef
+          .afterClosed()
+          .filter((result) => !!result)
+          .flatMap((result) => this.apiUserService.apiChangeProfile(result))
+          .subscribe((result) => {
+              this.setPage({ offset: this.page.pageNumber });
+              this.toast.success('Aggiornamento Profilo', 'Profilo modificato con successo');
+          }, (err) => {
+            const rowIndex = this.table.bodyComponent.getRowIndex(user);
+            this.rows[rowIndex] = this.editedUser;
+            this.toast.error('Aggiornamento Profilo', this.errorTranslator.Translate(err.error.message));
+            this.editProfile(this.rows[rowIndex]);
+          });
       });
   }
 
@@ -134,23 +149,23 @@ export class UserManagerComponent implements OnInit, OnDestroy {
   });
   }
 
-  exportFile() {
-    this.spinner.show();
-    this.apiUserService.apiGetUserFile(this.filter)
-      .subscribe( data => {
-        const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
-        a.href = window.URL.createObjectURL(data.file);
-        a.download = data.filename;
-        document.body.appendChild(a);
-        a.click();
-        this.spinner.hide();
-        this.toast.success('Download File!', 'Operazione conclusa!');
-    }, () => this.spinner.hide());
-    this.pageSizeControlSubscription = this.pageSizeControl.valueChanges.subscribe(data => {
-      this.spinner.hide();
-      this.toast.error('Download File!', 'Operazione Fallita!');
-    });
-    return;
+  public setOnlyOperator(ev: MatCheckboxChange) {
+    this.page.onlyOperator = ev.checked;
+    this.setPage({ offset: 0 });
+  }
+
+    exportFile() {
+      const exportSource = (this.page.onlyOperator) ? this.apiUserService.apiGetOperatorFile(this.filter) : this.apiUserService.apiGetUserFile(this.filter);
+       exportSource.subscribe(data => {
+            const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+            a.href = window.URL.createObjectURL(data.file);
+            a.download = data.filename;
+            document.body.appendChild(a);
+            a.click();
+            this.toast.success('Download File!', 'Operazione conclusa!');
+          }, () => {
+            this.toast.error('Download File!', 'Operazione Fallita!');
+          });
   }
 
   Registration(): void {

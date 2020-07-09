@@ -1,12 +1,19 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MatDialogRef, MatSlideToggleChange, MAT_DIALOG_DATA } from '@angular/material';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { map, assign } from 'lodash';
+import { assign } from 'lodash';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { AlertToasterOptions } from '../../../../../class/alert-toaster-options';
+import { IRoles } from '../../../../../interfaces/i-roles';
+import { ITicketOffice } from '../../../../../interfaces/i-ticket-office';
+import { ITicketService } from '../../../../../interfaces/i-ticket-service';
+import { IUser } from '../../../../../interfaces/i-user';
 import { IUserData } from '../../../../../interfaces/i-userdata';
-import { ApiItalyGeoService } from '../../../../services/api/api-italy-geo.service';
+import { RoleType } from '../../../../../type/user-roles';
+import { ApiRolesService } from '../../../../services/api/api-roles.service';
+import { AuthService } from '../../../../services/auth/auth.service';
+import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
 import { AlphabeticOnlyValidator } from '../../../../services/MaterialValidator/AlphabeticOnlyValidator';
 import { EmailCustomValidator } from '../../../../services/MaterialValidator/EmailCustomValidator';
 import { NumericOnlyValidator } from '../../../../services/MaterialValidator/NumericOnlyValidator';
@@ -37,8 +44,14 @@ export class DialogProfileComponent implements OnInit {
 
   public options = AlertToasterOptions;
   public modalData: IUserData;
+  public modalUser: IUser;
   public formGroup: FormGroup;
   public provinces: any[];
+  public ticketService: ITicketService[];
+  public offices: ITicketOffice[];
+  public roles: IRoles[];
+  public hasOperatorPermission: boolean;
+  public onlyOperator: FormControl;
   public gender = [
     { id: 'male', name: 'Maschio'},
     { id: 'female', name: 'Femmina'}
@@ -48,49 +61,88 @@ export class DialogProfileComponent implements OnInit {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<DialogProfileComponent>,
-    private httpItalyGeo: ApiItalyGeoService
+    private authService: AuthService,
+    private localStorage: LocalStorageService,
+    private apiRoles: ApiRolesService
     ) {
-      this.httpItalyGeo.apiGetAllProvince()
-        .subscribe(provinces => {
-          this.provinces = provinces;
-        });
-  }
+      this.hasOperatorPermission = this.authService.hasPermission(['operator.get.all']);
 
-  ngOnInit(): void {
+      if (this.hasOperatorPermission) {
+        this.ticketService = this.localStorage.getItem('services');
+        this.offices = this.localStorage.getItem('offices');
+        this.apiRoles.apiGetAllRoles()
+          .subscribe(roles => {
+            this.roles = roles;
+          });
+      }
+    }
+
+  ngOnInit() {
     this.modalData = this.data.modalData.userdata as IUserData;
+    this.modalUser = this.data.modalData as IUser;
     this.modalData.privacyaccept = this.modalData.privacyaccept || true;
     this.formGroup = new FormGroup({
-      'username': new FormControl(this.data.modalData.username, [
+      'userdata': new FormGroup({
+        'name': new FormControl(this.modalData.name, [
+          Validators.required,
+          AlphabeticOnlyValidator.alphabeticOnly
+        ]),
+        'surname': new FormControl(this.modalData.surname, [
+          Validators.required,
+          AlphabeticOnlyValidator.alphabeticOnly
+        ]),
+        'email': new FormControl(this.modalData.email, [
+          Validators.required, EmailCustomValidator.email_custom
+        ]),
+        'gender': new FormControl(this.modalData.gender, [Validators.required]),
+        'phone': new FormControl(this.modalData.phone, [
+          Validators.required, NumericOnlyValidator.numericOnly
+        ]),
+        'privacyaccept': new FormControl({value: this.modalData.privacyaccept, disabled: true}),
+        'newsletteraccept': new FormControl(this.modalData.newsletteraccept),
+        'becontacted': new FormControl(this.modalData.becontacted)  
+      }),
+      'isOperator': new FormControl(this.modalUser.isOperator),
+      'username': new FormControl(this.modalUser.username, [
         Validators.required,
         Validators.pattern(/^\S*$/)
       ]),
-      'name': new FormControl(this.modalData.name, [
-        Validators.required,
-        AlphabeticOnlyValidator.alphabeticOnly
-      ]),
-      'surname': new FormControl(this.modalData.surname, [
-        Validators.required,
-        AlphabeticOnlyValidator.alphabeticOnly
-      ]),
-      'email': new FormControl(this.modalData.email, [
-        Validators.required, EmailCustomValidator.email_custom
-      ]),
-      'gender': new FormControl(this.modalData.gender, [Validators.required]),
-      'phone': new FormControl(this.modalData.phone, [
-        Validators.required, NumericOnlyValidator.numericOnly
-      ]),
-      'privacyaccept': new FormControl({value: this.modalData.privacyaccept, disabled: true}),
-      'newsletteraccept': new FormControl(this.modalData.newsletteraccept),
-      'becontacted': new FormControl(this.modalData.becontacted),
     });
+    if (this.modalUser.isOperator) {
+      this.formGroup.addControl('services', new FormControl(this.modalUser.services, [Validators.required]));
+      this.formGroup.addControl('office', new FormControl(this.modalUser.office, [Validators.required]));
+      this.formGroup.addControl('role', new FormControl(this.modalUser.role, [Validators.required]));
+    }
+
   }
 
-  onYesClick(): void {
-    const updatedModalData = assign({}, this.modalData, ...map(this.formGroup.controls, (control, key) => ({[key] : control.value})));
+  compareObjects(o1: any, o2: any): boolean {
+    return o1.id === o2.id;
+  }
 
-    this.data.modalData.userdata = updatedModalData;
-    this.data.modalData.username = this.formGroup.controls['username'].value;
-    this.dialogRef.close(this.data.modalData);
+  isOperatorChange(ev: MatSlideToggleChange) {
+    if (ev.checked) {
+      this.formGroup.addControl('services', new FormControl(this.modalUser.services, [Validators.required]));
+      this.formGroup.addControl('office', new FormControl(this.modalUser.office, [Validators.required]));
+      this.formGroup.addControl('role', new FormControl(this.modalUser.role, [Validators.required]));
+    } else {
+      this.formGroup.removeControl('services');
+      this.formGroup.removeControl('office');
+      this.formGroup.removeControl('role');
+      this.modalUser.id_role = RoleType.USER;
+      this.modalUser.services = undefined;
+    }
+  }
+
+
+  onYesClick(): void {
+    const modalDataChanged = Object.assign(this.modalUser, this.formGroup.value);
+    if (modalDataChanged.isOperator) {
+      modalDataChanged.id_office = modalDataChanged.office.id;
+      modalDataChanged.id_role = modalDataChanged.role.id;
+    }
+
+    this.dialogRef.close(modalDataChanged);
   }
 
 }

@@ -37,7 +37,7 @@ const routes: Routes = [
   ],
   entryComponents: [
     DialogProfileComponent,
-    DialogRegistrationComponent
+    DialogRegistrationComponent,
   ],
   providers: [
     NotificationsService,

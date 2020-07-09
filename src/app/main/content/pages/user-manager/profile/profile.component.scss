@@ -4,7 +4,10 @@
   margin-bottom: 30px;
 
   mat-dialog-content {
-    min-height: auto;
+    .user-mat-tab, .operator-mat-tab {
+      margin: 15px;
+    }
+    min-height: 100%;
     overflow: unset;
   }
 
