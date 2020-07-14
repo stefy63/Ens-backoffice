@@ -150,11 +150,11 @@ export class UserManagerComponent implements OnInit, OnDestroy, AfterViewChecked
   }
 
   public setOnlyOperator(ev: MatCheckboxChange) {
-    this.page.onlyOperator = ev.checked;
     this.setPage({ offset: 0 });
   }
 
     exportFile() {
+      this.spinner.show();
       const exportSource = (this.page.onlyOperator) ? this.apiUserService.apiGetOperatorFile(this.filter) : this.apiUserService.apiGetUserFile(this.filter);
        exportSource.subscribe(data => {
             const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
@@ -163,12 +163,18 @@ export class UserManagerComponent implements OnInit, OnDestroy, AfterViewChecked
             document.body.appendChild(a);
             a.click();
             this.toast.success('Download File!', 'Operazione conclusa!');
+            this.spinner.hide();
           }, () => {
             this.toast.error('Download File!', 'Operazione Fallita!');
+            this.spinner.hide();
           });
   }
 
   Registration(): void {
-    this.dialog.open(DialogRegistrationComponent);
+    this.dialog.open(DialogRegistrationComponent, {
+      data: {
+          modalData: this.onlyOperator.value
+      }
+  });
   }
 }

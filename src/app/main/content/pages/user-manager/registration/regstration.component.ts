@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { NotificationsService } from 'angular2-notifications';
@@ -14,6 +14,14 @@ import { EmptyInputValidator } from '../../../../services/MaterialValidator/Empt
 import { ApiUserService } from '../../../../services/api/api-user.service';
 import { EmailCustomValidator } from '../../../../services/MaterialValidator/EmailCustomValidator';
 import { assign, get } from 'lodash';
+import { AuthService } from '../../../../services/auth/auth.service';
+import { ITicketService } from '../../../../../interfaces/i-ticket-service';
+import { ITicketOffice } from '../../../../../interfaces/i-ticket-office';
+import { IRoles } from '../../../../../interfaces/i-roles';
+import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
+import { ApiRolesService } from '../../../../services/api/api-roles.service';
+import { RoleType } from '../../../../../type/user-roles';
+import { IUserDataResponse } from '../../../../../interfaces/i-userdata.request';
 
 
 
@@ -49,25 +57,68 @@ export class DialogRegistrationComponent implements OnInit {
     { id: 'male', name: 'Maschio'},
     { id: 'female', name: 'Femmina'}
   ];
+  public hasOperatorPermission: boolean;
+  public ticketService: ITicketService[];
+  public offices: ITicketOffice[];
+  public roles: IRoles[];
 
 
   constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<DialogRegistrationComponent>,
     public toast: NotificationsService,
+    private authService: AuthService,
     private httpItalyGeo: ApiItalyGeoService,
     private apiUserService: ApiUserService,
+    private localStorage: LocalStorageService,
+    private apiRoles: ApiRolesService
     ) {
+      this.hasOperatorPermission = this.authService.hasPermission(['operator.get.all']);
       this.httpItalyGeo.apiGetAllProvince()
         .subscribe(provinces => {
           this.provinces = provinces;
         });
+
+      if (this.hasOperatorPermission) {
+        this.ticketService = this.localStorage.getItem('services');
+        this.offices = this.localStorage.getItem('offices');
+        this.apiRoles.apiGetAllRoles()
+          .subscribe(roles => {
+            this.roles = roles;
+          });
+      }
   }
 
   ngOnInit(): void {
 
     this.formGroup = new FormGroup({
+        'userdata': new FormGroup({
+          'name': new FormControl('', [
+              Validators.required,
+              AlphabeticOnlyValidator.alphabeticOnly
+          ]),
+          'surname': new FormControl('', [
+              Validators.required,
+              AlphabeticOnlyValidator.alphabeticOnly
+          ]),
+          'email': new FormControl('', [
+              Validators.required,
+              EmailCustomValidator.email_custom
+          ]),
+          'gender': new FormControl('', [
+              Validators.required
+              ]),
+          'phone': new FormControl('', [
+              Validators.required,
+              NumericOnlyValidator.numericOnly
+          ]),
+          // 'card_number': new FormControl('', []),
+          'privacyaccept': new FormControl(''),
+          'newsletteraccept': new FormControl(''),
+          'becontacted': new FormControl(''),
+        }),
         'username': new FormControl(''),
-        'new_password': new FormControl('', [
+        'password': new FormControl('', [
             Validators.required,
             EmptyInputValidator.whiteSpace,
             PasswordValidator.match
@@ -76,55 +127,29 @@ export class DialogRegistrationComponent implements OnInit {
             Validators.required,
             PasswordValidator.match
         ]),
-        'name': new FormControl('', [
-            Validators.required,
-            AlphabeticOnlyValidator.alphabeticOnly
-        ]),
-        'surname': new FormControl('', [
-            Validators.required,
-            AlphabeticOnlyValidator.alphabeticOnly
-        ]),
-        'email': new FormControl('', [
-            Validators.required,
-            EmailCustomValidator.email_custom
-        ]),
-        'gender': new FormControl('', [
-            Validators.required
-            ]),
-        'phone': new FormControl('', [
-            Validators.required,
-            NumericOnlyValidator.numericOnly
-        ]),
-        'card_number': new FormControl('', []),
-        'privacyaccept': new FormControl(''),
-        'newsletteraccept': new FormControl(''),
-        'becontacted': new FormControl(''),
     });
+    if (this.data.modalData) {
+      this.formGroup.addControl('services', new FormControl('', [Validators.required]));
+      this.formGroup.addControl('office', new FormControl('', [Validators.required]));
+      this.formGroup.addControl('role', new FormControl('', [Validators.required]));
+    }
   }
 
   onYesClick(): void {
-    const updatedModalData = assign(this.user, {
-        user: {
-            username: this.formGroup.controls.username.value,
-            password: this.formGroup.controls.new_password.value,
-        },
-        user_data: {
-            name: this.formGroup.controls.name.value,
-            surname: this.formGroup.controls.surname.value,
-            email: this.formGroup.controls.email.value,
-            gender: this.formGroup.controls.gender.value,
-            phone: this.formGroup.controls.phone.value,
-            card_number: this.formGroup.controls.card_number.value,
-            privacyaccept: !!this.formGroup.controls.privacyaccept.value,
-            newsletteraccept: !!this.formGroup.controls.newsletteraccept.value,
-            becontacted: !!this.formGroup.controls.becontacted.value
-        },
-        noSendMail: true
-    });
+    const modalDataChanged: IUser = assign({}, this.formGroup.value, {noSendMail: true});
 
-    this.apiUserService.apiCreateUser(updatedModalData)
+    if (this.data.modalData) {
+      modalDataChanged.isOperator = true;
+      modalDataChanged.id_office =  this.formGroup.controls.office.value.id;
+      modalDataChanged.id_role =  this.formGroup.controls.role.value.id;
+      modalDataChanged.services = this.formGroup.controls.services.value;
+    } else {
+      modalDataChanged.isOperator = false;
+    }
+
+    this.apiUserService.apiCreateUser(modalDataChanged)
         .subscribe(data => {
-                this.toast.success('Attenzione', 'Ti abbiamo inviato una mail di conferma.');
+                this.toast.success('Nuovo Utente creato con successo!');
                 this.dialogRef.close();
             }, (err) => {
                 const errorMessage = get(err, 'error.message', '');
@@ -132,11 +157,14 @@ export class DialogRegistrationComponent implements OnInit {
                     this.toast.error('Attenzione', 'Utente già presente in archivio');
                 } else if (errorMessage === 'EMAIL_ALREDY_EXIST') {
                     this.toast.error('Attenzione', 'Email già presente in archivio');
+                } else if (errorMessage === 'PHONE_ALREDY_EXIST') {
+                    this.toast.error('Attenzione', 'Telefono già presente in archivio');
                 }
                 else {
                     this.toast.error('Attenzione', 'Creazione nuovo utente fallita');
                 }
             });
+
     }
 
 
