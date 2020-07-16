@@ -19,4 +19,5 @@ export interface ITicket {
     unreaded_messages?: number;
     id_user_unknown?: number;
     userUnknown?: any;
+    user_disabled?: boolean;
 }
