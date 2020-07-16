@@ -44,10 +44,6 @@ export class TicketItemComponent implements OnInit {
       });
   }
 
-  public getUserDisabled(item) {
-    return (item.user_disabled) ? 'red' : 'black';
-  }
-
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     filterValue = filterValue.toLowerCase(); // Datasource defaults to lowercase matches
