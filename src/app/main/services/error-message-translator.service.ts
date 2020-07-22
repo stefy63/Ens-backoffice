@@ -1,19 +1,19 @@
 import { Injectable } from '@angular/core';
-import {Dictionary} from 'lodash';
+import { Dictionary } from 'lodash';
 
 @Injectable()
 export class ErrorMessageTranslatorService {
 
   private errorMessages: Dictionary<string> = {
-    'EMAIL_ALREDY_EXIST' : 'Email esistente!',
-    'USER_ALREDY_EXIST' : 'Username esistente!',
+    'EMAIL_ALREDY_EXIST' : 'Email già presente in archivio!',
+    'USER_ALREDY_EXIST' : 'Username già presente in archivio!',
+    'PHONE_ALREDY_EXIST': 'Telefono già presente in archivio!',
     'GENERIC' : 'Modifica Profilo fallita!',
-
   };
 
   constructor() { }
 
-  public Translate(err: string) {
+  public translate(err: string) {
     return this.errorMessages[err] || this.errorMessages['GENERIC'];
   }
 

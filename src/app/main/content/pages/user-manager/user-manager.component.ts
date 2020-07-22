@@ -130,14 +130,10 @@ export class UserManagerComponent implements OnInit, OnDestroy, AfterViewChecked
           .filter((result) => !!result)
           .flatMap((result) => this.apiUserService.apiChangeProfile(result))
           .subscribe((result) => {
-              this.setPage({ offset: this.page.pageNumber });
               this.toast.success('Aggiornamento Profilo', 'Profilo modificato con successo');
           }, (err) => {
-            const rowIndex = this.table.bodyComponent.getRowIndex(user);
-            this.rows[rowIndex] = this.editedUser;
-            this.toast.error('Aggiornamento Profilo', this.errorTranslator.Translate(err.error.message));
-            this.editProfile(this.rows[rowIndex]);
-          });
+            this.toast.error('Aggiornamento Profilo', this.errorTranslator.translate(err.error.message));            
+          }, () => this.setPage({ offset: this.page.pageNumber }));
       });
   }
 
