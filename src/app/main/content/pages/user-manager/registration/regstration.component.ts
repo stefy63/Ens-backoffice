@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MatSlideToggleChange, MAT_DIALOG_DATA } from '@angular/material';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { NotificationsService } from 'angular2-notifications';
@@ -10,6 +10,7 @@ import { IRoles } from '../../../../../interfaces/i-roles';
 import { ITicketOffice } from '../../../../../interfaces/i-ticket-office';
 import { ITicketService } from '../../../../../interfaces/i-ticket-service';
 import { IUser } from '../../../../../interfaces/i-user';
+import { RoleType } from '../../../../../type/user-roles';
 import { ApiItalyGeoService } from '../../../../services/api/api-italy-geo.service';
 import { ApiRolesService } from '../../../../services/api/api-roles.service';
 import { ApiUserService } from '../../../../services/api/api-user.service';
@@ -86,6 +87,8 @@ export class DialogRegistrationComponent implements OnInit {
             this.roles = roles;
           });
       }
+      
+      this.data.onlyOperator = false;
   }
 
   ngOnInit(): void {
@@ -127,23 +130,36 @@ export class DialogRegistrationComponent implements OnInit {
             PasswordValidator.match
         ]),
     });
-    if (this.data.onlyOperator) {
-      this.formGroup.addControl('services', new FormControl('', [Validators.required]));
-      this.formGroup.addControl('office', new FormControl('', [Validators.required]));
-      this.formGroup.addControl('role', new FormControl('', [Validators.required]));
+  }
+
+  isOperatorChange(ev: MatSlideToggleChange) {
+    this.data.onlyOperator = ev.checked;
+    if (ev.checked) {
+      this.addOperatorControl();
+    } else {
+      this.formGroup.removeControl('services');
+      this.formGroup.removeControl('office');
+      this.formGroup.removeControl('role');
     }
+  }
+
+  private addOperatorControl(){
+    this.formGroup.addControl('services', new FormControl('', [Validators.required]));
+    this.formGroup.addControl('office', new FormControl('', [Validators.required]));
+    this.formGroup.addControl('role', new FormControl('', [Validators.required]));
   }
 
   onYesClick(): void {
     const modalDataChanged: IUser = assign({}, this.formGroup.value, {noSendMail: true});
-
+    modalDataChanged.isOperator = this.data.onlyOperator;
     if (this.data.onlyOperator) {
-      modalDataChanged.isOperator = true;
       modalDataChanged.id_office =  this.formGroup.controls.office.value.id;
       modalDataChanged.id_role =  this.formGroup.controls.role.value.id;
       modalDataChanged.services = this.formGroup.controls.services.value;
     } else {
-      modalDataChanged.isOperator = false;
+      modalDataChanged.id_role = RoleType.USER;
+      modalDataChanged.services = undefined;
+      modalDataChanged.id_office = undefined;
     }
 
     this.apiUserService.apiCreateUser(modalDataChanged)

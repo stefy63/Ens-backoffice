@@ -163,11 +163,7 @@ export class UserManagerComponent implements OnInit, OnDestroy, AfterViewChecked
         }, () => this.spinner.hide());
   }
 
-  Registration(): void {
-    this.dialog.open(DialogRegistrationComponent, {
-      data: {
-          onlyOperator: this.onlyOperator.value
-      }
-  });
+  registration(): void {
+    this.dialog.open(DialogRegistrationComponent);
   }
 }

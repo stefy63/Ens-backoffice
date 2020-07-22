@@ -13,6 +13,10 @@
       <div class="user-mat-tab">
 
         <div class="dialog-content__container">
+            <div class="row" *ngIf="hasOperatorPermission">
+                <mat-slide-toggle class="col-md-6" formControlName="isOperator" (change)="isOperatorChange($event)">Operatore</mat-slide-toggle>
+            </div><br>
+
             <div class="row">
                 <mat-form-field class="col-md-6"  >
                     <input matInput  type="text" placeholder="Username" formControlName="username"  required>
@@ -96,7 +100,7 @@
           </div>
         </div>
       </mat-tab>
-      <mat-tab label="Dettagli Operatore" class="operator-mat-tab" *ngIf="data.modalData && hasOperatorPermission">
+      <mat-tab label="Dettagli Operatore" class="operator-mat-tab" *ngIf="data.onlyOperator && hasOperatorPermission">
         <div class="operator-mat-tab" >
 
           <div class="row">
