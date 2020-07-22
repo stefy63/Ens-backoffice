@@ -108,9 +108,7 @@ export class DialogProfileComponent implements OnInit {
       ]),
     });
     if (this.modalUser.isOperator) {
-      this.formGroup.addControl('services', new FormControl(this.modalUser.services, [Validators.required]));
-      this.formGroup.addControl('office', new FormControl(this.modalUser.office, [Validators.required]));
-      this.formGroup.addControl('role', new FormControl(this.modalUser.role, [Validators.required]));
+      this.addOperatorControl();
     }
 
     this.formGroup.markAsTouched();
@@ -122,24 +120,29 @@ export class DialogProfileComponent implements OnInit {
 
   isOperatorChange(ev: MatSlideToggleChange) {
     if (ev.checked) {
-      this.formGroup.addControl('services', new FormControl(this.modalUser.services, [Validators.required]));
-      this.formGroup.addControl('office', new FormControl(this.modalUser.office, [Validators.required]));
-      this.formGroup.addControl('role', new FormControl(this.modalUser.role, [Validators.required]));
+      this.addOperatorControl();
     } else {
       this.formGroup.removeControl('services');
       this.formGroup.removeControl('office');
       this.formGroup.removeControl('role');
-      this.modalUser.id_role = RoleType.USER;
-      this.modalUser.services = undefined;
     }
   }
 
+  private addOperatorControl(){
+    this.formGroup.addControl('services', new FormControl(this.modalUser.services, [Validators.required]));
+    this.formGroup.addControl('office', new FormControl(this.modalUser.office, [Validators.required]));
+    this.formGroup.addControl('role', new FormControl(this.modalUser.role, [Validators.required]));
+  }
 
   onYesClick(): void {
     const modalDataChanged = Object.assign(this.modalUser, this.formGroup.value);
     if (modalDataChanged.isOperator) {
       modalDataChanged.id_office = modalDataChanged.office.id;
       modalDataChanged.id_role = modalDataChanged.role.id;
+    } else {
+      modalDataChanged.id_role = RoleType.USER;
+      modalDataChanged.services = undefined;
+      modalDataChanged.id_office = undefined;
     }
 
     this.dialogRef.close(modalDataChanged);

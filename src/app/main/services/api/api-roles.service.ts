@@ -1,8 +1,8 @@
-import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { IRoles } from '../../../interfaces/i-roles';
 import { GetBaseUrl } from '../helper/getBaseUrl';
-import {IRoles} from '../../../interfaces/i-roles';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -19,7 +19,7 @@ export class ApiRolesService {
   ) { }
 
   public apiGetAllRoles(): Observable<IRoles[]> {
-    return this.http.get(this.baseUrl + '/roles').map((data) => data as IRoles[]);
+    return this.http.get(this.baseUrl + '/roles').map((data) => (data as IRoles[]).filter((role) => role.portal !== 'frontoffice'));
   }
 
 
