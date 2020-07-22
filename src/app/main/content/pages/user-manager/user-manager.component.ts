@@ -151,19 +151,16 @@ export class UserManagerComponent implements OnInit, OnDestroy, AfterViewChecked
 
     exportFile() {
       this.spinner.show();
-      const exportSource = (this.page.onlyOperator) ? this.apiUserService.apiGetOperatorFile(this.filter) : this.apiUserService.apiGetUserFile(this.filter);
-       exportSource.subscribe(data => {
-            const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
-            a.href = window.URL.createObjectURL(data.file);
-            a.download = data.filename;
-            document.body.appendChild(a);
-            a.click();
-            this.toast.success('Download File!', 'Operazione conclusa!');
-            this.spinner.hide();
-          }, () => {
-            this.toast.error('Download File!', 'Operazione Fallita!');
-            this.spinner.hide();
-          });
+      this.apiUserService.exportUserDetails(this.filter, !!this.page.onlyOperator).subscribe(data => {
+          const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+          a.href = window.URL.createObjectURL(data.file);
+          a.download = data.filename;
+          document.body.appendChild(a);
+          a.click();
+          this.toast.success('Download File!', 'Operazione conclusa!');
+        }, () => {
+          this.toast.error('Download File!', 'Operazione Fallita!');
+        }, () => this.spinner.hide());
   }
 
   Registration(): void {

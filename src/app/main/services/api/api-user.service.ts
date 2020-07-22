@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators';
 import { IChangePassword } from '../../../interfaces/i-change-password';
+import { IGetUserListRequest } from '../../../interfaces/i-get-user-request';
 import { IUser } from '../../../interfaces/i-user';
 import { GetBaseUrl } from '../helper/getBaseUrl';
-import { IGetUserListRequest } from '../../../interfaces/i-get-user-request';
-import { map, tap } from 'rxjs/operators';
 
 
 const httpOptions = {
@@ -43,12 +43,11 @@ export class ApiUserService {
     }));
   }
 
-  public apiGetOperatorFile(request: any): Observable<any> {
-    const  headers = new HttpHeaders({ 'Accept':  'text/csv' });
-
-    return this.http.get(this.baseUrl + '/user/operator-export' , {
+  public exportUserDetails(filter: any, operator: boolean){
+    const exportRelativePath = (operator) ? '/user/operator-export' : '/user/user-export';
+    return this.http.get(this.baseUrl + exportRelativePath , {
       observe: 'response',
-      params: {filter: request},
+      params: {filter: filter},
       responseType: 'blob'
     })
     .map((data) => {
@@ -60,24 +59,7 @@ export class ApiUserService {
       return blob ;
     });
   }
-
-  public apiGetUserFile(request: any): Observable<any> {
-    const  headers = new HttpHeaders({ 'Accept':  'text/csv' });
-    return this.http.get(this.baseUrl + '/user/user-export' , {
-      observe: 'response',
-      params: {filter: request},
-      responseType: 'blob'
-    })
-    .map((data) => {
-      const blob = {
-        file: new Blob([data.body], { type: data.headers.get('Content-Type') }),
-        filename: data.headers.get('File-Name')
-      };
-
-      return blob ;
-    });
-  }
-
+  
   public apiGetUserById(id: number): Observable<any> {
     return this.http.get(this.baseUrl + '/user/' + id)
       .map((data) => {
