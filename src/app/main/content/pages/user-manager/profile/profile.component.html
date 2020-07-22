@@ -93,7 +93,8 @@
                 <mat-error class="error-message" *ngIf="formGroup?.get('services')?.hasError('required')">Campo obbligatorio</mat-error>
                 </mat-form-field>    
                 <mat-form-field class="col-12">
-                    <mat-select formControlName="office" [compareWith]="compareObjects" placeholder="Ufficio.." required style="height: 25px" >
+                    <mat-select formControlName="office" [compareWith]="compareObjects" placeholder="Ufficio.." style="height: 25px" >
+                        <mat-option [value]="null">- Scegli -</mat-option>
                         <mat-option *ngFor="let office of offices" [value]="office">
                             {{office.office}}
                         </mat-option>

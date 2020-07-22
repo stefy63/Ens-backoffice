@@ -142,8 +142,8 @@ export class DialogRegistrationComponent implements OnInit {
   }
 
   private addOperatorControl(){
-    this.formGroup.addControl('services', new FormControl('', [Validators.required]));
-    this.formGroup.addControl('office', new FormControl('', [Validators.required]));
+    this.formGroup.addControl('services', new FormControl());
+    this.formGroup.addControl('office', new FormControl());
     this.formGroup.addControl('role', new FormControl('', [Validators.required]));
   }
 
@@ -151,7 +151,7 @@ export class DialogRegistrationComponent implements OnInit {
     const modalDataChanged: IUser = assign({}, this.formGroup.value, {noSendMail: true});
     modalDataChanged.isOperator = this.data.onlyOperator;
     if (this.data.onlyOperator) {
-      modalDataChanged.id_office =  this.formGroup.controls.office.value.id;
+      modalDataChanged.id_office =  (this.formGroup.controls.office.value) ? this.formGroup.controls.office.value.id : undefined;
       modalDataChanged.id_role =  this.formGroup.controls.role.value.id;
       modalDataChanged.services = this.formGroup.controls.services.value;
     } else {

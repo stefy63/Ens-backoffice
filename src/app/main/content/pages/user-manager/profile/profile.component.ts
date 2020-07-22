@@ -129,15 +129,15 @@ export class DialogProfileComponent implements OnInit {
   }
 
   private addOperatorControl(){
-    this.formGroup.addControl('services', new FormControl(this.modalUser.services, [Validators.required]));
-    this.formGroup.addControl('office', new FormControl(this.modalUser.office, [Validators.required]));
+    this.formGroup.addControl('services', new FormControl(this.modalUser.services));
+    this.formGroup.addControl('office', new FormControl(this.modalUser.office));
     this.formGroup.addControl('role', new FormControl(this.modalUser.role, [Validators.required]));
   }
 
   onYesClick(): void {
     const modalDataChanged = Object.assign(this.modalUser, this.formGroup.value);
     if (modalDataChanged.isOperator) {
-      modalDataChanged.id_office = modalDataChanged.office.id;
+      modalDataChanged.id_office = (modalDataChanged.office) ? modalDataChanged.office.id : undefined;
       modalDataChanged.id_role = modalDataChanged.role.id;
     } else {
       modalDataChanged.id_role = RoleType.USER;
