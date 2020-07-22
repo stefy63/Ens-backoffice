@@ -1,28 +1,26 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { NotificationsService } from 'angular2-notifications';
-import { AlertToasterOptions } from '../../../../../class/alert-toaster-options';
-import { ApiItalyGeoService } from '../../../../services/api/api-italy-geo.service';
-import { IUser } from '../../../../../interfaces/i-user';
-import { PasswordValidator } from '../../../../services/MaterialValidator/PasswordValidator';
-import { AlphabeticOnlyValidator } from '../../../../services/MaterialValidator/AlphabeticOnlyValidator'
-import { NumericOnlyValidator } from '../../../../services/MaterialValidator/NumericOnlyValidator';
-import { EmptyInputValidator } from '../../../../services/MaterialValidator/EmptyInputValidator';
-import { ApiUserService } from '../../../../services/api/api-user.service';
-import { EmailCustomValidator } from '../../../../services/MaterialValidator/EmailCustomValidator';
 import { assign, get } from 'lodash';
-import { AuthService } from '../../../../services/auth/auth.service';
-import { ITicketService } from '../../../../../interfaces/i-ticket-service';
-import { ITicketOffice } from '../../../../../interfaces/i-ticket-office';
+import { AlertToasterOptions } from '../../../../../class/alert-toaster-options';
 import { IRoles } from '../../../../../interfaces/i-roles';
-import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
+import { ITicketOffice } from '../../../../../interfaces/i-ticket-office';
+import { ITicketService } from '../../../../../interfaces/i-ticket-service';
+import { IUser } from '../../../../../interfaces/i-user';
+import { ApiItalyGeoService } from '../../../../services/api/api-italy-geo.service';
 import { ApiRolesService } from '../../../../services/api/api-roles.service';
-import { RoleType } from '../../../../../type/user-roles';
-import { IUserDataResponse } from '../../../../../interfaces/i-userdata.request';
-
+import { ApiUserService } from '../../../../services/api/api-user.service';
+import { AuthService } from '../../../../services/auth/auth.service';
+import { ErrorMessageTranslatorService } from '../../../../services/error-message-translator.service';
+import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
+import { AlphabeticOnlyValidator } from '../../../../services/MaterialValidator/AlphabeticOnlyValidator';
+import { EmailCustomValidator } from '../../../../services/MaterialValidator/EmailCustomValidator';
+import { EmptyInputValidator } from '../../../../services/MaterialValidator/EmptyInputValidator';
+import { NumericOnlyValidator } from '../../../../services/MaterialValidator/NumericOnlyValidator';
+import { PasswordValidator } from '../../../../services/MaterialValidator/PasswordValidator';
 
 
 export const MY_FORMATS = {
@@ -71,7 +69,8 @@ export class DialogRegistrationComponent implements OnInit {
     private httpItalyGeo: ApiItalyGeoService,
     private apiUserService: ApiUserService,
     private localStorage: LocalStorageService,
-    private apiRoles: ApiRolesService
+    private apiRoles: ApiRolesService,
+    private errorMessageTranslatorService: ErrorMessageTranslatorService,
     ) {
       this.hasOperatorPermission = this.authService.hasPermission(['operator.get.all']);
       this.httpItalyGeo.apiGetAllProvince()
@@ -128,7 +127,7 @@ export class DialogRegistrationComponent implements OnInit {
             PasswordValidator.match
         ]),
     });
-    if (this.data.modalData) {
+    if (this.data.onlyOperator) {
       this.formGroup.addControl('services', new FormControl('', [Validators.required]));
       this.formGroup.addControl('office', new FormControl('', [Validators.required]));
       this.formGroup.addControl('role', new FormControl('', [Validators.required]));
@@ -138,7 +137,7 @@ export class DialogRegistrationComponent implements OnInit {
   onYesClick(): void {
     const modalDataChanged: IUser = assign({}, this.formGroup.value, {noSendMail: true});
 
-    if (this.data.modalData) {
+    if (this.data.onlyOperator) {
       modalDataChanged.isOperator = true;
       modalDataChanged.id_office =  this.formGroup.controls.office.value.id;
       modalDataChanged.id_role =  this.formGroup.controls.role.value.id;
@@ -152,17 +151,8 @@ export class DialogRegistrationComponent implements OnInit {
                 this.toast.success('Nuovo Utente creato con successo!');
                 this.dialogRef.close();
             }, (err) => {
-                const errorMessage = get(err, 'error.message', '');
-                if (errorMessage === 'USER_ALREDY_EXIST') {
-                    this.toast.error('Attenzione', 'Utente già presente in archivio');
-                } else if (errorMessage === 'EMAIL_ALREDY_EXIST') {
-                    this.toast.error('Attenzione', 'Email già presente in archivio');
-                } else if (errorMessage === 'PHONE_ALREDY_EXIST') {
-                    this.toast.error('Attenzione', 'Telefono già presente in archivio');
-                }
-                else {
-                    this.toast.error('Attenzione', 'Creazione nuovo utente fallita');
-                }
+                const errorMessageTranslated = this.errorMessageTranslatorService.translate(get(err, 'error.message', ''));
+                this.toast.error(errorMessageTranslated);
             });
 
     }

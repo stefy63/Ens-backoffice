@@ -2,7 +2,6 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MatSlideToggleChange, MAT_DIALOG_DATA } from '@angular/material';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { assign } from 'lodash';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { AlertToasterOptions } from '../../../../../class/alert-toaster-options';
 import { IRoles } from '../../../../../interfaces/i-roles';
@@ -114,6 +113,7 @@ export class DialogProfileComponent implements OnInit {
       this.formGroup.addControl('role', new FormControl(this.modalUser.role, [Validators.required]));
     }
 
+    this.formGroup.markAsTouched();
   }
 
   compareObjects(o1: any, o2: any): boolean {
