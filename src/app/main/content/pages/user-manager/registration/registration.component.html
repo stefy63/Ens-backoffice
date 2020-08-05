@@ -14,7 +14,7 @@
 
         <div class="dialog-content__container">
             <div class="row" *ngIf="hasOperatorPermission">
-                <mat-slide-toggle class="col-md-6" formControlName="isOperator" (change)="isOperatorChange($event)">Operatore</mat-slide-toggle>
+                <mat-slide-toggle class="col-md-6" (change)="isOperatorChange($event)">Operatore</mat-slide-toggle>
             </div><br>
 
             <div class="row">

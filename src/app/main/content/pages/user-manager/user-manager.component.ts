@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { MatCheckboxChange, MatDialog } from '@angular/material';
 import { NotificationsService } from 'angular2-notifications';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { debounceTime, filter, mergeMap, tap } from 'rxjs/operators';
+import { debounceTime, filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
 import { Page } from '../../../../class/page';
 import { IUser } from '../../../../interfaces/i-user';
@@ -23,7 +23,6 @@ export class UserManagerComponent implements OnInit, OnDestroy, AfterViewChecked
 
   public page = new Page();
   public rows: IUser[];
-  private editedUser: IUser;
   public filter = '';
 
   @ViewChild('myTable') table;
@@ -32,7 +31,6 @@ export class UserManagerComponent implements OnInit, OnDestroy, AfterViewChecked
   public pageSizeControl: FormControl;
   public onlyOperator: FormControl;
   public hasOperatorPermission = false;
-  private debounce = 1000;
   private filterControlSubscription: Subscription;
   private pageSizeControlSubscription: Subscription;
 
@@ -57,22 +55,13 @@ export class UserManagerComponent implements OnInit, OnDestroy, AfterViewChecked
     this.onlyOperator = new FormControl(false);
     this.filterControlSubscription = this.filterControl.valueChanges
       .pipe(
-        debounceTime(this.debounce),
+        debounceTime(1000),
         filter((data) => this.filter !== data.toLowerCase()),
-        tap(data => {
-          this.spinner.show();
-          this.filter = data.toLowerCase();
-          this.page.filter = this.filter;
-          this.page.pageNumber = 0;
-          this.page.onlyOperator = this.onlyOperator.value;
-        }),
-        mergeMap(data => this.apiUserService.apiGetUserList(this.page))
       )
-      .subscribe( pagedData => {
-          this.page = pagedData.page;
-          this.rows = pagedData.data;
-          this.spinner.hide();
-      }, () => this.spinner.hide());
+      .subscribe( () => {
+          this.filter = this.filterControl.value;
+          this.setPage({ offset: 0 });
+      });
 
     this.pageSizeControlSubscription = this.pageSizeControl.valueChanges.subscribe(data => {
       this.setPage({ offset: 0 });
@@ -149,18 +138,18 @@ export class UserManagerComponent implements OnInit, OnDestroy, AfterViewChecked
     this.setPage({ offset: 0 });
   }
 
-    exportFile() {
-      this.spinner.show();
-      this.apiUserService.exportUserDetails(this.filter, !!this.page.onlyOperator).subscribe(data => {
-          const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
-          a.href = window.URL.createObjectURL(data.file);
-          a.download = data.filename;
-          document.body.appendChild(a);
-          a.click();
-          this.toast.success('Download File!', 'Operazione conclusa!');
-        }, () => {
-          this.toast.error('Download File!', 'Operazione Fallita!');
-        }, () => this.spinner.hide());
+  exportFile() {
+    this.spinner.show();
+    this.apiUserService.exportUserDetails(this.filter, this.onlyOperator.value).subscribe(data => {
+        const a: HTMLAnchorElement = document.createElement('a') as HTMLAnchorElement;
+        a.href = window.URL.createObjectURL(data.file);
+        a.download = data.filename;
+        document.body.appendChild(a);
+        a.click();
+        this.toast.success('Download File!', 'Operazione conclusa!');
+      }, () => {
+        this.toast.error('Download File!', 'Operazione Fallita!');
+      }, () => this.spinner.hide());
   }
 
   registration(): void {
