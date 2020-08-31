@@ -45,12 +45,12 @@ export class ApiUserService {
 
   public exportUserDetails(filter: any, operator: boolean){
     const exportRelativePath = (operator) ? '/user/operator-export' : '/user/user-export';
-    return this.http.get(this.baseUrl + exportRelativePath , {
+    return this.http.post(this.baseUrl + exportRelativePath , {
       observe: 'response',
       params: {filter: filter},
       responseType: 'blob'
     })
-    .map((data) => {
+    .map((data: any) => {
       const blob = {
         file: new Blob([data.body], { type: data.headers.get('Content-Type') }),
         filename: data.headers.get('File-Name')
