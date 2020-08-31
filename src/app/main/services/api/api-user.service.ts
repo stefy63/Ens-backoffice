@@ -45,9 +45,8 @@ export class ApiUserService {
 
   public exportUserDetails(filter: any, operator: boolean){
     const exportRelativePath = (operator) ? '/user/operator-export' : '/user/user-export';
-    return this.http.post(this.baseUrl + exportRelativePath , {
+    return this.http.post(this.baseUrl + exportRelativePath, {filter: filter}, {
       observe: 'response',
-      params: {filter: filter},
       responseType: 'blob'
     })
     .map((data: any) => {
