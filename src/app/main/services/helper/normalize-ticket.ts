@@ -34,7 +34,8 @@ export class NormalizeTicket {
                 historys: item.historys,
                 reports: item.reports,
                 closed_at: (closed_at) ? moment.utc(closed_at.date_time).format('DD/MM/YYYY HH:mm') : undefined,
-                unreaded_messages: item.unreaded_messages || 0
+                unreaded_messages: item.unreaded_messages || 0,
+                user_disabled: (!!item.user) ? item.user.disabled : false
             };
         });
     }

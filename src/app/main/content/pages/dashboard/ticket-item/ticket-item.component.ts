@@ -1,10 +1,9 @@
-import { Component, OnInit, Input, ViewChild, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, ViewChild,  ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ITicket } from '../../../../../interfaces/i-ticket';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
 import * as _ from 'lodash';
-import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
 
 @Component({
   selector: 'fuse-ticket-item',
@@ -12,7 +11,7 @@ import { LocalStorageService } from '../../../../services/local-storage/local-st
   styleUrls: ['./ticket-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
+export class TicketItemComponent implements OnInit {
   @Input() allTicket: Observable<ITicket[]>;
   public dataSource: MatTableDataSource<ITicket>;
   public dataBadge: number[] = [];
@@ -33,7 +32,6 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private cd: ChangeDetectorRef,
     private router: Router,
-    private storage: LocalStorageService,
   ) { }
 
   ngOnInit() {
@@ -44,12 +42,6 @@ export class TicketItemComponent implements OnInit, AfterViewInit, OnDestroy {
         this.dataSource.paginator = this.paginator;
         this.dataSource.sort = this.sort;
       });
-  }
-
-  ngOnDestroy() {
-  }
-
-  ngAfterViewInit() {
   }
 
   applyFilter(filterValue: string) {

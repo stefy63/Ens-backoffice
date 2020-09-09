@@ -1,20 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef, MatSlideToggleChange, MAT_DIALOG_DATA } from '@angular/material';
 import { MomentDateAdapter } from '@angular/material-moment-adapter';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { NotificationsService } from 'angular2-notifications';
-import { AlertToasterOptions } from '../../../../../class/alert-toaster-options';
-import { ApiItalyGeoService } from '../../../../services/api/api-italy-geo.service';
-import { IUser } from '../../../../../interfaces/i-user';
-import { PasswordValidator } from '../../../../services/MaterialValidator/PasswordValidator';
-import { AlphabeticOnlyValidator } from '../../../../services/MaterialValidator/AlphabeticOnlyValidator'
-import { NumericOnlyValidator } from '../../../../services/MaterialValidator/NumericOnlyValidator';
-import { EmptyInputValidator } from '../../../../services/MaterialValidator/EmptyInputValidator';
-import { ApiUserService } from '../../../../services/api/api-user.service';
-import { EmailCustomValidator } from '../../../../services/MaterialValidator/EmailCustomValidator';
 import { assign, get } from 'lodash';
-
+import { AlertToasterOptions } from '../../../../../class/alert-toaster-options';
+import { IRoles } from '../../../../../interfaces/i-roles';
+import { ITicketOffice } from '../../../../../interfaces/i-ticket-office';
+import { ITicketService } from '../../../../../interfaces/i-ticket-service';
+import { IUser } from '../../../../../interfaces/i-user';
+import { RoleType } from '../../../../../type/user-roles';
+import { ApiItalyGeoService } from '../../../../services/api/api-italy-geo.service';
+import { ApiRolesService } from '../../../../services/api/api-roles.service';
+import { ApiUserService } from '../../../../services/api/api-user.service';
+import { AuthService } from '../../../../services/auth/auth.service';
+import { ErrorMessageTranslatorService } from '../../../../services/error-message-translator.service';
+import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
+import { AlphabeticOnlyValidator } from '../../../../services/MaterialValidator/AlphabeticOnlyValidator';
+import { EmailCustomValidator } from '../../../../services/MaterialValidator/EmailCustomValidator';
+import { EmptyInputValidator } from '../../../../services/MaterialValidator/EmptyInputValidator';
+import { NumericOnlyValidator } from '../../../../services/MaterialValidator/NumericOnlyValidator';
+import { PasswordValidator } from '../../../../services/MaterialValidator/PasswordValidator';
 
 
 export const MY_FORMATS = {
@@ -49,25 +56,69 @@ export class DialogRegistrationComponent implements OnInit {
     { id: 'male', name: 'Maschio'},
     { id: 'female', name: 'Femmina'}
   ];
+  public hasOperatorPermission: boolean;
+  public ticketService: ITicketService[];
+  public offices: ITicketOffice[];
+  public roles: IRoles[];
 
 
   constructor(
+    @Inject(MAT_DIALOG_DATA) public data: any,
     public dialogRef: MatDialogRef<DialogRegistrationComponent>,
     public toast: NotificationsService,
+    private authService: AuthService,
     private httpItalyGeo: ApiItalyGeoService,
     private apiUserService: ApiUserService,
+    private localStorage: LocalStorageService,
+    private apiRoles: ApiRolesService,
+    private errorMessageTranslatorService: ErrorMessageTranslatorService,
     ) {
+      this.hasOperatorPermission = this.authService.hasPermission(['operator.get.all']);
       this.httpItalyGeo.apiGetAllProvince()
         .subscribe(provinces => {
           this.provinces = provinces;
         });
+
+      if (this.hasOperatorPermission) {
+        this.ticketService = this.localStorage.getItem('services');
+        this.offices = this.localStorage.getItem('offices');
+        this.apiRoles.apiGetAllRoles()
+          .subscribe(roles => {
+            this.roles = roles;
+          });
+      }      
   }
 
   ngOnInit(): void {
 
     this.formGroup = new FormGroup({
+        'userdata': new FormGroup({
+          'name': new FormControl('', [
+              Validators.required,
+              AlphabeticOnlyValidator.alphabeticOnly
+          ]),
+          'surname': new FormControl('', [
+              Validators.required,
+              AlphabeticOnlyValidator.alphabeticOnly
+          ]),
+          'email': new FormControl('', [
+              Validators.required,
+              EmailCustomValidator.email_custom
+          ]),
+          'gender': new FormControl('', [
+              Validators.required
+              ]),
+          'phone': new FormControl('', [
+              Validators.required,
+              NumericOnlyValidator.numericOnly
+          ]),
+          // 'card_number': new FormControl('', []),
+          'privacyaccept': new FormControl(''),
+          'newsletteraccept': new FormControl(''),
+          'becontacted': new FormControl(''),
+        }),
         'username': new FormControl(''),
-        'new_password': new FormControl('', [
+        'password': new FormControl('', [
             Validators.required,
             EmptyInputValidator.whiteSpace,
             PasswordValidator.match
@@ -76,67 +127,48 @@ export class DialogRegistrationComponent implements OnInit {
             Validators.required,
             PasswordValidator.match
         ]),
-        'name': new FormControl('', [
-            Validators.required,
-            AlphabeticOnlyValidator.alphabeticOnly
-        ]),
-        'surname': new FormControl('', [
-            Validators.required,
-            AlphabeticOnlyValidator.alphabeticOnly
-        ]),
-        'email': new FormControl('', [
-            Validators.required,
-            EmailCustomValidator.email_custom
-        ]),
-        'gender': new FormControl('', [
-            Validators.required
-            ]),
-        'phone': new FormControl('', [
-            Validators.required,
-            NumericOnlyValidator.numericOnly
-        ]),
-        'card_number': new FormControl('', []),
-        'privacyaccept': new FormControl(''),
-        'newsletteraccept': new FormControl(''),
-        'becontacted': new FormControl(''),
     });
   }
 
-  onYesClick(): void {
-    const updatedModalData = assign(this.user, {
-        user: {
-            username: this.formGroup.controls.username.value,
-            password: this.formGroup.controls.new_password.value,
-        },
-        user_data: {
-            name: this.formGroup.controls.name.value,
-            surname: this.formGroup.controls.surname.value,
-            email: this.formGroup.controls.email.value,
-            gender: this.formGroup.controls.gender.value,
-            phone: this.formGroup.controls.phone.value,
-            card_number: this.formGroup.controls.card_number.value,
-            privacyaccept: !!this.formGroup.controls.privacyaccept.value,
-            newsletteraccept: !!this.formGroup.controls.newsletteraccept.value,
-            becontacted: !!this.formGroup.controls.becontacted.value
-        },
-        noSendMail: true
-    });
+  isOperatorChange(ev: MatSlideToggleChange) {
+    this.data.onlyOperator = ev.checked;
+    if (ev.checked) {
+      this.addOperatorControl();
+    } else {
+      this.formGroup.removeControl('services');
+      this.formGroup.removeControl('office');
+      this.formGroup.removeControl('role');
+    }
+  }
 
-    this.apiUserService.apiCreateUser(updatedModalData)
+  private addOperatorControl(){
+    this.formGroup.addControl('services', new FormControl());
+    this.formGroup.addControl('office', new FormControl());
+    this.formGroup.addControl('role', new FormControl('', [Validators.required]));
+  }
+
+  onYesClick(): void {
+    const modalDataChanged: IUser = assign({}, this.formGroup.value, {noSendMail: true});
+    modalDataChanged.isOperator = this.data.onlyOperator;
+    if (this.data.onlyOperator) {
+      modalDataChanged.id_office =  (this.formGroup.controls.office.value) ? this.formGroup.controls.office.value.id : undefined;
+      modalDataChanged.id_role =  this.formGroup.controls.role.value.id;
+      modalDataChanged.services = this.formGroup.controls.services.value;
+    } else {
+      modalDataChanged.id_role = RoleType.USER;
+      modalDataChanged.services = undefined;
+      modalDataChanged.id_office = undefined;
+    }
+
+    this.apiUserService.apiCreateUser(modalDataChanged)
         .subscribe(data => {
-                this.toast.success('Attenzione', 'Ti abbiamo inviato una mail di conferma.');
+                this.toast.success('Nuovo Utente creato con successo!');
                 this.dialogRef.close();
             }, (err) => {
-                const errorMessage = get(err, 'error.message', '');
-                if (errorMessage === 'USER_ALREDY_EXIST') {
-                    this.toast.error('Attenzione', 'Utente già presente in archivio');
-                } else if (errorMessage === 'EMAIL_ALREDY_EXIST') {
-                    this.toast.error('Attenzione', 'Email già presente in archivio');
-                }
-                else {
-                    this.toast.error('Attenzione', 'Creazione nuovo utente fallita');
-                }
+                const errorMessageTranslated = this.errorMessageTranslatorService.translate(get(err, 'error.message', ''));
+                this.toast.error(errorMessageTranslated);
             });
+
     }
 
 

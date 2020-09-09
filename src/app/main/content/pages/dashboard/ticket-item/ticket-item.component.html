@@ -33,7 +33,7 @@
     <!-- user Column -->
     <ng-container matColumnDef="user">
       <mat-header-cell *matHeaderCellDef mat-sort-header="user_name" class="col-2">Utente</mat-header-cell>
-      <mat-cell *matCellDef="let element" class="col-2"> {{element.user_name}} {{element.user_surname}} </mat-cell>
+      <mat-cell *matCellDef="let element" [ngStyle]="{'color': element.user_disabled ? 'red' : 'rgba(0, 0, 0, 0.87)'}" class="col-2"> {{element.user_name}} {{element.user_surname}} </mat-cell>
     </ng-container>
 
     <!-- category Column -->

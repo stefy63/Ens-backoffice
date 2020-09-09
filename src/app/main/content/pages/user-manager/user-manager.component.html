@@ -9,16 +9,19 @@
           </button>
         </div>
         <div class="col-2 text-center table_header--input">
-          <button mat-raised-button class="btn btn-primary" (click)="Registration()" matTooltip="Aggiungi un nuovo utente" style="width: 100%;">
+          <button mat-raised-button class="btn btn-primary" (click)="registration()" matTooltip="Aggiungi un nuovo utente" style="width: 100%;">
               <mat-icon>add_circle_outline</mat-icon>
           </button>
         </div>
+    </div>
+    <div class="row justify-content-end" [hidden]="!hasOperatorPermission">
+      <mat-slide-toggle style="margin-right: 15px; margin-bottom: 10px;" [formControl]="onlyOperator" (change)="setOnlyOperator($event)">Visualizza gli Operatori</mat-slide-toggle>
     </div>
 
     <ngx-datatable #myTable [rows]="rows" class="material striped"
         [columnMode]="'force'" [headerHeight]="50" [footerHeight]="50" [rowHeight]="'auto'" [externalPaging]="true"
         [count]="page.totalElements" [offset]="page.pageNumber" [limit]="page.size" (page)='setPage($event)'>
-        <ngx-datatable-column name="Abilitazione" headerClass="col-2 custom-datatable-header" cellClass="col-2"
+        <ngx-datatable-column name="Abilitazione" headerClass="col-1 custom-datatable-header" cellClass="col-1"
             [sortable]="false">
             <ng-template let-row="row" ngx-datatable-cell-template>
                 <mat-slide-toggle [checked]="!row.disabled" (change)="changeUserStatus(row)"
@@ -31,10 +34,16 @@
                 {{row.userdata.name}} {{row.userdata.surname}}
             </ng-template>
         </ngx-datatable-column>
-        <ngx-datatable-column name="eMail" headerClass="col-3 custom-datatable-header" cellClass="col-3"
+        <ngx-datatable-column name="Telefono" headerClass="col-2 custom-datatable-header" cellClass="col-2"
             [sortable]="false">
             <ng-template let-row="row" ngx-datatable-cell-template>
-                {{row.userdata.email}}
+                {{row.userdata.phone}}
+            </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column name="eMail" headerClass="col-2 custom-datatable-header" cellClass="col-2"
+            [sortable]="false">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+                <div matTooltip="{{row.userdata.email}}" matTooltipPosition="above">{{row.userdata.email}}</div>
             </ng-template>
         </ngx-datatable-column>
         <ngx-datatable-column name="Username" headerClass="col-2 custom-datatable-header" cellClass="col-2"

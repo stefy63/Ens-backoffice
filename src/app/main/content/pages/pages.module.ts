@@ -1,4 +1,3 @@
-import { OperatorModule } from './operator/operator.module';
 import { NgModule } from '@angular/core';
 import { Login2Module } from './authentication/login-2/login-2.module';
 import { DashboardModule } from './dashboard/dashboard.module';
@@ -15,7 +14,6 @@ import { StatisticsModule } from './statistics/statistics.module';
       SendingSmsModule,
       UserManagerModule,
       StatisticsModule,
-      OperatorModule
     ],
     declarations: []
 })

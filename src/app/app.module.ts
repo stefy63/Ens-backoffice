@@ -1,4 +1,4 @@
-import { NgModule, NO_ERRORS_SCHEMA, ErrorHandler } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA, ErrorHandler, LOCALE_ID } from '@angular/core';
 import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -31,6 +31,7 @@ import { ApiTicketReportService } from './main/services/api/api-ticket-report.se
 import { ExportmanagerComponent } from '../app/main/content/pages/exportmanager/exportmanager.component';
 import { ApiStatisticsService } from './main/services/api/api-statistics.service';
 import { HasPermissionGuard } from './guard/has-permission.guard';
+import {ErrorMessageTranslatorService} from './main/services/error-message-translator.service';
 
 const appRoutes: Routes = [
     {
@@ -96,7 +97,8 @@ const config: SocketIoConfig = { url: environment.ws_url + wssPort, options: opt
         ApiTicketHistoryService,
         { provide: ErrorHandler, useClass: RollbarErrorHandler },
         ApiTicketReportService,
-        ApiStatisticsService
+        ApiStatisticsService,
+        ErrorMessageTranslatorService
     ],
     bootstrap: [
         AppComponent

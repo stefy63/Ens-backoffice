@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
+import { map } from 'rxjs/operators';
 import { IChangePassword } from '../../../interfaces/i-change-password';
+import { IGetUserListRequest } from '../../../interfaces/i-get-user-request';
 import { IUser } from '../../../interfaces/i-user';
 import { GetBaseUrl } from '../helper/getBaseUrl';
-import { IGetUserListRequest } from '../../../interfaces/i-get-user-request';
-import { map } from 'rxjs/operators';
 
 
 const httpOptions = {
@@ -37,33 +37,19 @@ export class ApiUserService {
   public apiGetUserList(request: any): Observable<any> {
     return this.http.get(this.baseUrl + '/user', {
       params: request
-    }).pipe(map(data => data as IGetUserListRequest));
+    }).pipe(map((data: any) => {
+      data.page.onlyOperator = data.page.onlyOperator === 'true';
+      return data as IGetUserListRequest;
+    }));
   }
 
-  public apiGetOperatorFile(): Observable<any> {
-    const  headers = new HttpHeaders({ 'Accept':  'text/csv' });
-
-    return this.http.get(this.baseUrl + '/user/operator-export' , {observe: 'response', responseType: 'blob'})
-      .map((data) => {
-        const blob = {
-          file: new Blob([data.body], { type: data.headers.get('Content-Type') }),
-          filename: data.headers.get('File-Name')
-        };
-
-        return blob ;
-      });
-  }
-
-
-  public apiGetUserFile(request: any): Observable<any> {
-    const  headers = new HttpHeaders({ 'Accept':  'text/csv' });
-    console.log('-------------------->  ',request);
-    return this.http.get(this.baseUrl + '/user/user-export' , {
+  public exportUserDetails(filter: any, operator: boolean){
+    const exportRelativePath = (operator) ? '/user/operator-export' : '/user/user-export';
+    return this.http.post(this.baseUrl + exportRelativePath, {filter: filter}, {
       observe: 'response',
-      params: {filter: request},
       responseType: 'blob'
     })
-    .map((data) => {
+    .map((data: any) => {
       const blob = {
         file: new Blob([data.body], { type: data.headers.get('Content-Type') }),
         filename: data.headers.get('File-Name')
@@ -71,5 +57,12 @@ export class ApiUserService {
 
       return blob ;
     });
+  }
+  
+  public apiGetUserById(id: number): Observable<any> {
+    return this.http.get(this.baseUrl + '/user/' + id)
+      .map((data) => {
+        return data as IUser;
+      });
   }
 }

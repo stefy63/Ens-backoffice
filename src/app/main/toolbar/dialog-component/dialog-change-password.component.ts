@@ -40,11 +40,11 @@ export class DialogChangePassword implements OnInit {
   ngOnInit(): void {
 
     if (this.modalData.user_id !== this.storage.getItem('user').id) {
+      this.oldPasswordView = false;
       this.formGroup = new FormGroup({
         'new_password': new FormControl('', [Validators.required, EmptyInputValidator.whiteSpace]),
         'confirm_password': new FormControl('', [Validators.required, PasswordValidator.match])
       });
-      this.oldPasswordView = false;
     } else {
       this.formGroup = new FormGroup({
         'old_password': new FormControl('', [Validators.required, EmptyInputValidator.whiteSpace]),

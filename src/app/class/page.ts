@@ -9,4 +9,6 @@ export class Page {
   pageNumber: number = 0;
   //The current filter
   filter: string = '';
+  //Select Only Operator
+  onlyOperator: boolean = false;
 }
