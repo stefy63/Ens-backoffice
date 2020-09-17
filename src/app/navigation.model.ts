@@ -59,7 +59,7 @@ export class NavigationModel {
                       'title': 'Orari Apertura',
                       'type': 'item',
                       'icon': 'schedule',
-                      'url': '/pages/schedule',
+                      'url': '/pages/schedule-manager',
                       'permission': ['update.chanels']
                   },
                 ],

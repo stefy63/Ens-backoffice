@@ -1,0 +1,11 @@
+:host {
+  .container {
+    display: flex;
+    flex-direction: column;
+    overflow-x: scroll;
+    mat-tab-group {
+      flex-grow: 1;
+    }
+  }
+
+}
