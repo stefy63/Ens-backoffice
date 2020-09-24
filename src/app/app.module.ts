@@ -75,7 +75,8 @@ const config: SocketIoConfig = { url: environment.ws_url + wssPort, options: opt
         PagesModule,
         SimpleNotificationsModule.forRoot(),
         MDBBootstrapModule.forRoot(),
-        MatTooltipModule
+        MatTooltipModule,
+
     ],
     providers: [
         FuseSplashScreenService,

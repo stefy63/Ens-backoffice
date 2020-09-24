@@ -1,0 +1,75 @@
+<div class="page_container">
+  <div class="ck_editor">
+    <div class="title-editor">Descrizione</div>
+    <br />
+    <ckeditor #editor [config]="config" [(ngModel)]="htmlContent" [editor]="Editor" (change)="onChange($event)"></ckeditor>
+  </div>
+  <div class="table__content">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="table_header">Orari Aperturta {{service[ServiceId]}}</div>
+      <div class="day_content row_content row" *ngFor="let element of dataSource;  let i = index" [ngClass]="{ 'odd': (i%2 == 0), 'even': i%2 == 1 } " >
+
+
+        <!-- <div class=" col-10"> -->
+          <div class="row col-12" *ngIf="element[1].length > 0">
+            <div class="day_content_exist row col-12" *ngFor="let item of element[1];  let j = index" >
+
+              <div class="day_of_week col-3" >
+                <span *ngIf="j == 0">{{element[0]}}</span>
+              </div>
+
+              <div class="data_content col-3">
+                <label for="{{item.id}}__time_start">Dalle</label>
+                <input id="{{item.id}}__time_start" name="{{item.id}}__time_start" class="col-4 ml-5" type="text" locale="it" onlyHour="false" atp-time-picker formControlName="{{item.id}}__time_start" />
+                <mat-icon matSuffix  (click)="openPicker(item.id+'__time_start')" >calendar_today</mat-icon>
+              </div>
+              <div class="data_content col-3">
+                <label for="{{item.id}}__time_end">Alle</label>
+                <input id="{{item.id}}__time_end" name="{{item.id}}__time_end" class="col-4 ml-5" type="text" locale="it" onlyHour="false" atp-time-picker formControlName="{{item.id}}__time_end" />
+                <mat-icon matSuffix (click)="openPicker(item.id+'__time_end')" >calendar_today</mat-icon>
+              </div>
+
+              <div class="action_content col-3">
+                <mat-icon color="green" (click)="addRow(element)" >control_point</mat-icon>
+                <mat-icon color="red" (click)="delRow(item)">remove_circle_outline</mat-icon>
+              </div>
+            </div>
+          </div>
+
+        <!-- <div class="day_content-empty col-10"> -->
+          <div class="day_content-empty row col-12" *ngIf="element[1].length == 0">
+            <div class="row col-12">
+              <div class="day_of_week col-3" >
+                {{element[0]}}
+              </div>
+              <div class="col-6">
+                Nessun orario inserito, il canale rimarrà chiuso
+              </div>
+              <div class="action_content_empty_row col-3">
+                <mat-icon color="green" (click)="addRow(element)" >control_point</mat-icon>
+              </div>
+            </div>
+          </div>
+
+        <!-- </div> -->
+      </div>
+      <div class="button_container">
+        <button class="btn btn-primary" type="submit" [disabled]="!form.valid">Salva</button>
+      </div>
+
+
+
+
+
+
+
+
+
+
+    </form>
+  </div>
+
+
+
+
+</div>

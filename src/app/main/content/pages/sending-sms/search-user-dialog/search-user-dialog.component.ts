@@ -12,7 +12,7 @@ import { IUserDataRequest, IUserDataResponse } from '../../../../../interfaces/i
 export class SearchUserDialogComponent implements OnInit {
   public formGroup: FormGroup;
   public dataSource: MatTableDataSource<IUserDataResponse>;
-  public userDataList: IUserDataResponse[] = null; 
+  public userDataList: IUserDataResponse[] = null;
   public displayedColumns = ['nome', 'cognome' ];
 
   constructor(
@@ -29,7 +29,7 @@ export class SearchUserDialogComponent implements OnInit {
   }
 
   validForm() {
-    return !!this.formGroup.controls.surname.value || !!this.formGroup.controls.name.value; 
+    return !!this.formGroup.controls.surname.value || !!this.formGroup.controls.name.value;
   }
 
   search() {

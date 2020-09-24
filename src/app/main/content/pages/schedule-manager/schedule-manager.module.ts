@@ -10,7 +10,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HasPermissionGuard } from '../../../../guard/has-permission.guard';
 import {ScheduleManagerComponent} from './schedule-manager.component';
-import {ScheduleItemComponent} from './schedule-item/schedule-item.component';
+import {ScheduleTabComponent} from './schedule-tab/schedule-tab.component';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import {ApiCalendarService} from '../../../services/api/api-calendar.service';
+import { AmazingTimePickerModule } from 'amazing-time-picker';
 
 const routes: Routes = [
   {
@@ -29,11 +32,14 @@ const routes: Routes = [
     ReactiveFormsModule,
     CommonModule,
     BrowserModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    CKEditorModule,
+    AmazingTimePickerModule
+
   ],
   declarations: [
     ScheduleManagerComponent,
-    ScheduleItemComponent
+    ScheduleTabComponent,
   ],
   exports     : [
     ScheduleManagerComponent
@@ -42,6 +48,7 @@ const routes: Routes = [
   ],
   providers: [
     NotificationsService,
+    ApiCalendarService
   ]
 })
 export class ScheduleManagerModule { }
