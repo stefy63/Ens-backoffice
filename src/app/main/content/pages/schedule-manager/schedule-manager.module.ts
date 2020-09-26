@@ -13,7 +13,7 @@ import {ScheduleManagerComponent} from './schedule-manager.component';
 import {ScheduleTabComponent} from './schedule-tab/schedule-tab.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import {ApiCalendarService} from '../../../services/api/api-calendar.service';
-import { AmazingTimePickerModule } from 'amazing-time-picker';
+import { AmazingTimePickerModule } from 'amazing-time-picker-view24h';
 
 
 const routes: Routes = [

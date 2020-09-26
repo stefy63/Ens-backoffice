@@ -20,7 +20,7 @@
 
               <div class="data_content col-3">
                 <label for="{{item.id}}__time_start">Dalle</label>
-                <input mat-input id="{{item.id}}__time_start" class="col-4 ml-5 pl-2 pr-1" type="text" locale="it" onlyHour="false" atp-time-picker formControlName="{{item.id}}__time_start" />
+                <input id="{{item.id}}__time_start" class="col-5 ml-5 pl-2 pr-1"  atp-time-picker hours24="true" formControlName="{{item.id}}__time_start" />
                 <mat-icon matSuffix class="ml-3" (click)="openPicker(item.id+'__time_start')" >calendar_today</mat-icon>
 
                 <mat-error class="error-message" *ngIf="!!form.get(item.id+'__time_start') && form?.get(item.id+'__time_start').hasError('pattern')">Il forma dell'ora è errato.</mat-error>
@@ -30,7 +30,7 @@
               </div>
               <div class="data_content col-3">
                 <label for="{{item.id}}__time_end">Alle</label>
-                <input mat-input id="{{item.id}}__time_end" class="col-4 ml-5 pl-2 pr-1" type="text" locale="it" onlyHour="false" atp-time-picker formControlName="{{item.id}}__time_end" />
+                <input id="{{item.id}}__time_end" class="col-5 ml-5 pl-2 pr-1"  atp-time-picker hours24="true" formControlName="{{item.id}}__time_end" />
                 <mat-icon matSuffix class="ml-3"  (click)="openPicker(item.id+'__time_end')" >calendar_today</mat-icon>
 
                 <mat-error class="error-message" *ngIf="!!form.get(item.id+'__time_end') && form?.get(item.id+'__time_end').hasError('pattern')">Il forma dell'ora è errato.</mat-error>
