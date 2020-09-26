@@ -49,7 +49,6 @@
     "highlight.js": "9.12.0",
     "intl": "1.2.5",
     "lodash": "4.17.20",
-    "material-time-control": "github:SteveDunlap13/MaterialTimeControl",
     "moment": "2.22.2",
     "moment-timezone": "0.5.28",
     "ng-socket-io": "0.2.4",

@@ -1,19 +1,17 @@
-import { Component, OnInit, Input, ViewChild, AfterViewInit, LOCALE_ID } from '@angular/core';
+import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import * as _ from 'lodash';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import '@ckeditor/ckeditor5-build-classic/build/translations/it';
-import { ChangeEvent, CKEditorComponent } from '@ckeditor/ckeditor5-angular';
+import { CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 import { Services } from '../../../../../enums/ticket-services.enum';
 import {DayOfWeek} from '../../../../../enums/day-of-week.enum';
 import { ApiCalendarService } from '../../../../services/api/api-calendar.service';
 import { ICalendar } from '../../../../../interfaces/i-calendar';
-import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material';
-import { MomentDateAdapter } from '@angular/material-moment-adapter';
-import { MY_FORMATS } from '../../../../../type/date-format';
 import * as moment from 'moment';
 import { tap, map } from 'rxjs/operators';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { AmazingTimePickerService } from 'amazing-time-picker';
+import { NotificationsService } from 'angular2-notifications';
+import { ErrorMessageTranslatorService } from '../../../../services/error-message-translator.service';
 
 
 
@@ -21,13 +19,8 @@ import { AmazingTimePickerService } from 'amazing-time-picker';
   selector: 'fuse-schedule-tab',
   templateUrl: './schedule-tab.component.html',
   styleUrls: ['./schedule-tab.component.scss'],
-  // providers: [
-    // { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
-    // { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
-    // { provide: LOCALE_ID, useValue: 'it' }
-  // ]
 })
-export class ScheduleTabComponent implements OnInit, AfterViewInit {
+export class ScheduleTabComponent implements OnInit {
   @ViewChild( 'editor' ) editorComponent: CKEditorComponent;
   @Input() ServiceId: number;
   public htmlContent: string;
@@ -37,37 +30,66 @@ export class ScheduleTabComponent implements OnInit, AfterViewInit {
   };
   public form: FormGroup;
   public dataSource:  ICalendar[];
-  public displayedColumns = [
-    'weekday_start',
-    'time_start',
-    'time_end',
-    'id',
-  ];
   public service = Services;
-  public week = DayOfWeek;
+
 
   constructor(
     private calendarService: ApiCalendarService,
-    private atp: AmazingTimePickerService
+    public toast: NotificationsService,
+    private errorMessageTranslatorService: ErrorMessageTranslatorService,
+
     ) {
       this.form = new FormGroup({});
      }
 
-  ngAfterViewInit(): void {
-
+  ngOnInit() {
+    this.getData();
   }
 
-  ngOnInit() {
+
+  onSubmit() {
+    const newDataSource: ICalendar[] = _.flatMap(this.dataSource, data => {
+      return data[1];
+    })
+    .map((data: ICalendar) => {
+      data.time_start = this.form.controls[data.id + '__time_start'].value;
+      this.form.removeControl(data.id + '__time_start');
+      data.time_end = this.form.controls[data.id + '__time_end'].value;
+      this.form.removeControl(data.id + '__time_end');
+      delete data.id;
+      delete data.service;
+      return data;
+    });
+    this.form.clearValidators();
+    this.form.updateValueAndValidity();
+    this.calendarService.apiUpdateChannel(newDataSource, this.htmlContent)
+      .subscribe(data => {
+            this.toast.success('Calendario aggiornato con successo!');
+            this.getData();
+        }, (err) => {
+            const errorMessageTranslated = this.errorMessageTranslatorService.translate(_.get(err, 'error.message', ''));
+            this.toast.error(errorMessageTranslated);
+        });
+  }
+
+  private getData() {
     this.calendarService.apiGetCalendarFromService(this.ServiceId).pipe(
       map(data => {
         _.forEach(data, element => {
           this.form.addControl(
-            element.id + '__time_start', new FormControl(element.time_start, Validators.required)
+            element.id + '__time_start', new FormControl(element.time_start, [
+              Validators.required,
+              Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/)
+            ])
           );
           this.form.addControl(
-            element.id + '__time_end', new FormControl(element.time_end, Validators.required)
+            element.id + '__time_end', new FormControl(element.time_end, [
+              Validators.required,
+              Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/)
+            ])
           );
         });
+        this.form.updateValueAndValidity();
         return data;
       }),
       tap(data => {
@@ -81,26 +103,8 @@ export class ScheduleTabComponent implements OnInit, AfterViewInit {
       }),
     )
     .subscribe((data) => {
-      console.log(data);
       this.dataSource = data;
-
-
     });
-
-
-  }
-
-
-  onSubmit() {
-    const newDataSource: ICalendar[] = _.flatMap(this.dataSource, data => {
-      return data[1];
-    });
-    console.log(newDataSource);
-  }
-
-
-  onChange( { editor }: ChangeEvent) {
-    console.log(editor.getData());
   }
 
   openPicker(element) {
@@ -134,7 +138,6 @@ export class ScheduleTabComponent implements OnInit, AfterViewInit {
   }
 
   delRow(item: ICalendar) {
-    console.log('Remove row ', item);
     this.dataSource[item.weekday_start][1].splice(this.dataSource[item.weekday_start][1].indexOf(item), 1);
 
   }

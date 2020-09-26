@@ -85,11 +85,15 @@
 
   .mat-form-field-infix {
     padding: 0;
+  }
+
+    .data_content > input[type=text] {
+      background-color: white;
     }
 
-
-
-
+    .data_content > .mat-icon {
+      font-size: 18px;
+    }
 
 
 

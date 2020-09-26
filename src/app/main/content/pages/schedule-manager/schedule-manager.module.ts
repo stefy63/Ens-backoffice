@@ -15,6 +15,7 @@ import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import {ApiCalendarService} from '../../../services/api/api-calendar.service';
 import { AmazingTimePickerModule } from 'amazing-time-picker';
 
+
 const routes: Routes = [
   {
       path     : 'pages/schedule-manager',
@@ -34,7 +35,8 @@ const routes: Routes = [
     BrowserModule,
     BrowserAnimationsModule,
     CKEditorModule,
-    AmazingTimePickerModule
+    AmazingTimePickerModule,
+
 
   ],
   declarations: [
