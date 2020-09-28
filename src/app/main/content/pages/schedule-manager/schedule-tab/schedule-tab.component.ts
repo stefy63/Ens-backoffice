@@ -8,7 +8,7 @@ import {DayOfWeek} from '../../../../../enums/day-of-week.enum';
 import { ApiCalendarService } from '../../../../services/api/api-calendar.service';
 import { ICalendar } from '../../../../../interfaces/i-calendar';
 import * as moment from 'moment';
-import { tap, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NotificationsService } from 'angular2-notifications';
 import { ErrorMessageTranslatorService } from '../../../../services/error-message-translator.service';
@@ -33,6 +33,7 @@ export class ScheduleTabComponent implements OnInit {
   public form: FormGroup;
   public dataSource:  ICalendar[];
   public service = Services;
+  private ticketService: ITicketService[];
 
 
   constructor(
@@ -46,9 +47,8 @@ export class ScheduleTabComponent implements OnInit {
      }
 
   ngOnInit() {
-    const services: ITicketService[] = this.storage.getItem('services');
-    const service: ITicketService = _.find(services, {id: this.ServiceId});
-    this.htmlContent = service.description;
+    this.ticketService = this.storage.getItem('services');
+    this.htmlContent = _.find(this.ticketService, {id: this.ServiceId}).description;
     this.getData();
   }
 
@@ -71,9 +71,8 @@ export class ScheduleTabComponent implements OnInit {
     this.calendarService.apiUpdateChannel(this.ServiceId, newDataSource, this.htmlContent)
       .subscribe(data => {
             this.toast.success('Calendario aggiornato con successo!');
-            const services: ITicketService[] = this.storage.getItem('services');
-            services.find( item => item.id === this.ServiceId).description = this.htmlContent;
-            this.storage.setDataItem('services', services);
+            this.ticketService.find( item => item.id === this.ServiceId).description = this.htmlContent;
+            this.storage.setDataItem('services', this.ticketService);
             this.getData();
         }, (err) => {
             const errorMessageTranslated = this.errorMessageTranslatorService.translate(_.get(err, 'error.message', ''));
