@@ -23,12 +23,12 @@ export class ApiCalendarService {
       .map((data) => (data as ICalendar[]));
   }
 
-  public apiUpdateChannel(timeGroup: ICalendar[], channelDescription: string): Observable<ICalendar[]> {
+  public apiUpdateChannel(idService: number, timeGroup: ICalendar[], channelDescription: string): Observable<ICalendar[]> {
     const sendData = {
       calendar: timeGroup,
       description: channelDescription
     };
-    return this.http.put(this.baseUrl + '/calendar/service/' + timeGroup[0].id_service, sendData).map(data => data as ICalendar[]);
+    return this.http.put(this.baseUrl + '/calendar/service/' + idService, sendData).map(data => data as ICalendar[]);
   }
 
 }

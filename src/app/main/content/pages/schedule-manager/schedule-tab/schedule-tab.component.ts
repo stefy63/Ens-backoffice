@@ -12,6 +12,8 @@ import { tap, map } from 'rxjs/operators';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NotificationsService } from 'angular2-notifications';
 import { ErrorMessageTranslatorService } from '../../../../services/error-message-translator.service';
+import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
+import { ITicketService } from '../../../../../interfaces/i-ticket-service';
 
 
 
@@ -35,6 +37,7 @@ export class ScheduleTabComponent implements OnInit {
 
   constructor(
     private calendarService: ApiCalendarService,
+    private storage: LocalStorageService,
     public toast: NotificationsService,
     private errorMessageTranslatorService: ErrorMessageTranslatorService,
 
@@ -62,9 +65,12 @@ export class ScheduleTabComponent implements OnInit {
     });
     this.form.clearValidators();
     this.form.updateValueAndValidity();
-    this.calendarService.apiUpdateChannel(newDataSource, this.htmlContent)
+    this.calendarService.apiUpdateChannel(this.ServiceId, newDataSource, this.htmlContent)
       .subscribe(data => {
             this.toast.success('Calendario aggiornato con successo!');
+            const services: ITicketService[] = this.storage.getItem('services');
+            services.find( item => item.id === this.ServiceId).description = this.htmlContent;
+            this.storage.setDataItem('services', JSON.stringify(services));
             this.getData();
         }, (err) => {
             const errorMessageTranslated = this.errorMessageTranslatorService.translate(_.get(err, 'error.message', ''));
@@ -73,6 +79,8 @@ export class ScheduleTabComponent implements OnInit {
   }
 
   private getData() {
+    this.htmlContent = this.storage.getItem('services').find( item => item.id === this.ServiceId).description;
+
     this.calendarService.apiGetCalendarFromService(this.ServiceId).pipe(
       map(data => {
         _.forEach(data, element => {
@@ -92,10 +100,6 @@ export class ScheduleTabComponent implements OnInit {
         this.form.updateValueAndValidity();
         return data;
       }),
-      tap(data => {
-        this.htmlContent = data[0].service.description;
-        _.orderBy(data , 'weekday_start');
-      }),
       map(data => {
         return _.map(DayOfWeek, item => {
           return [item, _.filter(data, day => DayOfWeek[day.weekday_start] === item)];
@@ -103,13 +107,12 @@ export class ScheduleTabComponent implements OnInit {
       }),
     )
     .subscribe((data) => {
-      this.dataSource = data;
+      this.dataSource = _.orderBy(data , 'weekday_start');
     });
   }
 
   openPicker(element) {
-    const InputEl: HTMLElement = document.getElementById(element);
-    InputEl.click();
+    document.getElementById(element).click();
   }
 
   addRow(day: any[]) {
@@ -135,10 +138,14 @@ export class ScheduleTabComponent implements OnInit {
       test.id + '__time_end', new FormControl('', Validators.required)
     );
     this.dataSource[d][1].push(test);
+    this.form.updateValueAndValidity();
   }
 
   delRow(item: ICalendar) {
     this.dataSource[item.weekday_start][1].splice(this.dataSource[item.weekday_start][1].indexOf(item), 1);
+    this.form.removeControl(item.id + '__time_start');
+    this.form.removeControl(item.id + '__time_end');
+    this.form.updateValueAndValidity();
 
   }
 }

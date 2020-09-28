@@ -14,6 +14,7 @@ import {ScheduleTabComponent} from './schedule-tab/schedule-tab.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import {ApiCalendarService} from '../../../services/api/api-calendar.service';
 import { AmazingTimePickerModule } from 'amazing-time-picker-view24h';
+import {ApiTicketServiceService} from '../../../services/api/api-ticket-service.service ';
 
 
 const routes: Routes = [
@@ -37,7 +38,6 @@ const routes: Routes = [
     CKEditorModule,
     AmazingTimePickerModule,
 
-
   ],
   declarations: [
     ScheduleManagerComponent,
@@ -50,7 +50,8 @@ const routes: Routes = [
   ],
   providers: [
     NotificationsService,
-    ApiCalendarService
+    ApiCalendarService,
+    ApiTicketServiceService
   ]
 })
 export class ScheduleManagerModule { }

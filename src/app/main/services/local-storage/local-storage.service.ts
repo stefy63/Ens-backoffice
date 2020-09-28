@@ -32,4 +32,11 @@ export class LocalStorageService {
       return undefined;
     }
   }
+
+  public setDataItem(key: string, value: string): void {
+      const data = JSON.parse(this.storage.getItem('data'));
+      data[key] = value;
+      this.storage.setItem('data', JSON.stringify(data));
+  }
+
 }
