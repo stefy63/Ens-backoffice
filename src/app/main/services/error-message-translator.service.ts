@@ -9,6 +9,7 @@ export class ErrorMessageTranslatorService {
     'USER_ALREDY_EXIST' : 'Username già presente in archivio!',
     'PHONE_ALREDY_EXIST': 'Telefono già presente in archivio!',
     'GENERIC' : 'Modifica fallita!',
+    'UPDATE_CALENDAR_FAULT': 'Modifica al servizio FALLITA!'
   };
 
   constructor() { }

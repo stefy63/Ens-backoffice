@@ -46,6 +46,9 @@ export class ScheduleTabComponent implements OnInit {
      }
 
   ngOnInit() {
+    const services: ITicketService[] = this.storage.getItem('services');
+    const service: ITicketService = _.find(services, {id: this.ServiceId});
+    this.htmlContent = service.description;
     this.getData();
   }
 
@@ -70,7 +73,7 @@ export class ScheduleTabComponent implements OnInit {
             this.toast.success('Calendario aggiornato con successo!');
             const services: ITicketService[] = this.storage.getItem('services');
             services.find( item => item.id === this.ServiceId).description = this.htmlContent;
-            this.storage.setDataItem('services', JSON.stringify(services));
+            this.storage.setDataItem('services', services);
             this.getData();
         }, (err) => {
             const errorMessageTranslated = this.errorMessageTranslatorService.translate(_.get(err, 'error.message', ''));
@@ -79,7 +82,6 @@ export class ScheduleTabComponent implements OnInit {
   }
 
   private getData() {
-    this.htmlContent = this.storage.getItem('services').find( item => item.id === this.ServiceId).description;
 
     this.calendarService.apiGetCalendarFromService(this.ServiceId).pipe(
       map(data => {
