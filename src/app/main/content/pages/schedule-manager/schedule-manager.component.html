@@ -1,13 +1,8 @@
 <div class="container col-md-12 p-24" fusePerfectScrollbar>
   <mat-tab-group #tabGroup class="mat-elevation-z24" >
-    <mat-tab label="CHAT">
+    <mat-tab *ngFor="let item of services" label="{{serviceName[item.service]}}">
       <mat-list>
-        <fuse-schedule-tab [ServiceId]="services.CHAT"></fuse-schedule-tab>
-      </mat-list>
-    </mat-tab>
-    <mat-tab label="VIDEOCHAT">
-      <mat-list>
-        <fuse-schedule-tab [ServiceId]="services.VIDEOCHAT"></fuse-schedule-tab>
+        <fuse-schedule-tab [ServiceId]="item.id"></fuse-schedule-tab>
       </mat-list>
     </mat-tab>
   </mat-tab-group>

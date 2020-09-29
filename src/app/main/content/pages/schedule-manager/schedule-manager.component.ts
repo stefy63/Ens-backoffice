@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Services } from '../../../../enums/ticket-services.enum';
+import { Component } from '@angular/core';
+import { ITicketService } from '../../../../interfaces/i-ticket-service';
+import { LocalStorageService } from '../../../services/local-storage/local-storage.service';
+import { ServiceNameEnum } from '../../../../enums/service-name.enum';
 
 
 @Component({
@@ -7,15 +9,15 @@ import { Services } from '../../../../enums/ticket-services.enum';
   templateUrl: './schedule-manager.component.html',
   styleUrls: ['./schedule-manager.component.scss'],
 })
-export class ScheduleManagerComponent implements OnInit {
+export class ScheduleManagerComponent {
 
-  public services = Services;
+  public services: ITicketService;
+  public serviceName = ServiceNameEnum;
 
-  constructor( ) {
-  }
-
-  ngOnInit() {
-
+  constructor(
+    private storage: LocalStorageService,
+  ) {
+    this.services = this.storage.getItem('services');
   }
 
 
