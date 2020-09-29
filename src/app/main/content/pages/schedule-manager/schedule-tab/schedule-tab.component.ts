@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import * as _ from 'lodash';
+import {find, flatMap, get, forEach, filter, orderBy} from 'lodash';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import '@ckeditor/ckeditor5-build-classic/build/translations/it';
 import { CKEditorComponent } from '@ckeditor/ckeditor5-angular';
@@ -7,14 +7,12 @@ import { Services } from '../../../../../enums/ticket-services.enum';
 import {DayOfWeek} from '../../../../../enums/day-of-week.enum';
 import { ApiCalendarService } from '../../../../services/api/api-calendar.service';
 import { ICalendar } from '../../../../../interfaces/i-calendar';
-import * as moment from 'moment';
 import { map } from 'rxjs/operators';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NotificationsService } from 'angular2-notifications';
 import { ErrorMessageTranslatorService } from '../../../../services/error-message-translator.service';
 import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
 import { ITicketService } from '../../../../../interfaces/i-ticket-service';
-
 
 
 @Component({
@@ -48,13 +46,13 @@ export class ScheduleTabComponent implements OnInit {
 
   ngOnInit() {
     this.ticketService = this.storage.getItem('services');
-    this.htmlContent = _.find(this.ticketService, {id: this.ServiceId}).description;
+    this.htmlContent = find(this.ticketService, {id: this.ServiceId}).description;
     this.getData();
   }
 
 
   onSubmit() {
-    const newDataSource: ICalendar[] = _.flatMap(this.dataSource, data => {
+    const newDataSource: ICalendar[] = flatMap(this.dataSource, data => {
       return data[1];
     })
     .map((data: ICalendar) => {
@@ -75,7 +73,7 @@ export class ScheduleTabComponent implements OnInit {
             this.storage.setDataItem('services', this.ticketService);
             this.getData();
         }, (err) => {
-            const errorMessageTranslated = this.errorMessageTranslatorService.translate(_.get(err, 'error.message', ''));
+            const errorMessageTranslated = this.errorMessageTranslatorService.translate(get(err, 'error.message', ''));
             this.toast.error(errorMessageTranslated);
         });
   }
@@ -84,7 +82,7 @@ export class ScheduleTabComponent implements OnInit {
 
     this.calendarService.apiGetCalendarFromService(this.ServiceId).pipe(
       map(data => {
-        _.forEach(data, element => {
+        forEach(data, element => {
           this.form.addControl(
             element.id + '__time_start', new FormControl(element.time_start, [
               Validators.required,
@@ -99,16 +97,13 @@ export class ScheduleTabComponent implements OnInit {
           );
         });
         this.form.updateValueAndValidity();
-        return data;
-      }),
-      map(data => {
-        return _.map(DayOfWeek, item => {
-          return [item, _.filter(data, day => DayOfWeek[day.weekday_start] === item)];
+        return DayOfWeek.map(item => {
+          return [item, filter(data, day => DayOfWeek[day.weekday_start] === item)];
         });
       }),
     )
     .subscribe((data) => {
-      this.dataSource = _.orderBy(data , 'weekday_start');
+      this.dataSource = orderBy(data , 'weekday_start');
     });
   }
 
@@ -118,7 +113,6 @@ export class ScheduleTabComponent implements OnInit {
 
   addRow(day: any[]) {
     const d = DayOfWeek.findIndex(x => x === day[0]);
-    const hour = moment().format('H:mm');
     const test: ICalendar = {
       id: day[1].length + 101,
       id_service: this.ServiceId,
