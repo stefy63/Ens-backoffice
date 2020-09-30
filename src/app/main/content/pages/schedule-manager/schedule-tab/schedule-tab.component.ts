@@ -29,7 +29,7 @@ export class ScheduleTabComponent implements OnInit {
       language: 'it'
   };
   public form: FormGroup;
-  public dataSource:  ICalendar[];
+  public dataSource:  any[];
   public service = Services;
   private ticketService: ITicketService[];
 
@@ -57,9 +57,8 @@ export class ScheduleTabComponent implements OnInit {
     })
     .map((data: ICalendar) => {
       data.time_start = this.form.controls[data.id + '__time_start'].value;
-      this.form.removeControl(data.id + '__time_start');
       data.time_end = this.form.controls[data.id + '__time_end'].value;
-      this.form.removeControl(data.id + '__time_end');
+      this._delControl(data);
       delete data.id;
       delete data.service;
       return data;
@@ -82,28 +81,18 @@ export class ScheduleTabComponent implements OnInit {
 
     this.calendarService.apiGetCalendarFromService(this.ServiceId).pipe(
       map(data => {
-        forEach(data, element => {
-          this.form.addControl(
-            element.id + '__time_start', new FormControl(element.time_start, [
-              Validators.required,
-              Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/)
-            ])
-          );
-          this.form.addControl(
-            element.id + '__time_end', new FormControl(element.time_end, [
-              Validators.required,
-              Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/)
-            ])
-          );
+        forEach(data, (element: ICalendar) => {
+          this._addControl(element);
         });
         this.form.updateValueAndValidity();
-        return DayOfWeek.map(item => {
-          return [item, filter(data, day => DayOfWeek[day.weekday_start] === item)];
+        return DayOfWeek.map((item, index) => {
+          return {dayNumber: index, day: item, timeSeries: filter(data, (day: ICalendar) => DayOfWeek[day.weekday_start] === item)};
         });
       }),
     )
     .subscribe((data) => {
-      this.dataSource = orderBy(data , 'weekday_start');
+        data = orderBy(data , 'weekday_start');
+      this.dataSource = data;
     });
   }
 
@@ -111,36 +100,50 @@ export class ScheduleTabComponent implements OnInit {
     document.getElementById(element).click();
   }
 
-  addRow(day: any[]) {
-    const d = DayOfWeek.findIndex(x => x === day[0]);
-    const test: ICalendar = {
-      id: day[1].length + 101,
+  addRow(day: any) {
+    const calendar: ICalendar = {
+      id: day.timeSeries.length + 101,
       id_service: this.ServiceId,
       month_end: 0,
       month_start: 0,
       monthday_start: 0,
       monthday_end: 0,
-      weekday_start: d,
-      weekday_end: d,
+      weekday_start: day.dayNumber,
+      weekday_end: day.dayNumber,
       time_start: '',
       time_end: '',
     };
-
-    this.form.addControl(
-      test.id + '__time_start', new FormControl('', Validators.required)
-    );
-    this.form.addControl(
-      test.id + '__time_end', new FormControl('', Validators.required)
-    );
-    this.dataSource[d][1].push(test);
+    this._addControl(calendar);
+    this.dataSource[day.dayNumber].timeSeries.push(calendar);
     this.form.updateValueAndValidity();
   }
 
   delRow(item: ICalendar) {
-    this.dataSource[item.weekday_start][1].splice(this.dataSource[item.weekday_start][1].indexOf(item), 1);
-    this.form.removeControl(item.id + '__time_start');
-    this.form.removeControl(item.id + '__time_end');
+    this.dataSource[item.weekday_start].timeSeries.splice(item, 1);
+    this._delControl(item);
     this.form.updateValueAndValidity();
 
   }
+
+  private _delControl(element: ICalendar){
+    this.form.removeControl(element.id + '__time_start');
+    this.form.removeControl(element.id + '__time_end');
+  }
+
+
+  private _addControl(element: ICalendar){
+    this.form.addControl(
+      element.id + '__time_start', new FormControl(element.time_start, [
+        Validators.required,
+        Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/)
+      ])
+    );
+    this.form.addControl(
+      element.id + '__time_end', new FormControl(element.time_end, [
+        Validators.required,
+        Validators.pattern(/^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?$/)
+      ])
+    );
+  }
+
 }
