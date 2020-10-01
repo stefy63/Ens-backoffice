@@ -2,27 +2,27 @@
   <mat-tab-group #tabGroup class="mat-elevation-z24" (selectedTabChange)="tabChanged($event)">
     <mat-tab label="Nuove">
       <mat-list>
-        <fuse-ticket-item [allTicket]="tableTickets" (play-sound)="playSound($event)"></fuse-ticket-item>
+        <fuse-ticket-item [allTicket]="tableTickets" *ngIf="currentTabIndex==0"></fuse-ticket-item>
       </mat-list>
     </mat-tab>
     <mat-tab label="In Carico">
       <mat-list>
-          <fuse-ticket-item [allTicket]="tableTickets"></fuse-ticket-item>
+          <fuse-ticket-item [allTicket]="tableTickets" *ngIf="currentTabIndex==1"></fuse-ticket-item>
       </mat-list>
     </mat-tab>
     <mat-tab label="Chiuse">
       <mat-list>
-          <fuse-ticket-item [allTicket]="tableTickets"></fuse-ticket-item>
+          <fuse-ticket-item [allTicket]="tableTickets" *ngIf="currentTabIndex==2"></fuse-ticket-item>
       </mat-list>
     </mat-tab>
     <mat-tab label="Rifiutate">
       <mat-list>
-          <fuse-ticket-item [allTicket]="tableTickets"></fuse-ticket-item>
+          <fuse-ticket-item [allTicket]="tableTickets" *ngIf="currentTabIndex==3"></fuse-ticket-item>
       </mat-list>
     </mat-tab>
     <mat-tab label="I Miei Ticket Aperti">
-      <div>
-        <fuse-ticket-item [allTicket]="tableTickets"></fuse-ticket-item>
+      <div >
+        <fuse-ticket-item [allTicket]="tableTickets" *ngIf="currentTabIndex==4"></fuse-ticket-item>
       </div>
     </mat-tab>
   </mat-tab-group>

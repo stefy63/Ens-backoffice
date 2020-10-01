@@ -1,9 +1,8 @@
-import { Component, OnInit, Input, ViewChild,  ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { ITicket } from '../../../../../interfaces/i-ticket';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
-import { Observable } from 'rxjs/Observable';
 import { Router } from '@angular/router';
-import * as _ from 'lodash';
+import { Observable } from 'rxjs/Observable';
+import { ITicket } from '../../../../../interfaces/i-ticket';
 
 @Component({
   selector: 'fuse-ticket-item',
