@@ -54,6 +54,14 @@ export class NavigationModel {
                         'url': '/pages/statistics',
                         'permission': ['statistics.view']
                     },
+                    {
+                      'id': 'orari',
+                      'title': 'Orari Apertura',
+                      'type': 'item',
+                      'icon': 'schedule',
+                      'url': '/pages/schedule-manager',
+                      'permission': ['update.chanels']
+                  },
                 ],
             },
         ];

@@ -1,0 +1,101 @@
+:host ::ng-deep {
+  .page_container {
+    padding: 15px;
+  }
+  .title-editor {
+    color: #25b2f7;
+    font-weight: bold;
+    margin-left: 15px;
+  }
+  .ck-editor__editable_inline {
+    min-height: 12vh;
+  }
+  .ck-editor {
+    padding: 10px;
+  }
+  .ck-toolbar {
+    border-radius: 10px !important;
+    border-bottom-left-radius: 0 !important;
+    border-bottom-right-radius: 0 !important;
+  }
+  .ck-content  {
+    border-radius: 10px !important;
+    border-top-left-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+  }
+
+  .odd {
+    background-color: lightgray ;
+  }
+
+  .even {
+
+  }
+
+
+  .table__content {
+    padding: 15px;
+  }
+
+  .table_header {
+    padding: 10px;
+    background-color: #039be5;
+    color: white;
+    font-weight: 600;
+  }
+
+  .row_content {
+    margin: 0;
+  }
+
+  .day_content-empty,
+  .day_content_exist,
+  .action_content {
+  }
+
+  .action_content {
+    display: flex;
+    justify-content: space-evenly;
+  }
+  .action_content_empty_row {
+    display: flex;
+    justify-content: space-around;
+
+  }
+
+  .row_content {
+    padding: 10px;
+  }
+
+  .button_container {
+    margin: 20px;
+    text-align: right;
+  }
+
+  .action_content .mat-icon,
+  .action_content_empty_row .mat-icon {
+    cursor: pointer;
+  }
+  // .mat-green {
+  //   color: green;
+  // }
+  // .mat-red {
+  //   color: red;
+  // }
+
+  .mat-form-field-infix {
+    padding: 0;
+  }
+
+    .data_content > input[type=text] {
+      background-color: white;
+    }
+
+    .data_content > .mat-icon {
+      font-size: 18px;
+    }
+
+
+
+
+}

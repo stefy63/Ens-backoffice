@@ -5,6 +5,7 @@ import {TicketDetailModule} from './ticket-detail/ticket-detail.module';
 import { SendingSmsModule } from './sending-sms/sending-sms.module';
 import { UserManagerModule } from './user-manager/user-manager.module';
 import { StatisticsModule } from './statistics/statistics.module';
+import {ScheduleManagerModule} from './schedule-manager/schedule-manager.module';
 
 @NgModule({
     imports: [
@@ -14,6 +15,7 @@ import { StatisticsModule } from './statistics/statistics.module';
       SendingSmsModule,
       UserManagerModule,
       StatisticsModule,
+      ScheduleManagerModule
     ],
     declarations: []
 })

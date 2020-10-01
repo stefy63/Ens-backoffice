@@ -1,0 +1,68 @@
+<div class="page_container">
+  <div class="ck_editor">
+    <div class="title-editor">Descrizione</div>
+    <ckeditor #editor [config]="editorConfig" [(ngModel)]="htmlContent" [editor]="Editor"></ckeditor>
+  </div>
+  <div class="table__content">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+      <div class="table_header">Orari Apertura {{service[ServiceId]}}</div>
+      <div class="day_content row_content row" *ngFor="let element of dataSource;  let i = index"
+        [ngClass]="{ 'odd': (i%2 == 0), 'even': i%2 == 1 } ">
+
+        <div class="row col-12" *ngIf="element.timeSeries.length > 0; else elseBlock">
+          <div class="day_content_exist row col-12" *ngFor="let item of element.timeSeries;  let j = index">
+
+            <div class="day_of_week col-3">
+              <span *ngIf="j == 0">{{element.day}}</span>
+            </div>
+
+            <div class="data_content col-3">
+              <label for="{{item.id}}__time_start">Dalle</label>
+              <input id="{{item.id}}__time_start" class="col-5 ml-5 pl-2 pr-1" atp-time-picker hours24="true" formControlName="{{item.id}}__time_start" />
+              <mat-icon matSuffix class="ml-3" (click)="openPicker(item.id+'__time_start')">calendar_today</mat-icon>
+              <mat-error class="error-message" *ngIf="!!form.get(item.id+'__time_start') && form?.get(item.id+'__time_start').hasError('pattern')">
+                Il forma dell'ora è errato.
+              </mat-error>
+              <mat-error class="error-message" *ngIf="!!form.get(item.id+'__time_start') && form?.get(item.id+'__time_start').hasError('required')">
+                L'ora è obbligatoria.
+              </mat-error>
+            </div>
+            <div class="data_content col-3">
+              <label for="{{item.id}}__time_end">Alle</label>
+              <input id="{{item.id}}__time_end" class="col-5 ml-5 pl-2 pr-1" atp-time-picker hours24="true" formControlName="{{item.id}}__time_end" />
+              <mat-icon matSuffix class="ml-3" (click)="openPicker(item.id+'__time_end')">calendar_today</mat-icon>
+              <mat-error class="error-message" *ngIf="!!form.get(item.id+'__time_end') && form?.get(item.id+'__time_end').hasError('pattern')">
+                Il forma dell'ora è errato.
+              </mat-error>
+              <mat-error class="error-message" *ngIf="!!form.get(item.id+'__time_end') && form?.get(item.id+'__time_end').hasError('required')">
+                L'ora è obbligatoria.
+              </mat-error>
+            </div>
+            <div class="action_content col-3">
+              <mat-icon color="green" (click)="addRow(element)">control_point</mat-icon>
+              <mat-icon color="red" (click)="delRow(item, j)">remove_circle_outline</mat-icon>
+            </div>
+          </div>
+        </div>
+        <ng-template #elseBlock>
+          <div class="day_content-empty row col-12">
+            <div class="row col-12">
+              <div class="day_of_week col-3">
+                {{element.day}}
+              </div>
+              <div class="col-6">
+                Nessun orario inserito, il canale rimarrà chiuso
+              </div>
+              <div class="action_content_empty_row col-3">
+                <mat-icon color="green" (click)="addRow(element)">control_point</mat-icon>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+      <div class="row justify-content-center mt-3">
+        <button mat-button color="primary" type="submit" [disabled]="!form.valid">Salva</button>
+      </div>
+    </form>
+  </div>
+</div>
