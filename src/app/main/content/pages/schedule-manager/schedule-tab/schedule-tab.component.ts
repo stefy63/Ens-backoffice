@@ -1,18 +1,19 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import {find, flatMap, get, forEach, filter, orderBy} from 'lodash';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import '@ckeditor/ckeditor5-build-classic/build/translations/it';
-import { CKEditorComponent } from '@ckeditor/ckeditor5-angular';
-import { Services } from '../../../../../enums/ticket-services.enum';
-import {DayOfWeek} from '../../../../../enums/day-of-week.enum';
-import { ApiCalendarService } from '../../../../services/api/api-calendar.service';
-import { ICalendar } from '../../../../../interfaces/i-calendar';
-import { map } from 'rxjs/operators';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NotificationsService } from 'angular2-notifications';
+import { filter, find, flatMap, forEach, get } from 'lodash';
+import { map } from 'rxjs/operators';
+import { DayOfWeek } from '../../../../../enums/day-of-week.enum';
+import { Services } from '../../../../../enums/ticket-services.enum';
+import { ICalendar } from '../../../../../interfaces/i-calendar';
+import { ITicketService } from '../../../../../interfaces/i-ticket-service';
+import { ApiCalendarService } from '../../../../services/api/api-calendar.service';
 import { ErrorMessageTranslatorService } from '../../../../services/error-message-translator.service';
 import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
-import { ITicketService } from '../../../../../interfaces/i-ticket-service';
+import { uuidv4 } from '../../../../services/UuidGenerator';
 
 
 @Component({
@@ -25,11 +26,11 @@ export class ScheduleTabComponent implements OnInit {
   @Input() ServiceId: number;
   public htmlContent: string;
   public Editor = ClassicEditor;
-  public config = {
+  public editorConfig = {
       language: 'it'
   };
   public form: FormGroup;
-  public dataSource:  any[];
+  public dataSource:  DayWithTimeSeries[];
   public service = Services;
   private ticketService: ITicketService[];
 
@@ -39,10 +40,9 @@ export class ScheduleTabComponent implements OnInit {
     private storage: LocalStorageService,
     public toast: NotificationsService,
     private errorMessageTranslatorService: ErrorMessageTranslatorService,
-
-    ) {
+  ) {
       this.form = new FormGroup({});
-     }
+  }
 
   ngOnInit() {
     this.ticketService = this.storage.getItem('services');
@@ -52,8 +52,8 @@ export class ScheduleTabComponent implements OnInit {
 
 
   onSubmit() {
-    const newDataSource: ICalendar[] = flatMap(this.dataSource, data => {
-      return data[1];
+    const calendars: ICalendar[] = flatMap(this.dataSource, (day: DayWithTimeSeries) => {
+      return day.timeSeries;
     })
     .map((data: ICalendar) => {
       data.time_start = this.form.controls[data.id + '__time_start'].value;
@@ -65,7 +65,8 @@ export class ScheduleTabComponent implements OnInit {
     });
     this.form.clearValidators();
     this.form.updateValueAndValidity();
-    this.calendarService.apiUpdateChannel(this.ServiceId, newDataSource, this.htmlContent)
+    
+    this.calendarService.apiUpdateChannel(this.ServiceId, calendars, this.htmlContent)
       .subscribe(data => {
             this.toast.success('Calendario aggiornato con successo!');
             this.ticketService.find( item => item.id === this.ServiceId).description = this.htmlContent;
@@ -78,7 +79,6 @@ export class ScheduleTabComponent implements OnInit {
   }
 
   private getData() {
-
     this.calendarService.apiGetCalendarFromService(this.ServiceId).pipe(
       map(data => {
         forEach(data, (element: ICalendar) => {
@@ -89,10 +89,8 @@ export class ScheduleTabComponent implements OnInit {
           return {dayNumber: index, day: item, timeSeries: filter(data, (day: ICalendar) => DayOfWeek[day.weekday_start] === item)};
         });
       }),
-    )
-    .subscribe((data) => {
-        data = orderBy(data , 'weekday_start');
-      this.dataSource = data;
+    ).subscribe((days: DayWithTimeSeries[]) => {
+      this.dataSource = days;
     });
   }
 
@@ -102,7 +100,7 @@ export class ScheduleTabComponent implements OnInit {
 
   addRow(day: any) {
     const calendar: ICalendar = {
-      id: day.timeSeries.length + 101,
+      id: uuidv4(),
       id_service: this.ServiceId,
       month_end: 0,
       month_start: 0,
@@ -118,11 +116,10 @@ export class ScheduleTabComponent implements OnInit {
     this.form.updateValueAndValidity();
   }
 
-  delRow(item: ICalendar) {
-    this.dataSource[item.weekday_start].timeSeries.splice(item, 1);
+  delRow(item: ICalendar, index: number) {
+    this.dataSource[item.weekday_start].timeSeries.splice(index, 1);
     this._delControl(item);
     this.form.updateValueAndValidity();
-
   }
 
   private _delControl(element: ICalendar){
@@ -145,5 +142,10 @@ export class ScheduleTabComponent implements OnInit {
       ])
     );
   }
+}
 
+export interface DayWithTimeSeries {
+  dayNumber: number;
+  day: string;
+  timeSeries: ICalendar[];
 }
