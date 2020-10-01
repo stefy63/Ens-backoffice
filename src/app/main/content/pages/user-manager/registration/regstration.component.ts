@@ -86,7 +86,7 @@ export class DialogRegistrationComponent implements OnInit {
           .subscribe(roles => {
             this.roles = roles;
           });
-      }      
+      }
   }
 
   ngOnInit(): void {

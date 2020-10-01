@@ -11,7 +11,6 @@ const httpOptions = {
 @Injectable()
 export class ApiRolesService {
 
-
   private baseUrl = GetBaseUrl.baseUrl();
 
   constructor(

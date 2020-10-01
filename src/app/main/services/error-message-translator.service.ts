@@ -8,7 +8,8 @@ export class ErrorMessageTranslatorService {
     'EMAIL_ALREDY_EXIST' : 'Email già presente in archivio!',
     'USER_ALREDY_EXIST' : 'Username già presente in archivio!',
     'PHONE_ALREDY_EXIST': 'Telefono già presente in archivio!',
-    'GENERIC' : 'Modifica Profilo fallita!',
+    'GENERIC' : 'Modifica fallita!',
+    'UPDATE_CALENDAR_FAULT': 'Modifica al servizio FALLITA!'
   };
 
   constructor() { }

@@ -10,7 +10,6 @@ import { ToastMessage } from '../../../../../services/toastMessage.service';
 import { PhoneValidator } from '../../../../../services/MaterialValidator/CustomNumericValidator.service';
 import * as _ from 'lodash';
 import { uuidv4 } from '../../../../../services/UuidGenerator';
-import { assign } from 'lodash';
 
 @Component({
   selector: 'fuse-dialog-close-ticket',

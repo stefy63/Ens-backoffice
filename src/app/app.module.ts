@@ -33,6 +33,7 @@ import { ApiStatisticsService } from './main/services/api/api-statistics.service
 import { HasPermissionGuard } from './guard/has-permission.guard';
 import {ErrorMessageTranslatorService} from './main/services/error-message-translator.service';
 
+
 const appRoutes: Routes = [
     {
         path: 'pages/export-report',
@@ -75,7 +76,8 @@ const config: SocketIoConfig = { url: environment.ws_url + wssPort, options: opt
         PagesModule,
         SimpleNotificationsModule.forRoot(),
         MDBBootstrapModule.forRoot(),
-        MatTooltipModule
+        MatTooltipModule,
+
     ],
     providers: [
         FuseSplashScreenService,

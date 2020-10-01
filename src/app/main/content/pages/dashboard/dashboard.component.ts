@@ -1,36 +1,36 @@
-import * as _ from 'lodash';
-import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
-import { ApiTicketService } from '../../../services/api/api-ticket.service';
-import { ITicket } from '../../../../interfaces/i-ticket';
-import { LocalStorageService } from '../../../services/local-storage/local-storage.service';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { SocketService } from '../../../services/socket/socket.service';
-import { WsEvents } from '../../../../type/ws-events';
-import { NotificationsService } from 'angular2-notifications';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTabChangeEvent } from '@angular/material';
-import { environment } from '../../../../../environments/environment';
-import { NormalizeTicket } from '../../../services/helper/normalize-ticket';
-import { mergeMap, tap, map } from 'rxjs/operators';
+import { NotificationsService } from 'angular2-notifications';
+import * as _ from 'lodash';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { Status } from '../../../../enums/ticket-status.enum';
-import { ToastOptions } from '../../../../type/toast-options';
+import { map, mergeMap, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs/Subscription';
+import { environment } from '../../../../../environments/environment';
+import { Status } from '../../../../enums/ticket-status.enum';
+import { ITicket } from '../../../../interfaces/i-ticket';
+import { WsEvents } from '../../../../type/ws-events';
+import { ApiTicketService } from '../../../services/api/api-ticket.service';
+import { NormalizeTicket } from '../../../services/helper/normalize-ticket';
+import { LocalStorageService } from '../../../services/local-storage/local-storage.service';
+import { SocketService } from '../../../services/socket/socket.service';
 
 @Component({
   selector: 'fuse-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
-export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
+export class DashboardComponent implements OnInit, OnDestroy {
 
   @ViewChild('tabGroup') tabGroup: any;
   private idOperator: number;
   public totalBadge = 0;
   public beep;
-  public currentTabIndex: number = this.storage.getItem('dashboard_selected_tabindex') || 0;
-  public tabChangedSubject: BehaviorSubject<number> = new BehaviorSubject<number>(this.currentTabIndex);
-  public tableTickets: BehaviorSubject<ITicket[]> = new BehaviorSubject<ITicket[]>([]);
+  public currentTabIndex: number;
+  public tabChangedSubject: BehaviorSubject<number>;
+  public tableTickets: Subject<ITicket[]> = new Subject<ITicket[]>();
   public currentStatus: Status = Status.NEW;
   private MINE_TICKETS_TAB = 4;
   private newTicketSubscription: Subscription;
@@ -48,9 +48,16 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
   ) {
     this.idOperator = this.storage.getItem('user').id;
     this.beep = new Audio('/assets/audio/' + environment.beep_alarm);
+    this.currentTabIndex = parseInt(this.storage.getKey('dashboard_selected_tabindex'), 10) || 0;
+    this.tabChangedSubject = new BehaviorSubject<number>(this.currentTabIndex);
+    
   }
 
   ngOnInit() {
+    if (this.currentTabIndex) {
+      this.tabGroup.selectedIndex = this.currentTabIndex;
+    }
+
     this.tabChangedSubscription = this.tabChangedSubject.pipe(
       tap(() => this.spinner.show()),
       mergeMap((status: number) => this.loadTicketsWith(status)),
@@ -106,13 +113,6 @@ export class DashboardComponent implements OnInit, OnDestroy, AfterViewInit {
     }
     if (this.updatingTicketSubscription){
       this.updatingTicketSubscription.unsubscribe();
-    }
-  }
-
-  ngAfterViewInit() {
-    const selectedIndex = this.storage.getKey('dashboard_selected_tabindex');
-    if (selectedIndex) {
-      this.tabGroup.selectedIndex = +selectedIndex;
     }
   }
 

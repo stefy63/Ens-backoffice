@@ -4,8 +4,7 @@
       <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
     </mat-form-field>
   </div>
-  <mat-table #table [dataSource]="dataSource" matSort class="col-12">
-    <!-- service Column -->
+  <mat-table #table [dataSource]="dataSource" matSort class="col-12" *ngIf="dataSource">
     <ng-container matColumnDef="service">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="col-1">Servizio</mat-header-cell>
       <mat-cell *matCellDef="let element" class="col-1" [ngClass]="{
@@ -18,31 +17,26 @@
         {{element.service }} </mat-cell>
     </ng-container>
 
-    <!-- status Column -->
     <ng-container matColumnDef="status">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="col-1">Stato</mat-header-cell>
       <mat-cell *matCellDef="let element" class="col-1"> {{element.status}} </mat-cell>
     </ng-container>
 
-    <!-- operator Column -->
     <ng-container matColumnDef="operator">
       <mat-header-cell *matHeaderCellDef mat-sort-header="operator_firstname" class="col-2">Operatore</mat-header-cell>
       <mat-cell *matCellDef="let element" class="col-2">{{element.operator_name}} {{element.operator_surname}}</mat-cell>
     </ng-container>
 
-    <!-- user Column -->
     <ng-container matColumnDef="user">
       <mat-header-cell *matHeaderCellDef mat-sort-header="user_name" class="col-2">Utente</mat-header-cell>
       <mat-cell *matCellDef="let element" [ngStyle]="{'color': element.user_disabled ? 'red' : 'rgba(0, 0, 0, 0.87)'}" class="col-2"> {{element.user_name}} {{element.user_surname}} </mat-cell>
     </ng-container>
 
-    <!-- category Column -->
     <ng-container matColumnDef="category">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="col-1">Categoria</mat-header-cell>
       <mat-cell *matCellDef="let element" class="col-1"> {{element.category}} </mat-cell>
     </ng-container>
 
-    <!-- phone Column -->
     <ng-container matColumnDef="phone">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="col-2 text-center"><span class="col-12 text-center">Telefono</span></mat-header-cell>
       <mat-cell *matCellDef="let element" class="col-2 text-right">
@@ -50,14 +44,12 @@
       </mat-cell>
     </ng-container>
 
-    <!-- date_time Column -->
     <ng-container matColumnDef="date_time">
       <mat-header-cell *matHeaderCellDef mat-sort-header class="col-2">Data</mat-header-cell>
       <mat-cell *matCellDef="let element" class="col-2"> {{element.date_time | date:'dd/MM/yyyy HH:mm':'UTC'}}
       </mat-cell>
     </ng-container>
 
-    <!-- id Column -->
     <ng-container matColumnDef="id">
       <mat-header-cell *matHeaderCellDef class="col-1 text-center"> Azioni</mat-header-cell>
       <mat-cell *matCellDef="let element" class="col-1 text-center" >
