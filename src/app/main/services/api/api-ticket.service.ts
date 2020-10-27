@@ -1,10 +1,8 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { ITicket } from '../../../interfaces/i-ticket';
 import { Observable } from 'rxjs/Observable';
-import * as _ from 'lodash';
+import { ITicket } from '../../../interfaces/i-ticket';
 import { GetBaseUrl } from '../helper/getBaseUrl';
-import { Services } from '../../../enums/ticket-services.enum';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -38,8 +36,8 @@ export class ApiTicketService {
     }).map((data) => data as ITicket[]);
   }
 
-  public update(ticket: ITicket): Observable<ITicket> {
-    return this.http.put(this.baseUrl + '/ticket/' + ticket.id, ticket).map((data) => data as ITicket);
+  public update(ticket: ITicket, force: boolean): Observable<ITicket> {
+    return this.http.put(`${this.baseUrl}/ticket/${ticket.id}?force=${force}`, ticket).map((data) => data as ITicket);
   }
 
   public getNewedCount(): Observable<number> {
