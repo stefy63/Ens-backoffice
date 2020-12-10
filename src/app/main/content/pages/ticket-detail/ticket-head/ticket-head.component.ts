@@ -199,7 +199,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
       id_operator: this.user.id,
     });
 
-    return this.apiTicketService.update(updateTicket as ITicket, force);
+    return this.apiTicketService.update(updateTicket as ITicket, !!force);
   }
 
   openDialogDetail(close: boolean): void {
