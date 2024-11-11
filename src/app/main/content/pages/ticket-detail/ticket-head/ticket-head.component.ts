@@ -1,25 +1,26 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { ITicket } from '../../../../../interfaces/i-ticket';
-import { Location } from '@angular/common';
-import { find, assign } from 'lodash';
-import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
-import { ApiTicketService } from '../../../../services/api/api-ticket.service';
-import { Status } from '../../../../../enums/ticket-status.enum';
-import swal from 'sweetalert2';
-import { ApiTicketHistoryService } from '../../../../services/api/api-ticket-history.service';
-import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
-import { Observable } from 'rxjs/Observable';
-import * as moment from 'moment-timezone';
-import { NormalizeTicket } from '../../../../services/helper/normalize-ticket';
-import { HistoryTypes } from '../../../../../enums/ticket-history-type.enum';
-import { MatDialog} from '@angular/material';
-import * as _ from 'lodash';
-import { ToastMessage } from '../../../../services/toastMessage.service';
-import 'rxjs/add/operator/mergeMap';
-import { DialogCloseTicket } from './dialog-component/dialog-close.component';
-import { Subscription } from 'rxjs/Subscription';
-import { DialogDetail } from './dialog-component/dialog-detail.component';
 import { ComponentType } from '@angular/cdk/portal';
+import { Location } from '@angular/common';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material';
+import * as _ from 'lodash';
+import { assign, find } from 'lodash';
+import * as moment from 'moment-timezone';
+import 'rxjs/add/operator/mergeMap';
+import { Observable } from 'rxjs/Observable';
+import { flatMap } from 'rxjs/operators';
+import { Subscription } from 'rxjs/Subscription';
+import swal from 'sweetalert2';
+import { HistoryTypes } from '../../../../../enums/ticket-history-type.enum';
+import { Status } from '../../../../../enums/ticket-status.enum';
+import { ITicket } from '../../../../../interfaces/i-ticket';
+import { ITicketHistory } from '../../../../../interfaces/i-ticket-history';
+import { ApiTicketHistoryService } from '../../../../services/api/api-ticket-history.service';
+import { ApiTicketService } from '../../../../services/api/api-ticket.service';
+import { NormalizeTicket } from '../../../../services/helper/normalize-ticket';
+import { LocalStorageService } from '../../../../services/local-storage/local-storage.service';
+import { ToastMessage } from '../../../../services/toastMessage.service';
+import { DialogCloseTicket } from './dialog-component/dialog-close.component';
+import { DialogDetail } from './dialog-component/dialog-detail.component';
 
 @Component({
   selector: 'fuse-ticket-head',
@@ -41,7 +42,6 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   public timeout = false;
   public phone: string;
   private ticketSubscription: Subscription;
-  private initTimeout: any;
 
 
   constructor(
@@ -56,7 +56,6 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.initTimeout = moment();
     this.ticketSubscription = this.newTicket.subscribe((data: ITicket) => {
       if (this.ticket && this.ticket.id_status === Status.NEW && data.id_status !== Status.NEW && !this.isOpen) {
         this.toastMessage.error('ATTENZIONE! TICKET GIA ACQUISITO', 'TICKET PRESO IN CARICO DA ALTRO OPERATORE');
@@ -80,13 +79,10 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
         }, 10000);
       }
 
-      this.msgAlert = (data.id_operator
-        && this.user.id !== data.id_operator
-        && data.id_status === Status.ONLINE);
-    },
-      (err) => {
-        console.log(err);
-      });
+      this.msgAlert = (data.id_operator && this.user.id !== data.id_operator && data.id_status === Status.ONLINE);
+    }, (err) => {
+      console.log(err);
+    });
   }
 
   ngOnDestroy() {
@@ -104,7 +100,11 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
         this.updateTicketStatus(this.ticketNotNormalized.id_status).subscribe(() => {
           this.msgAlert = false;
           this.open.next(true);
-          this.createHistoryTicketSystem('Ticket acquisito da: ' + this.user.userdata.name + ' ' + this.user.userdata.surname).subscribe();
+          this.createHistoryTicketSystem(`Ticket acquisito da: ${this.user.userdata.name} ${this.user.userdata.surname}`).subscribe();
+        }, (error) => {
+          this.toastMessage.error(
+            'Errore Acquisizione Ticket',
+            (error.message && error.message === 'TICKET_ALREADY_ONLINE') ? `Ticket già gestito da un altro operatore` : `Errore generico`);
         });
       }
     }
@@ -112,26 +112,24 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
 
   activateChat() {
     if (this.ticket.id_status === Status.ONLINE && this.ticket.id_operator !== this.user.id) {
-      this.setUserChoise('Conferma Trasferimento Ticket?', 'Trasferito ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
+      this.setUserChoise('Conferma Trasferimento Ticket?', 'Trasferito ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname, true);
     } else if (this.ticket.id_status === Status.CLOSED) {
-      this.setUserChoise('Conferma Riapertura Ticket?', 'Riapertura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
+      this.setUserChoise('Conferma Riapertura Ticket?', 'Riapertura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname, true);
     } else {
-      this.setUserChoise('Conferma Presa in carico Ticket?', 'Acquisito ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname);
+      this.setUserChoise('Conferma Presa in carico Ticket?', 'Acquisito ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname, true);
     }
   }
 
-  private async setUserChoise(confirmMessage: string, historyMessage: string) {
+  private async setUserChoise(confirmMessage: string, historyMessage: string, force?: boolean) {
     const confirm = await this.toastMessage.warning(confirmMessage, '');
     if (confirm.value) {
       this.updateTicketStatus(Status.ONLINE)
-        .mergeMap((data) => this.createHistoryTicketSystem(historyMessage))
-        .subscribe(
-          () => {
-            console.log('TicketHistory Subscription success');
-          },
-          (err) => {
-            this.toastMessage.error('ERRORE', 'Errore nel ticket....' + this.ticket.id);
-          });
+      .mergeMap((data) => this.createHistoryTicketSystem(historyMessage))
+      .subscribe(() => {
+        console.log('TicketHistory Subscription success');
+      }, (err) => {
+        this.toastMessage.error('ERRORE', 'Errore nel ticket....' + this.ticket.id);
+      });
       this.isOpen = true;
       this.msgAlert = false;
       this.open.next(true);
@@ -144,13 +142,10 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
 
   async closeChat() {
     this.updateTicketStatus(Status.CLOSED)
-      .subscribe(() => {
-        this.createHistoryTicketSystem('Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname)
-          .subscribe(() => {
-            this.location.back();
-          });
-      });
-    // }
+    .pipe(flatMap(() => this.createHistoryTicketSystem('Chiusura ticket da Operatore: ' + this.user.userdata.name + ' ' + this.user.userdata.surname)))
+    .subscribe(() => {
+      this.location.back();
+    });
   }
 
   private async refuseChat() {
@@ -161,7 +156,7 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
       showCancelButton: true,
       confirmButtonText: 'Conferma',
       showLoaderOnConfirm: true,
-      preConfirm: (message) => {
+      preConfirm: async(message) => {
         return new Promise((resolve) => {
           if (!message) {
             swal.showValidationError(
@@ -198,13 +193,13 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
     return this.apiTicketHistoryService.create(createHistory);
   }
 
-  private updateTicketStatus(id_status: number): Observable<ITicket> {
+  private updateTicketStatus(id_status: number, force?: boolean): Observable<ITicket> {
     const updateTicket: ITicket = assign({}, this.ticketNotNormalized, {
       id_status: id_status,
       id_operator: this.user.id,
     });
 
-    return this.apiTicketService.update(updateTicket as ITicket);
+    return this.apiTicketService.update(updateTicket as ITicket, !!force);
   }
 
   openDialogDetail(close: boolean): void {
@@ -214,13 +209,14 @@ export class TicketHeadComponent implements OnInit, OnDestroy {
       data: { ticket: this.ticket }
     });
 
-    if (close) {
-      dialogRef.afterClosed().subscribe(result => {
-        if (!!result) {
-          this.closeChat();
-        }
-      });
+    if (!close){
+      return;
     }
+    dialogRef.afterClosed().subscribe(result => {
+      if (!!result) {
+        this.closeChat();
+      }
+    });
   }
 
 
